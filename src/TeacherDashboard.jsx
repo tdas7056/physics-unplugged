@@ -191,6 +191,12 @@ return (
           Question Bank
         </button>
         <button
+  className={activeTab === "results" ? "active" : ""}
+  onClick={() => setActiveTab("results")}
+>
+  Student Results
+</button>
+        <button
   className={activeTab === "builder" ? "active" : ""}
   onClick={() => setActiveTab("builder")}
 >
@@ -202,8 +208,10 @@ return (
   <QuestionBank />
 ) : activeTab === "builder" ? (
   <ExamBuilder />
+) : activeTab === "results" ? (
+  <TeacherResults />
 ) : (
-        <>
+  <>
       <header className="teacher-header">
         <div>
           <p className="eyebrow">PHYSICS UNPLUGGED</p>
