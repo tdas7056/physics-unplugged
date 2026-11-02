@@ -22,7 +22,7 @@ export default function ExamBuilder() {
 
     const [examResult, questionResult] = await Promise.all([
       supabase.from("exams")
-        .select("id, title, class_name")
+        .select("id, title, class_name, positive_marks, negative_marks")
         .order("created_at", { ascending: false }),
       supabase.from("questions")
         .select("id, class_name, topic, question_text, options")
