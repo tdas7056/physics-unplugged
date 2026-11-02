@@ -255,6 +255,15 @@ const matchesExamClass = true;
         <>
           <section className="builder-section">
             <h3>Questions in this examination ({assigned.length})</h3>
+            <div className="exam-readiness">
+  {assigned.length === 0 ? (
+    <p>⚠️ Not ready: No questions added.</p>
+  ) : missingKeys > 0 ? (
+    <p>⚠️ Not ready: {missingKeys} question(s) missing answer keys.</p>
+  ) : (
+    <p>✅ Ready: All {assigned.length} question(s) have answer keys.</p>
+  )}
+</div>
 <div className="exam-total-marks">
   <strong>Total Questions: {assigned.length}</strong>
   <strong>
