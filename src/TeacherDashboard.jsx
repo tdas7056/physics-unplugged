@@ -202,6 +202,12 @@ return (
 >
   Exam Builder
 </button>
+        <button
+  className={activeTab === "results" ? "active" : ""}
+  onClick={() => setActiveTab("results")}
+>
+  Student Results
+</button>
       </nav>
 
 {activeTab === "questions" ? (
