@@ -1,3 +1,4 @@
+import TeacherDashboard from "./TeacherDashboard";
 import { useEffect, useState } from "react";
 import {
   BookOpen,
@@ -122,7 +123,9 @@ export default function App() {
   if (loading && !session) {
     return <main className="loading">Loading Physics Unplugged...</main>;
   }
-
+if (session && session.user.email === "tdas66142@gmail.com") {
+  return <TeacherDashboard />;
+}
   if (!session) {
     return (
       <main className="login-screen">
