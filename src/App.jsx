@@ -16,6 +16,7 @@ export default function App() {
   const [session, setSession] = useState(null);
   const [exams, setExams] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedExam, setSelectedExam] = useState(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
