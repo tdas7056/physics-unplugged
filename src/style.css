@@ -344,3 +344,90 @@ button {
     align-items: flex-start;
   }
 }
+/* Teacher Dashboard */
+.teacher-dashboard {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px 20px;
+}
+
+.teacher-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.teacher-header h1 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.teacher-form {
+  background: #fff;
+  padding: 24px;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  margin-bottom: 28px;
+}
+
+.teacher-form input,
+.teacher-form textarea,
+.teacher-form select {
+  width: 100%;
+  padding: 12px;
+  margin: 7px 0 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font: inherit;
+  box-sizing: border-box;
+}
+
+.teacher-form label {
+  display: block;
+  font-weight: 600;
+}
+
+.teacher-form button,
+.teacher-actions button {
+  padding: 10px 16px;
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.teacher-form button {
+  background: #2563eb;
+  color: white;
+}
+
+.teacher-exam-list {
+  display: grid;
+  gap: 14px;
+}
+
+.teacher-exam-card {
+  background: #fff;
+  padding: 20px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+}
+
+.teacher-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.teacher-actions button {
+  background: #eef2ff;
+  color: #3730a3;
+}
+
+.teacher-actions button.delete {
+  background: #fee2e2;
+  color: #991b1b;
+}
