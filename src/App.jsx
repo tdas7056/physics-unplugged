@@ -1,4 +1,5 @@
 import TeacherDashboard from "./TeacherDashboard";
+import StudentExam from "./StudentExam";
 import { useEffect, useState } from "react";
 import {
   BookOpen,
