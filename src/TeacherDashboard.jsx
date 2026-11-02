@@ -189,11 +189,19 @@ return (
         >
           Question Bank
         </button>
+        <button
+  className={activeTab === "builder" ? "active" : ""}
+  onClick={() => setActiveTab("builder")}
+>
+  Exam Builder
+</button>
       </nav>
 
-      {activeTab === "questions" ? (
-        <QuestionBank />
-      ) : (
+{activeTab === "questions" ? (
+  <QuestionBank />
+) : activeTab === "builder" ? (
+  <ExamBuilder />
+) : (
         <>
       <header className="teacher-header">
         <div>
