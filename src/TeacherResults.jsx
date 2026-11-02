@@ -155,9 +155,9 @@ function downloadExcel() {
           ))}
         </select>
 
-        <button onClick={downloadCSV} disabled={!filteredResults.length}>
-          <Download size={16} /> Download CSV
-        </button>
+<button onClick={downloadExcel} disabled={!filteredResults.length}>
+  <Download size={16} /> Download Excel
+</button>
       </div>
 
       {message && <p className="message">{message}</p>}
