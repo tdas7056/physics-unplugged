@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { supabase } from "./supabase";
 import QuestionBank from "./QuestionBank";
+import TeacherResults from "./TeacherResults";
 import ExamBuilder from "./ExamBuilder";
 const emptyExam = {
   title: "",
