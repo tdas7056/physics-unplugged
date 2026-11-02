@@ -61,12 +61,12 @@ async function submitExam() {
     p_answers: submittedAnswers
   });
 
-  if (error) {
-    setMessage(error.message);
-  } else {
-    setMessage("Examination submitted successfully!");
-    console.log("Exam result:", data);
-  }
+if (error) {
+  setMessage(error.message);
+} else {
+  setResult(data);
+  setMessage("Examination submitted successfully!");
+}
 
   setLoading(false);
 }
