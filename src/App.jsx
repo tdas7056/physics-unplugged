@@ -256,16 +256,15 @@ if (session && session.user.email === "tdas66142@gmail.com") {
               <div className="exam-meta">
                 <span>{exam.duration_minutes} minutes</span>
               </div>
-              <button
-                className="primary-button"
-                onClick={() =>
-                  setMessage(
-                    "Exam interface will be connected in the next development step."
-                  )
-                }
-              >
-                View examination
-              </button>
+<button
+  className="primary-button"
+  onClick={() => {
+    setMessage("");
+    setSelectedExam(exam);
+  }}
+>
+  Start Examination
+</button>
             </article>
           ))}
         </div>
