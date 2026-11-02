@@ -1,0 +1,346 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
+
+:root {
+  font-family: "Inter", sans-serif;
+  color: #172033;
+  background: #f5f7fb;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+.login-screen,
+.setup-screen {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: linear-gradient(135deg, #101b35, #243d70);
+}
+
+.login-card,
+.setup-card {
+  width: 100%;
+  max-width: 440px;
+  padding: 38px;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px #0003;
+}
+
+.brand-icon {
+  width: 58px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  color: white;
+  background: #315de7;
+  border-radius: 16px;
+  margin-bottom: 24px;
+}
+
+.login-card h1,
+.setup-card h1 {
+  margin: 8px 0;
+  font-size: 29px;
+  letter-spacing: -1px;
+}
+
+.eyebrow {
+  color: #315de7;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+.subtitle,
+.setup-card > p {
+  color: #748096;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.login-card form {
+  margin-top: 30px;
+}
+
+.login-card label {
+  display: block;
+  margin: 17px 0 8px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 0 14px;
+  border: 1px solid #dce2ed;
+  border-radius: 10px;
+  color: #8792a6;
+}
+
+.input-wrap:focus-within {
+  border-color: #315de7;
+}
+
+.input-wrap input {
+  width: 100%;
+  height: 48px;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: #172033;
+}
+
+.primary-button,
+.secondary-button {
+  width: 100%;
+  min-height: 47px;
+  border: 0;
+  border-radius: 10px;
+  font-weight: 700;
+  transition: 0.2s;
+}
+
+.primary-button {
+  color: white;
+  background: #315de7;
+  margin-top: 20px;
+}
+
+.primary-button:hover {
+  background: #244ac5;
+}
+
+.primary-button:disabled,
+.secondary-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.secondary-button {
+  margin-top: 12px;
+  color: #315de7;
+  background: #eef2ff;
+}
+
+.footer-note {
+  margin-top: 25px;
+  text-align: center;
+  font-size: 11px;
+  color: #929bad;
+}
+
+.message,
+.notice {
+  padding: 12px;
+  border-radius: 9px;
+  color: #9b4b13;
+  background: #fff5e8;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.dashboard {
+  max-width: 1180px;
+  margin: auto;
+  padding: 0 28px;
+}
+
+.topbar {
+  height: 76px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #e6eaf1;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #244ac5;
+  font-weight: 800;
+  font-size: 18px;
+}
+
+.logout-button,
+.refresh-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border: 1px solid #e1e6ef;
+  border-radius: 9px;
+  color: #47536a;
+  background: white;
+}
+
+.welcome {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 35px;
+  padding: 35px;
+  border-radius: 18px;
+  color: white;
+  background: linear-gradient(110deg, #18316c, #315de7);
+}
+
+.welcome .eyebrow {
+  color: #b9caff;
+}
+
+.welcome h1 {
+  margin: 8px 0;
+  font-size: 30px;
+}
+
+.welcome p:last-child {
+  color: #d4defe;
+  font-size: 13px;
+}
+
+.welcome-icon {
+  width: 75px;
+  height: 75px;
+  display: grid;
+  place-items: center;
+  border-radius: 20px;
+  background: #ffffff20;
+}
+
+.section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin: 38px 0 20px;
+}
+
+.section-heading h2 {
+  margin: 0 0 7px;
+  font-size: 21px;
+}
+
+.section-heading p {
+  margin: 0;
+  color: #7c879a;
+  font-size: 13px;
+}
+
+.exam-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 18px;
+}
+
+.exam-card,
+.empty-state {
+  padding: 24px;
+  border: 1px solid #e8ecf3;
+  border-radius: 15px;
+  background: white;
+}
+
+.exam-icon {
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  color: #315de7;
+  background: #eef2ff;
+  border-radius: 12px;
+}
+
+.exam-card h3 {
+  margin: 18px 0 8px;
+  font-size: 17px;
+}
+
+.exam-card p {
+  min-height: 38px;
+  color: #78849a;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.exam-meta {
+  color: #64718a;
+  font-size: 12px;
+  margin-top: 15px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 55px 20px;
+  color: #78849a;
+}
+
+.empty-state h3 {
+  color: #172033;
+}
+
+.dashboard-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 9px;
+  padding: 45px 10px;
+  color: #8b95a7;
+  font-size: 12px;
+}
+
+.loading {
+  padding: 50px;
+  text-align: center;
+  color: #64718a;
+}
+
+@media (max-width: 600px) {
+  .login-card,
+  .setup-card {
+    padding: 26px;
+  }
+
+  .dashboard {
+    padding: 0 16px;
+  }
+
+  .welcome {
+    padding: 25px;
+  }
+
+  .welcome h1 {
+    font-size: 24px;
+  }
+
+  .welcome-icon {
+    width: 55px;
+    height: 55px;
+  }
+
+  .section-heading {
+    align-items: flex-start;
+  }
+}
