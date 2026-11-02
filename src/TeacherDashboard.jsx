@@ -10,7 +10,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { supabase } from "./supabase";
-
+import QuestionBank from "./QuestionBank";
 const emptyExam = {
   title: "",
   class_name: "",
@@ -171,8 +171,28 @@ export default function TeacherDashboard() {
     }
   }
 
-  return (
+return (
     <main className="teacher-dashboard">
+      <nav className="teacher-tabs">
+        <button
+          className={activeTab === "exams" ? "active" : ""}
+          onClick={() => setActiveTab("exams")}
+        >
+          Examinations
+        </button>
+
+        <button
+          className={activeTab === "questions" ? "active" : ""}
+          onClick={() => setActiveTab("questions")}
+        >
+          Question Bank
+        </button>
+      </nav>
+
+      {activeTab === "questions" ? (
+        <QuestionBank />
+      ) : (
+        <>
       <header className="teacher-header">
         <div>
           <p className="eyebrow">PHYSICS UNPLUGGED</p>
@@ -363,6 +383,8 @@ export default function TeacherDashboard() {
           </div>
         )}
       </section>
+        </>
+      )}
     </main>
   );
 }
