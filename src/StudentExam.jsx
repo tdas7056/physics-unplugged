@@ -38,21 +38,37 @@ export default function StudentExam({ exam, onExit }) {
     }));
   }
 
-  async function submitExam() {
-    const confirmed = window.confirm(
-      "Are you sure you want to submit your examination?"
-    );
+async function submitExam() {
+  const confirmed = window.confirm(
+    "Are you sure you want to submit your examination?"
+  );
 
-    if (!confirmed) return;
+  if (!confirmed) return;
 
-    setLoading(true);
-    setMessage("");
+  setLoading(true);
+  setMessage("");
 
-    // Answers will be saved in the next development step.
-    setMessage("Exam submission system is being connected.");
+  const submittedAnswers = Object.entries(answers).map(
+    ([questionId, selectedOption]) => ({
+      question_id: questionId,
+      selected_option: selectedOption
+    })
+  );
 
-    setLoading(false);
+  const { data, error } = await supabase.rpc("submit_exam", {
+    p_attempt_id: attemptId,
+    p_answers: submittedAnswers
+  });
+
+  if (error) {
+    setMessage(error.message);
+  } else {
+    setMessage("Examination submitted successfully!");
+    console.log("Exam result:", data);
   }
+
+  setLoading(false);
+}
 
   if (!started) {
     return (
