@@ -109,7 +109,35 @@ if (error) {
   }
 
   const question = questions[current];
+if (result) {
+  return (
+    <main className="student-exam">
+      <section className="exam-instructions">
+        <h1>Examination Submitted!</h1>
+        <p>Your result is ready.</p>
 
+        <h2>
+          Score: {result.score} / {result.max_marks}
+        </h2>
+
+        <p>Correct answers: {result.correct_count}</p>
+        <p>Wrong answers: {result.wrong_count}</p>
+        <p>Unanswered: {result.unanswered_count}</p>
+
+        {result.time_expired && (
+          <p>Your examination time had expired.</p>
+        )}
+
+        <button
+          className="primary-button"
+          onClick={onExit}
+        >
+          Back to Dashboard
+        </button>
+      </section>
+    </main>
+  );
+}
   return (
     <main className="student-exam">
       <header className="student-exam-header">
