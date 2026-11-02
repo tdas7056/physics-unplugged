@@ -320,20 +320,30 @@ const matchesExamClass = true;
     ? "Clear Selection"
     : "Select All Questions"}
 </button>
-            {availableQuestions.map(question => (
-              <label className="builder-question" key={question.id}>
-                <input
-                  type="checkbox"
-                  checked={selectedQuestions.includes(question.id)}
-                  onChange={() => toggleQuestion(question.id)}
-                />
-                <span>
-                  <strong>{question.question_text}</strong>
-                  <small>{question.topic || "General"} · {question.class_name}</small>
-                </span>
-              </label>
-            ))}
+{availableQuestions.map(question => (
+  <div className="builder-question" key={question.id}>
+    <label>
+      <input
+        type="checkbox"
+        checked={selectedQuestions.includes(question.id)}
+        onChange={() => toggleQuestion(question.id)}
+      />
+      <strong>{question.question_text}</strong>
+      <small>{question.topic || "General"} · {question.class_name}</small>
+    </label>
 
+    <details className="question-preview">
+      <summary>Preview options</summary>
+      <ol type="A">
+        {(question.options || []).map((option, index) => (
+          <li key={index}>
+            {typeof option === "string" ? option : option.text}
+          </li>
+        ))}
+      </ol>
+    </details>
+  </div>
+))}
             {availableQuestions.length === 0 && (
               <p>No available questions found. Check the examination class or search term.</p>
             )}
