@@ -1,6 +1,7 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "./supabase";
+import * as XLSX from "xlsx";
 import { Trophy, RefreshCw, Download, Users } from "lucide-react";
 
 export default function TeacherResults() {
