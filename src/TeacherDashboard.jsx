@@ -23,6 +23,7 @@ const emptyExam = {
 
 export default function TeacherDashboard() {
   const [exams, setExams] = useState([]);
+  const [activeTab, setActiveTab] = useState("exams");
   const [form, setForm] = useState(emptyExam);
   const [editingId, setEditingId] = useState(null);
   const [showForm, setShowForm] = useState(false);
