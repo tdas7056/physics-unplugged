@@ -128,6 +128,14 @@ export default function App() {
 if (session && session.user.email === "tdas66142@gmail.com") {
   return <TeacherDashboard />;
 }
+  if (session && selectedExam) {
+  return (
+    <StudentExam
+      exam={selectedExam}
+      onExit={() => setSelectedExam(null)}
+    />
+  );
+}
   if (!session) {
     return (
       <main className="login-screen">
