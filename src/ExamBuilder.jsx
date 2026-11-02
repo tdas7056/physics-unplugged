@@ -11,7 +11,7 @@ export default function ExamBuilder() {
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
-
+const [missingKeys, setMissingKeys] = useState(0);
   useEffect(() => {
     loadInitialData();
   }, []);
@@ -62,7 +62,16 @@ export default function ExamBuilder() {
     }
 
     const ids = (data || []).map(item => item.question_id);
+const { count, error: keyError } = await supabase
+  .from("question_keys")
+  .select("question_id", { count: "exact", head: true })
+  .in("question_id", ids.length ? ids : ["00000000-0000-0000-0000-000000000000"]);
 
+if (keyError) {
+  setMessage(keyError.message);
+} else {
+  setMissingKeys(ids.length - (count || 0));
+}
     if (ids.length === 0) {
       setAssigned([]);
       setLoading(false);
