@@ -207,8 +207,7 @@ export default function ExamBuilder() {
     const exam = exams.find(item => item.id === selectedExam);
 
     return questions.filter(question => {
-      const matchesExamClass =
-        !exam?.class_name || question.class_name === exam.class_name;
+const matchesExamClass = true;
 
       const text = [
         question.question_text,
@@ -218,7 +217,6 @@ export default function ExamBuilder() {
 
       return (
         !assignedIds.has(question.id) &&
-        matchesExamClass &&
         text.includes(search.toLowerCase())
       );
     });
