@@ -88,52 +88,34 @@ export default function TeacherResults() {
     return Math.round((Number(result.score) / Number(result.max_marks)) * 100);
   }
 
-  function downloadCSV() {
-    const headers = [
-      "Rank",
-      "Student Name",
-      "Examination",
-      "Class",
-      "Score",
-      "Maximum Marks",
-      "Percentage",
-      "Correct",
-      "Wrong",
-      "Unanswered"
-    ];
+function downloadExcel() {
+  const rows = filteredResults.map((r, index) => ({
+    Rank: index + 1,
+    "Student Name": r.profiles?.display_name || "Student",
+    Examination: r.exams?.title || "",
+    Class: r.exams?.class_name || "",
+    Score: Number(r.score),
+    "Maximum Marks": Number(r.max_marks),
+    Percentage: percentage(r) + "%",
+    Correct: r.correct_count,
+    Wrong: r.wrong_count,
+    Unanswered: r.unanswered_count
+  }));
 
-    const rows = filteredResults.map((r, index) => [
-      index + 1,
-      r.profiles?.display_name || "Student",
-      r.exams?.title || "",
-      r.exams?.class_name || "",
-      r.score,
-      r.max_marks,
-      percentage(r) + "%",
-      r.correct_count,
-      r.wrong_count,
-      r.unanswered_count
-    ]);
+  const worksheet = XLSX.utils.json_to_sheet(rows);
+  const workbook = XLSX.utils.book_new();
 
-    const csv = [headers, ...rows]
-      .map((row) =>
-        row.map((value) =>
-          `"${String(value ?? "").replace(/"/g, '""')}"`
-        ).join(",")
-      )
-      .join("\n");
+  XLSX.utils.book_append_sheet(
+    workbook,
+    worksheet,
+    "Student Results"
+  );
 
-    const blob = new Blob(["\uFEFF" + csv], {
-      type: "text/csv;charset=utf-8;"
-    });
-
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "Physics-Unplugged-Results.csv";
-    link.click();
-    URL.revokeObjectURL(url);
-  }
+  XLSX.writeFile(
+    workbook,
+    "Physics-Unplugged-Results.xlsx"
+  );
+}
 
   return (
     <main className="teacher-results">
