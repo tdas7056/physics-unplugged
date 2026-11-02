@@ -246,7 +246,15 @@ const matchesExamClass = true;
         <>
           <section className="builder-section">
             <h3>Questions in this examination ({assigned.length})</h3>
-
+<div className="exam-total-marks">
+  <strong>Total Questions: {assigned.length}</strong>
+  <strong>
+    Maximum Marks: {
+      assigned.length *
+      (Number(exams.find(e => e.id === selectedExam)?.positive_marks) || 1)
+    }
+  </strong>
+</div>
             {assigned.length === 0 && (
               <p>No questions have been added yet.</p>
             )}
