@@ -300,7 +300,26 @@ const matchesExamClass = true;
               {" · "}
               {selectedQuestions.length} selected
             </p>
+<button
+  type="button"
+  onClick={() => {
+    const allIds = availableQuestions.map(q => q.id);
+    const allSelected = allIds.every(id =>
+      selectedQuestions.includes(id)
+    );
 
+    setSelectedQuestions(previous =>
+      allSelected
+        ? previous.filter(id => !allIds.includes(id))
+        : [...new Set([...previous, ...allIds])]
+    );
+  }}
+>
+  {availableQuestions.length > 0 &&
+  availableQuestions.every(q => selectedQuestions.includes(q.id))
+    ? "Clear Selection"
+    : "Select All Questions"}
+</button>
             {availableQuestions.map(question => (
               <label className="builder-question" key={question.id}>
                 <input
