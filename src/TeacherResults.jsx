@@ -9,40 +9,65 @@ export default function TeacherResults() {
   const [message, setMessage] = useState("");
   const [selectedExam, setSelectedExam] = useState("all");
 
-  async function loadResults() {
-    setLoading(true);
-    setMessage("");
+ async function loadResults() {
+  setLoading(true);
+  setMessage("");
 
-    const { data, error } = await supabase
-      .from("attempts")
-      .select(`
-        id,
-        score,
-        max_marks,
-        correct_count,
-        wrong_count,
-        unanswered_count,
-        started_at,
-        submitted_at,
-        exams (
-          title,
-          class_name
-        ),
-        profiles (
-          display_name
-        )
-      `)
-      .not("submitted_at", "is", null)
-      .order("score", { ascending: false });
+  const { data, error } = await supabase
+    .from("attempts")
+    .select(`
+      id,
+      student_id,
+      score,
+      max_marks,
+      correct_count,
+      wrong_count,
+      unanswered_count,
+      started_at,
+      submitted_at,
+      exams (
+        title,
+        class_name
+      )
+    `)
+    .not("submitted_at", "is", null)
+    .order("score", { ascending: false });
 
-    if (error) {
-      setMessage(error.message);
-    } else {
-      setResults(data || []);
-    }
-
+  if (error) {
+    setMessage(error.message);
     setLoading(false);
+    return;
   }
+
+  const studentIds = [
+    ...new Set((data || []).map((r) => r.student_id))
+  ];
+
+  const { data: profiles, error: profileError } = await supabase
+    .from("profiles")
+    .select("id, display_name")
+    .in("id", studentIds);
+
+  if (profileError) {
+    setMessage(profileError.message);
+    setLoading(false);
+    return;
+  }
+
+  const profileMap = Object.fromEntries(
+    (profiles || []).map((p) => [p.id, p])
+  );
+
+  const finalResults = (data || []).map((r) => ({
+    ...r,
+    profiles: profileMap[r.student_id] || {
+      display_name: "Student"
+    }
+  }));
+
+  setResults(finalResults);
+  setLoading(false);
+}
 
   useEffect(() => {
     loadResults();
