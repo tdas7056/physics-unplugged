@@ -875,3 +875,153 @@
     height: 74px;
   }
 }
+
+
+/* Dark glass login inspired by the supplied reference */
+.login-screen {
+  background:
+    radial-gradient(ellipse at 12% 12%, rgba(236, 0, 140, 0.58), transparent 36%),
+    radial-gradient(ellipse at 88% 80%, rgba(112, 37, 190, 0.55), transparent 38%),
+    linear-gradient(135deg, #07101e 0%, #111a31 52%, #07111f 100%);
+}
+
+.login-card {
+  max-width: 430px;
+  padding: 30px 34px;
+  border: 1px solid rgba(218, 230, 255, 0.32);
+  border-radius: 22px;
+  background: linear-gradient(145deg, rgba(255,255,255,0.20), rgba(255,255,255,0.075));
+  box-shadow: 0 24px 65px rgba(0,0,0,0.42), inset 0 1px 0 rgba(255,255,255,0.16);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+  color: #fff;
+}
+
+.login-brand {
+  margin-bottom: 18px;
+  gap: 5px;
+}
+
+.login-logo {
+  width: 68px;
+  height: 68px;
+  margin-bottom: 4px;
+  filter: drop-shadow(0 5px 12px rgba(0,0,0,0.28));
+}
+
+.login-brand .login-eyebrow {
+  color: #f8a6d9;
+  font-size: 10px;
+  letter-spacing: 1.35px;
+  text-align: center;
+}
+
+.login-brand h1 {
+  color: #fff;
+  font-size: 25px;
+}
+
+.login-welcome {
+  margin: 0 0 23px;
+  text-align: center;
+}
+.login-welcome h2 {
+  margin: 0 0 5px;
+  color: #fff;
+  font-size: 25px;
+  font-weight: 750;
+}
+.login-welcome p {
+  margin: 0;
+  color: rgba(255,255,255,0.82);
+  font-size: 13px;
+}
+
+.login-card form {
+  gap: 9px;
+}
+.login-card form > label,
+.login-password-heading label {
+  margin: 8px 0 0;
+  color: rgba(255,255,255,0.92);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+}
+.login-password-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 5px;
+}
+.login-card .input-wrap {
+  min-height: 49px;
+  padding: 0 13px;
+  border: 1px solid rgba(205, 220, 255, 0.18);
+  border-radius: 11px;
+  background: rgba(255,255,255,0.095);
+  color: #d7e3ff;
+  box-shadow: inset 0 2px 7px rgba(0,0,0,0.15), 0 5px 14px rgba(0,0,0,0.12);
+}
+.login-card .input-wrap:focus-within {
+  border-color: #21d6d0;
+  box-shadow: 0 0 0 3px rgba(33,214,208,0.13), inset 0 2px 7px rgba(0,0,0,0.12);
+  transform: none;
+}
+.login-card .input-wrap input {
+  height: 47px;
+  color: #fff;
+  font-size: 13px;
+}
+.login-card .input-wrap input::placeholder {
+  color: rgba(235,240,255,0.58);
+}
+.login-card .input-wrap > svg {
+  width: 16px;
+  height: 16px;
+  opacity: 0.9;
+}
+.login-password-heading .forgot-password-link {
+  position: static;
+  transform: none;
+  padding: 3px 0;
+  background: transparent;
+  color: #ff62bb;
+  font-size: 10px;
+}
+.login-card .primary-button {
+  min-height: 45px;
+  margin-top: 15px;
+  border: 0;
+  border-radius: 10px;
+  background: linear-gradient(100deg, #f00082, #a51bd1);
+  color: #fff;
+  box-shadow: 0 8px 18px rgba(218, 0, 139, 0.25);
+}
+.login-card .primary-button:hover {
+  background: linear-gradient(100deg, #ff168f, #b72be2);
+  box-shadow: 0 11px 22px rgba(218, 0, 139, 0.32);
+}
+.login-card .secondary-button {
+  min-height: 43px;
+  margin-top: 10px;
+  border: 1px solid rgba(224,232,255,0.22);
+  background: rgba(255,255,255,0.10);
+  color: #fff;
+}
+.login-card .secondary-button:hover {
+  background: rgba(255,255,255,0.17);
+}
+.login-card .footer-note {
+  margin-top: 17px;
+  color: rgba(230,237,255,0.62);
+  font-size: 11px;
+}
+.login-card .message {
+  color: #ffe0ef;
+}
+@media (max-width: 520px) {
+  .login-card {
+    padding: 27px 22px;
+  }
+}
