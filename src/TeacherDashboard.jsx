@@ -187,39 +187,39 @@ export default function TeacherDashboard() {
 
 return (
     <main className="teacher-dashboard">
-      <nav className="teacher-tabs">
-        <button
-          className={activeTab === "exams" ? "active" : ""}
-          onClick={() => setActiveTab("exams")}
-        >
-          Examinations
-        </button>
+ <nav className="teacher-tabs">
+  <button
+    className={activeTab === "exams" ? "active" : ""}
+    onClick={() => setActiveTab("exams")}
+  >
+    <LayoutDashboard size={18} />
+    <span>Dashboard</span>
+  </button>
 
-        <button
-          className={activeTab === "questions" ? "active" : ""}
-          onClick={() => setActiveTab("questions")}
-        >
-          Question Bank
-        </button>
-        <button
-  className={activeTab === "results" ? "active" : ""}
-  onClick={() => setActiveTab("results")}
->
-  Student Results
-</button>
-        <button
-  className={activeTab === "builder" ? "active" : ""}
-  onClick={() => setActiveTab("builder")}
->
-  Exam Builder
-</button>
-        <button
-  className={activeTab === "results" ? "active" : ""}
-  onClick={() => setActiveTab("results")}
->
-  Student Results
-</button>
-      </nav>
+  <button
+    className={activeTab === "questions" ? "active" : ""}
+    onClick={() => setActiveTab("questions")}
+  >
+    <BookOpen size={18} />
+    <span>Question Bank</span>
+  </button>
+
+  <button
+    className={activeTab === "builder" ? "active" : ""}
+    onClick={() => setActiveTab("builder")}
+  >
+    <FilePlus2 size={18} />
+    <span>Exam Builder</span>
+  </button>
+
+  <button
+    className={activeTab === "results" ? "active" : ""}
+    onClick={() => setActiveTab("results")}
+  >
+    <Trophy size={18} />
+    <span>Student Results</span>
+  </button>
+</nav>
 
 {activeTab === "questions" ? (
   <QuestionBank />
