@@ -1,4 +1,5 @@
 import TeacherDashboard from "./TeacherDashboard";
+import "./StudentDashboard.css";
 import StudentExam from "./StudentExam";
 import { useEffect, useState } from "react";
 import {
