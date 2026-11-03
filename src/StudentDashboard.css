@@ -1025,3 +1025,23 @@
     padding: 27px 22px;
   }
 }
+
+
+/* Center Forgot Password beneath the account button */
+.login-card .login-forgot-below {
+  position: static;
+  display: block;
+  width: fit-content;
+  margin: 13px auto 0;
+  padding: 7px 12px;
+  transform: none;
+  border: 1px solid rgba(224,232,255,0.20);
+  border-radius: 8px;
+  background: rgba(255,255,255,0.08);
+  color: #f7a0d3;
+  font-size: 12px;
+  text-align: center;
+}
+.login-card .login-forgot-below:hover {
+  background: rgba(255,255,255,0.15);
+}
