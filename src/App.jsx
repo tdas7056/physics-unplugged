@@ -50,6 +50,7 @@ const [showSignup, setShowSignup] = useState(false);
     if (session) loadExams();
   }, [session]);
 useEffect(() => {
+useEffect(() => {
   async function loadStudentProfile() {
     if (!session) {
       setProfileName("");
@@ -62,9 +63,14 @@ useEffect(() => {
       .eq("id", session.user.id)
       .single();
 
-    if (!error && data) {
-      setProfileName(data.display_name || "");
+    if (error) {
+      console.error("Profile loading error:", error);
+      setMessage("Profile error: " + error.message);
+      return;
     }
+
+    console.log("Student profile:", data);
+    setProfileName(data?.display_name || "");
   }
 
   loadStudentProfile();
