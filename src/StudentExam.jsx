@@ -13,6 +13,15 @@ export default function StudentExam({ exam, onExit }) {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  useEffect(() => {
+  if (!started || result) return;
+
+  const timer = setInterval(() => {
+    setSecondsLeft(previous => Math.max(previous - 1, 0));
+  }, 1000);
+
+  return () => clearInterval(timer);
+}, [started, result]);
 
   async function startExam() {
     setLoading(true);
