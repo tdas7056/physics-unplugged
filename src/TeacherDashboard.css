@@ -1,1 +1,484 @@
 
+/* =================================
+   PHYSICS UNPLUGGED - TEACHER DASHBOARD
+================================= */
+
+.teacher-dashboard {
+  min-height: 100vh;
+  padding: 30px;
+  background: #f4f7fc;
+  color: #172554;
+  font-family: Inter, Arial, sans-serif;
+}
+
+/* Navigation */
+
+.teacher-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 12px;
+  margin-bottom: 30px;
+  background: #ffffff;
+  border: 1px solid #e5eaf3;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(30, 64, 175, 0.05);
+}
+
+.teacher-tabs button {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 12px 18px;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: #64748b;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.teacher-tabs button:hover {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.teacher-tabs button.active {
+  background: #2563eb;
+  color: #ffffff;
+}
+
+/* Header */
+
+.teacher-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 30px;
+  margin-bottom: 25px;
+  border-radius: 20px;
+  color: #ffffff;
+  background: linear-gradient(120deg, #172554, #2563eb);
+  box-shadow: 0 10px 25px rgba(37, 99, 235, 0.16);
+}
+
+.teacher-welcome .eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #bfdbfe;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+}
+
+.teacher-header h1 {
+  margin: 12px 0 8px;
+  font-size: 30px;
+  color: #ffffff;
+}
+
+.teacher-header p {
+  color: #dbeafe;
+  line-height: 1.6;
+}
+
+.new-exam-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 14px 20px;
+  border: none;
+  border-radius: 11px;
+  background: #ffffff;
+  color: #1d4ed8;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.new-exam-button:hover {
+  transform: translateY(-2px);
+  background: #eff6ff;
+}
+
+/* Statistics */
+
+.teacher-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-bottom: 28px;
+}
+
+.teacher-stat {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 22px;
+  background: #ffffff;
+  border: 1px solid #e5eaf3;
+  border-radius: 16px;
+  box-shadow: 0 5px 18px rgba(15, 23, 42, 0.04);
+}
+
+.stat-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  flex-shrink: 0;
+  border-radius: 14px;
+}
+
+.stat-total .stat-icon {
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+.stat-published .stat-icon {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.stat-draft .stat-icon {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.stat-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.stat-info strong {
+  font-size: 27px;
+  color: #172554;
+}
+
+.stat-info span {
+  font-size: 13px;
+  color: #64748b;
+  font-weight: 600;
+}
+
+/* Messages */
+
+.teacher-dashboard .message {
+  padding: 13px 16px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+/* Examination Form */
+
+.teacher-form-card {
+  padding: 25px;
+  margin-bottom: 28px;
+  background: #ffffff;
+  border: 1px solid #e5eaf3;
+  border-radius: 17px;
+  box-shadow: 0 5px 18px rgba(15, 23, 42, 0.04);
+}
+
+.teacher-form-card h2 {
+  margin: 0 0 22px;
+  color: #172554;
+}
+
+.teacher-form {
+  display: grid;
+  gap: 18px;
+}
+
+.teacher-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: #334155;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.teacher-form input,
+.teacher-form textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 9px;
+  background: #ffffff;
+  color: #172554;
+  font: inherit;
+  outline: none;
+}
+
+.teacher-form input:focus,
+.teacher-form textarea:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+}
+
+.teacher-form-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 15px;
+}
+
+.teacher-form .publish-checkbox {
+  flex-direction: row;
+  align-items: center;
+}
+
+.publish-checkbox input {
+  width: auto;
+}
+
+.teacher-form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.primary-button,
+.secondary-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 19px;
+  border: none;
+  border-radius: 9px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.primary-button {
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.primary-button:hover {
+  background: #1d4ed8;
+}
+
+.secondary-button {
+  background: #e2e8f0;
+  color: #334155;
+}
+
+.primary-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Examination List */
+
+.teacher-exams {
+  padding: 25px;
+  background: #ffffff;
+  border: 1px solid #e5eaf3;
+  border-radius: 17px;
+  box-shadow: 0 5px 18px rgba(15, 23, 42, 0.04);
+}
+
+.teacher-list-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 22px;
+}
+
+.teacher-list-heading h2 {
+  margin: 0 0 6px;
+  color: #172554;
+}
+
+.teacher-list-heading p {
+  margin: 0;
+  color: #64748b;
+  font-size: 14px;
+}
+
+.refresh-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border: 1px solid #bfdbfe;
+  border-radius: 9px;
+  background: #eff6ff;
+  color: #2563eb;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.teacher-exam-list {
+  display: grid;
+  gap: 14px;
+}
+
+.teacher-exam-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+  padding: 20px;
+  border: 1px solid #e2e8f0;
+  border-radius: 13px;
+  background: #ffffff;
+  transition: 0.2s ease;
+}
+
+.teacher-exam-card:hover {
+  border-color: #93c5fd;
+  box-shadow: 0 5px 16px rgba(37, 99, 235, 0.07);
+}
+
+.teacher-exam-info h3 {
+  margin: 10px 0 6px;
+  color: #172554;
+  font-size: 17px;
+}
+
+.teacher-exam-info p {
+  margin: 0 0 9px;
+  color: #64748b;
+}
+
+.teacher-exam-meta {
+  color: #64748b;
+  font-size: 13px;
+}
+
+.status {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.status.published {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.status.draft {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.teacher-exam-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.teacher-exam-actions button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border: 1px solid #e2e8f0;
+  border-radius: 9px;
+  background: #f8fafc;
+  color: #475569;
+  cursor: pointer;
+}
+
+.teacher-exam-actions button:hover {
+  background: #eff6ff;
+  color: #2563eb;
+  border-color: #bfdbfe;
+}
+
+.loading,
+.empty-state {
+  padding: 35px 15px;
+  text-align: center;
+  color: #64748b;
+}
+
+.empty-state svg {
+  color: #94a3b8;
+}
+
+.empty-state h3 {
+  color: #334155;
+}
+
+/* Responsive layout */
+
+@media (max-width: 768px) {
+  .teacher-dashboard {
+    padding: 16px;
+  }
+
+  .teacher-header {
+    padding: 22px;
+  }
+
+  .teacher-header h1 {
+    font-size: 24px;
+  }
+
+  .teacher-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .teacher-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .teacher-tabs {
+    gap: 6px;
+  }
+
+  .teacher-tabs button {
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .teacher-exam-card {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .teacher-exam-actions {
+    width: 100%;
+  }
+
+  .teacher-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .teacher-header h1 {
+    font-size: 22px;
+  }
+
+  .teacher-tabs button {
+    flex: 1 1 40%;
+    justify-content: center;
+  }
+
+  .teacher-form-actions button {
+    width: 100%;
+  }
+}
+
