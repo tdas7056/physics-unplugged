@@ -40,9 +40,14 @@ const [showSignup, setShowSignup] = useState(false);
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, newSession) => {
-      setSession(newSession);
-    });
+    } = supabase.auth.onAuthStateChange((event, newSession) => {
+  setSession(newSession);
+
+  if (event === "PASSWORD_RECOVERY") {
+    setResetMode(true);
+    setMessage("Enter your new password.");
+  }
+});
 
     return () => subscription.unsubscribe();
   }, []);
