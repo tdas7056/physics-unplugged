@@ -350,12 +350,13 @@ function downloadExcel() {
                   <td>{r.wrong_count}</td>
                   <td>{r.unanswered_count}</td>
                   <td>
-  <button
-    className="view-details-button"
-    onClick={() => openResultDetails(r)}
-  >
-    View Details
-  </button>
+<button
+  type="button"
+  className="view-details-button"
+  onClick={() => openResultDetails(r)}
+>
+  View Details
+</button>
 </td>
                 </tr>
               ))}
