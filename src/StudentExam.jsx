@@ -141,6 +141,29 @@ export default function StudentExam({ exam, onExit }) {
     }));
   }
 
+async function clearResponse() {
+  const questionId = questions[current]?.id;
+  if (!questionId) return;
+
+  const { error } = await supabase.rpc("clear_exam_answer", {
+    p_attempt_id: attemptId,
+    p_question_id: questionId
+  });
+
+  if (error) {
+    setMessage("Could not clear answer: " + error.message);
+    return;
+  }
+
+  setAnswers(previous => {
+    const updated = { ...previous };
+    delete updated[questionId];
+    return updated;
+  });
+
+  setMessage("");
+}
+
   function getQuestionStatus(question) {
     if (marked[question.id]) return "marked";
     if (answers[question.id] !== undefined) return "answered";
