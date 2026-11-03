@@ -214,13 +214,16 @@ if (session && session.user.email === "tdas66142@gmail.com") {
 </button>
           </form>
 
-          <button
-            className="secondary-button"
-            onClick={handleSignup}
-            disabled={busy || !email || password.length < 6}
-          >
-            Create student account
-          </button>
+<button
+  type="button"
+  className="secondary-button"
+  onClick={() => {
+    setShowSignup(!showSignup);
+    setMessage("");
+  }}
+>
+  {showSignup ? "Back to Sign in" : "Create student account"}
+</button>
 
           <p className="footer-note">
             Secure student access powered by Supabase.
