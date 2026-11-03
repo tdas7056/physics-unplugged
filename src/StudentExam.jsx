@@ -350,48 +350,53 @@ async function clearResponse() {
 
           {message && <p className="message">{message}</p>}
 
-          <div className="cbt-action-bar">
-<button
-  className="cbt-review-button"
-  onClick={markForReviewAndNext}
->
-  <Bookmark size={17} />
-  Mark for Review & Next
-  <button
-  className="cbt-clear-button"
-  onClick={clearResponse}
-  disabled={answers[question.id] === undefined}
->
-  Clear Response
-</button>
-</button>
-              className="cbt-previous-button"
-              onClick={() => goToQuestion(current - 1)}
-              disabled={current === 0}
-            >
-              <ChevronLeft size={17} />
-              Previous
-            </button>
 
-            {current < questions.length - 1 ? (
-              <button
-                className="cbt-next-button"
-                onClick={() => goToQuestion(current + 1)}
-              >
-                Save & Next
-                <ChevronRight size={17} />
-              </button>
-            ) : (
-              <button
-                className="cbt-next-button"
-                onClick={() => submitExam()}
-                disabled={loading}
-              >
-                <Send size={17} />
-                Submit
-              </button>
-            )}
-          </div>
+<div className="cbt-action-bar">
+  <button
+    className="cbt-review-button"
+    onClick={markForReviewAndNext}
+  >
+    <Bookmark size={17} />
+    Mark for Review & Next
+  </button>
+
+  <button
+    className="cbt-clear-button"
+    onClick={clearResponse}
+    disabled={answers[question.id] === undefined}
+  >
+    Clear Response
+  </button>
+
+  <button
+    className="cbt-previous-button"
+    onClick={() => goToQuestion(current - 1)}
+    disabled={current === 0}
+  >
+    <ChevronLeft size={17} />
+    Previous
+  </button>
+
+  {current < questions.length - 1 ? (
+    <button
+      className="cbt-next-button"
+      onClick={() => goToQuestion(current + 1)}
+    >
+      Save & Next
+      <ChevronRight size={17} />
+    </button>
+  ) : (
+    <button
+      className="cbt-next-button"
+      onClick={() => submitExam()}
+      disabled={loading}
+    >
+      <Send size={17} />
+      Submit
+    </button>
+  )}
+</div>
+
         </section>
 
         <aside className="cbt-sidebar">
