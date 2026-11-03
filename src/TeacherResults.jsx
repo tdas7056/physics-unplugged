@@ -450,9 +450,11 @@ function downloadExcel() {
                       <span>
                         {String.fromCharCode(65 + optionIndex)}.
                       </span>{" "}
-                      {option}
+{typeof option === "object" && option !== null
+  ? option.text
+  : option}
 
-                      {isCorrect && <strong> — Correct Answer</strong>}
+{isCorrect && <strong> — Correct Answer</strong>}
 
                       {isSelected && <strong> — Student's Answer</strong>}
                     </div>
