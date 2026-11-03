@@ -19,6 +19,8 @@ export default function App() {
   const [selectedExam, setSelectedExam] = useState(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [studentName, setStudentName] = useState("");
+const [showSignup, setShowSignup] = useState(false);
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
 
