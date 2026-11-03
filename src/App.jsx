@@ -263,9 +263,15 @@ if (session && session.user.email === "tdas66142@gmail.com") {
     return (
       <main className="login-screen">
         <section className="login-card">
-          <div className="brand-icon">
-            <GraduationCap size={32} />
-          </div>
+<div className="login-brand">
+  <img
+    src={logo}
+    alt="Physics Unplugged Logo"
+    className="login-logo"
+  />
+  <h1>Physics Unplugged</h1>
+  <p>Learn Physics. Think Beyond.</p>
+</div>
 
           <p className="eyebrow">YOUR PHYSICS EXAMINATION PORTAL</p>
           <h1>Physics Unplugged</h1>
