@@ -21,6 +21,18 @@ function SiteWatermark() {
     </div>
   );
 }
+function GlobalSignOut({ onClick }) {
+  return (
+    <button
+      type="button"
+      className="global-signout"
+      onClick={onClick}
+    >
+      <LogOut size={15} />
+      <span>Sign out</span>
+    </button>
+  );
+}
 export default function App() {
   const [session, setSession] = useState(null);
   const [exams, setExams] = useState([]);
