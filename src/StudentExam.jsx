@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "./supabase";
 import { Clock, ChevronLeft, ChevronRight, Send } from "lucide-react";
 
@@ -9,6 +9,7 @@ export default function StudentExam({ exam, onExit }) {
   const [questions, setQuestions] = useState([]);
   const [answers, setAnswers] = useState({});
   const [current, setCurrent] = useState(0);
+  const [secondsLeft, setSecondsLeft] = useState(0);
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
