@@ -50,12 +50,14 @@ export default function StudentExam({ exam, onExit }) {
     }));
   }
 
-async function submitExam() {
-  const confirmed = window.confirm(
-    "Are you sure you want to submit your examination?"
-  );
+async function submitExam(askConfirmation = true) {
+  if (askConfirmation) {
+    const confirmed = window.confirm(
+      "Are you sure you want to submit your examination?"
+    );
 
-  if (!confirmed) return;
+    if (!confirmed) return;
+  }
 
   setLoading(true);
   setMessage("");
