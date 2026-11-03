@@ -209,10 +209,9 @@ if (session && session.user.email === "tdas66142@gmail.com") {
             </div>
 
             {message && <p className="message">{message}</p>}
-
-            <button className="primary-button" disabled={busy}>
-              {busy ? "Please wait..." : "Sign in"}
-            </button>
+<button className="primary-button" disabled={busy}>
+  {busy ? "Please wait..." : showSignup ? "Create Account" : "Sign in"}
+</button>
           </form>
 
           <button
