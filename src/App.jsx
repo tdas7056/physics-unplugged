@@ -11,6 +11,7 @@ import {
   Lock,
   RefreshCw,
   Trophy,
+  ClipboardList,
 } from "lucide-react";
 import { supabase, isSupabaseConfigured } from "./supabase";
 function SiteWatermark() {
@@ -42,6 +43,10 @@ export default function App() {
   const [password, setPassword] = useState("");
   const [studentName, setStudentName] = useState("");
   const [profileName, setProfileName] = useState("");
+  const [attemptHistory, setAttemptHistory] = useState([]);
+  const [historyLoading, setHistoryLoading] = useState(false);
+  const [selectedReview, setSelectedReview] = useState(null);
+  const [reviewLoading, setReviewLoading] = useState(false);
 const [showSignup, setShowSignup] = useState(false);
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
@@ -73,7 +78,13 @@ const [showSignup, setShowSignup] = useState(false);
   }, []);
 
   useEffect(() => {
-    if (session) loadExams();
+    if (session) {
+      loadExams();
+      loadAttemptHistory();
+    } else {
+      setAttemptHistory([]);
+      setSelectedReview(null);
+    }
   }, [session]);
 useEffect(() => {
   async function loadStudentProfile() {
@@ -117,6 +128,43 @@ useEffect(() => {
     }
 
     setLoading(false);
+  }
+
+  async function loadAttemptHistory() {
+    if (!session?.user?.id) return;
+
+    setHistoryLoading(true);
+    const { data, error } = await supabase
+      .from("attempts")
+      .select("id, exam_id, submitted_at, score, max_marks, correct_count, wrong_count, unanswered_count, exams(title)")
+      .eq("student_id", session.user.id)
+      .not("submitted_at", "is", null)
+      .order("submitted_at", { ascending: false });
+
+    if (error) {
+      console.error("Attempt history error:", error);
+      setMessage("Could not load exam history: " + error.message);
+    } else {
+      setAttemptHistory(data || []);
+    }
+    setHistoryLoading(false);
+  }
+
+  async function openAttemptReview(attemptId) {
+    setReviewLoading(true);
+    setSelectedReview(null);
+
+    const { data, error } = await supabase.rpc("get_attempt_review", {
+      p_attempt_id: attemptId
+    });
+
+    if (error) {
+      setMessage("Could not load answer review: " + error.message);
+    } else {
+      setSelectedReview(data);
+      setMessage("");
+    }
+    setReviewLoading(false);
   }
 
   async function handleLogin(event) {
@@ -529,6 +577,112 @@ return (
           ))}
         </div>
       )}
+
+      <section className="history-section">
+        <div className="section-heading">
+          <div>
+            <h2><ClipboardList size={21} /> My Exam History</h2>
+            <p>Review your submitted examinations, answers and explanations.</p>
+          </div>
+          <button className="refresh-button" onClick={loadAttemptHistory} disabled={historyLoading}>
+            <RefreshCw size={16} />
+            {historyLoading ? "Loading..." : "Refresh history"}
+          </button>
+        </div>
+
+        {historyLoading ? (
+          <p className="loading">Loading your exam history...</p>
+        ) : attemptHistory.length === 0 ? (
+          <div className="empty-state">
+            <ClipboardList size={32} />
+            <h3>No submitted examinations yet</h3>
+            <p>Your completed exam attempts will appear here.</p>
+          </div>
+        ) : (
+          <div className="history-list">
+            {attemptHistory.map((attempt) => (
+              <article className="history-card" key={attempt.id}>
+                <div className="history-card-main">
+                  <div>
+                    <h3>{attempt.exams?.title || "Physics examination"}</h3>
+                    <p>{attempt.submitted_at ? new Date(attempt.submitted_at).toLocaleString() : ""}</p>
+                  </div>
+                  <div className="history-score">
+                    <strong>{attempt.score ?? 0} / {attempt.max_marks ?? 0}</strong>
+                    <span>{attempt.correct_count ?? 0} correct · {attempt.wrong_count ?? 0} wrong · {attempt.unanswered_count ?? 0} unanswered</span>
+                  </div>
+                </div>
+                <button
+                  className="history-review-button"
+                  onClick={() => openAttemptReview(attempt.id)}
+                  disabled={reviewLoading}
+                >
+                  View answers and explanations
+                </button>
+              </article>
+            ))}
+          </div>
+        )}
+
+        {reviewLoading && <p className="loading">Loading answer review...</p>}
+
+        {selectedReview && (
+          <div className="review-panel">
+            <div className="review-panel-heading">
+              <div>
+                <h3>{selectedReview.exam_title}</h3>
+                <p>Score: <strong>{selectedReview.score} / {selectedReview.max_marks}</strong></p>
+              </div>
+              <button className="history-close-button" onClick={() => setSelectedReview(null)}>
+                Close review
+              </button>
+            </div>
+
+            {(selectedReview.questions || []).map((question, index) => {
+              const options = Array.isArray(question.options) ? question.options : [];
+              const selected = question.selected_option;
+              const correct = question.correct_option;
+              return (
+                <article className="review-question" key={question.question_id}>
+                  <h4>Q{index + 1}. {question.question_text}</h4>
+                  {question.image_url && (
+                    <img className="review-question-image" src={question.image_url} alt="Question" />
+                  )}
+                  <div className="review-options">
+                    {options.map((option, optionIndex) => {
+                      const optionText = typeof option === "string" ? option : option?.text || "";
+                      const isCorrect = optionIndex === correct;
+                      const isSelected = optionIndex === selected;
+                      return (
+                        <div
+                          className={`review-option ${isCorrect ? "correct" : ""} ${isSelected && !isCorrect ? "incorrect" : ""}`}
+                          key={optionIndex}
+                        >
+                          <span>{String.fromCharCode(65 + optionIndex)}. {optionText}</span>
+                          {isCorrect && <strong>Correct answer</strong>}
+                          {isSelected && <small>Your answer</small>}
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <div className="review-question-footer">
+                    <span className={question.marks > 0 ? "marks-positive" : question.marks < 0 ? "marks-negative" : "marks-neutral"}>
+                      Marks: {question.marks > 0 ? "+" : ""}{question.marks}
+                    </span>
+                    <span>{selected === null ? "Not answered" : selected === correct ? "Correct" : "Incorrect"}</span>
+                  </div>
+                  {question.explanation && (
+                    <div className="review-explanation">
+                      <strong>Explanation</strong>
+                      <p>{question.explanation}</p>
+                    </div>
+                  )}
+                </article>
+              );
+            })}
+          </div>
+        )}
+      </section>
 
       <footer className="dashboard-footer">
         <Trophy size={17} />
