@@ -24,6 +24,7 @@ export default function QuestionBank() {
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState("");
   const [search, setSearch] = useState("");
+  const [importing, setImporting] = useState(false);
 
   useEffect(() => {
     loadQuestions();
