@@ -19,11 +19,12 @@ const [detailLoading, setDetailLoading] = useState(false);
   setMessage("");
 
   const { data, error } = await supabase
-    .from("attempts")
-    .select(`
-      id,
-      student_id,
-      score,
+.from("attempts")
+.select(`
+  id,
+  exam_id,
+  student_id,
+  score,
       max_marks,
       correct_count,
       wrong_count,
