@@ -469,10 +469,7 @@ return (
           <GraduationCap size={27} />
           <span>Physics Unplugged</span>
         </div>
-        <button className="logout-button" onClick={handleLogout}>
-          <LogOut size={17} />
-          Sign out
-        </button>
+
       </header>
 
 <section className="welcome">
@@ -538,6 +535,7 @@ return (
         Keep learning. Keep questioning. Keep improving.
       </footer>
     </main>
+    <GlobalSignOut onClick={handleLogout} />
     <SiteWatermark />
   </>
   );
