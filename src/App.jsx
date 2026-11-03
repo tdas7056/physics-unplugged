@@ -244,7 +244,7 @@ async function handleSignup() {
             {busy ? "Updating..." : "Update Password"}
           </button>
         </form>
-      </div>
+      </section>
     </main>
   );
 }
