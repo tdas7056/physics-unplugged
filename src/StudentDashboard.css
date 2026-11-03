@@ -1045,3 +1045,58 @@
 .login-card .login-forgot-below:hover {
   background: rgba(255,255,255,0.15);
 }
+
+
+/* Login visual regression fix: force glass card and readable contrast */
+.login-screen .login-card {
+  width: min(100%, 430px) !important;
+  max-width: 430px !important;
+  height: auto !important;
+  min-height: 0 !important;
+  padding: 30px 34px !important;
+  margin: 0 auto !important;
+  background: linear-gradient(145deg, rgba(37, 48, 70, 0.94), rgba(28, 38, 61, 0.94)) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(218, 230, 255, 0.34) !important;
+  border-radius: 22px !important;
+  box-shadow: 0 24px 65px rgba(0,0,0,0.42), inset 0 1px 0 rgba(255,255,255,0.16) !important;
+}
+.login-screen .login-brand h1,
+.login-screen .login-welcome h2,
+.login-screen .login-welcome p,
+.login-screen .login-card form > label,
+.login-screen .login-password-heading label {
+  color: #ffffff !important;
+}
+.login-screen .login-card .input-wrap {
+  background: rgba(255,255,255,0.10) !important;
+  border: 1px solid rgba(205,220,255,0.28) !important;
+  color: #e4ecff !important;
+}
+.login-screen .login-card .input-wrap input {
+  color: #ffffff !important;
+  background: transparent !important;
+}
+.login-screen .login-card .input-wrap input::placeholder {
+  color: rgba(235,240,255,0.70) !important;
+}
+.login-screen .login-card .secondary-button {
+  background: rgba(255,255,255,0.10) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(224,232,255,0.28) !important;
+}
+.login-screen .login-card .footer-note {
+  color: rgba(230,237,255,0.78) !important;
+}
+.login-screen .login-card .login-forgot-below {
+  color: #ff9bd2 !important;
+  background: rgba(255,255,255,0.07) !important;
+}
+.login-screen .login-card .message {
+  color: #ffe0ef !important;
+}
+@media (max-width: 520px) {
+  .login-screen .login-card {
+    padding: 27px 22px !important;
+  }
+}
