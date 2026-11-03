@@ -1,528 +1,402 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
+
+/* ========================================
+   PHYSICS UNPLUGGED - PREMIUM UI UPGRADE
+======================================== */
 
 :root {
-  font-family: "Inter", sans-serif;
-  color: #172033;
-  background: #f5f7fb;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-}
-
-* {
-  box-sizing: border-box;
+  --primary: #4f46e5;
+  --primary-dark: #3730a3;
+  --primary-light: #eef2ff;
+  --navy: #111827;
+  --text: #1e293b;
+  --muted: #64748b;
+  --border: #e2e8f0;
+  --surface: #ffffff;
+  --background: #f6f7fb;
+  --radius: 16px;
+  --shadow: 0 8px 30px rgba(15, 23, 42, 0.06);
 }
 
 body {
-  margin: 0;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-button,
-input {
-  font: inherit;
+  background: var(--background);
+  color: var(--text);
+  font-family: "Inter", sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
 button {
-  cursor: pointer;
+  transition: all 0.2s ease;
 }
+
+button:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+/* Login and setup */
 
 .login-screen,
 .setup-screen {
-  min-height: 100vh;
-  display: grid;
-  place-items: center;
-  padding: 24px;
-  background: linear-gradient(135deg, #101b35, #243d70);
+  background:
+    radial-gradient(circle at top right, #4f46e5 0%, transparent 38%),
+    linear-gradient(135deg, #0f172a, #1e1b4b);
 }
 
 .login-card,
 .setup-card {
-  width: 100%;
-  max-width: 440px;
-  padding: 38px;
-  background: white;
-  border-radius: 20px;
-  box-shadow: 0 20px 60px #0003;
+  border: 1px solid rgba(255,255,255,0.5);
+  border-radius: 24px;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.25);
 }
 
 .brand-icon {
-  width: 58px;
-  height: 58px;
-  display: grid;
-  place-items: center;
-  color: white;
-  background: #315de7;
-  border-radius: 16px;
-  margin-bottom: 24px;
+  background: linear-gradient(135deg, #6366f1, #4338ca);
+  box-shadow: 0 8px 20px #4f46e144;
 }
 
-.login-card h1,
-.setup-card h1 {
-  margin: 8px 0;
-  font-size: 29px;
-  letter-spacing: -1px;
-}
-
-.eyebrow {
-  color: #315de7;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 1.5px;
-}
-
-.subtitle,
-.setup-card > p {
-  color: #748096;
-  font-size: 14px;
-  line-height: 1.7;
-}
-
-.login-card form {
-  margin-top: 30px;
-}
-
-.login-card label {
-  display: block;
-  margin: 17px 0 8px;
-  font-size: 13px;
-  font-weight: 700;
-}
-
-.input-wrap {
-  display: flex;
-  align-items: center;
-  gap: 11px;
-  padding: 0 14px;
-  border: 1px solid #dce2ed;
-  border-radius: 10px;
-  color: #8792a6;
-}
-
-.input-wrap:focus-within {
-  border-color: #315de7;
-}
-
-.input-wrap input {
-  width: 100%;
-  height: 48px;
-  border: 0;
-  outline: none;
-  background: transparent;
-  color: #172033;
-}
-
-.primary-button,
-.secondary-button {
-  width: 100%;
-  min-height: 47px;
-  border: 0;
-  border-radius: 10px;
-  font-weight: 700;
-  transition: 0.2s;
-}
+/* Buttons */
 
 .primary-button {
-  color: white;
-  background: #315de7;
-  margin-top: 20px;
+  background: linear-gradient(135deg, #6366f1, #4338ca);
+  box-shadow: 0 5px 14px #4f46e133;
+  border-radius: 12px;
 }
 
-.primary-button:hover {
-  background: #244ac5;
-}
-
-.primary-button:disabled,
-.secondary-button:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
+.primary-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, #4f46e5, #3730a3);
+  box-shadow: 0 8px 20px #4f46e144;
 }
 
 .secondary-button {
-  margin-top: 12px;
-  color: #315de7;
+  border-radius: 12px;
   background: #eef2ff;
 }
 
-.footer-note {
-  margin-top: 25px;
-  text-align: center;
-  font-size: 11px;
-  color: #929bad;
-}
-
-.message,
-.notice {
-  padding: 12px;
-  border-radius: 9px;
-  color: #9b4b13;
-  background: #fff5e8;
-  font-size: 13px;
-  line-height: 1.5;
-}
+/* Student dashboard */
 
 .dashboard {
-  max-width: 1180px;
-  margin: auto;
-  padding: 0 28px;
+  max-width: 1250px;
 }
 
 .topbar {
-  height: 76px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid #e6eaf1;
+  border-bottom: 1px solid var(--border);
 }
 
 .brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: #244ac5;
-  font-weight: 800;
-  font-size: 18px;
-}
-
-.logout-button,
-.refresh-button {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 14px;
-  border: 1px solid #e1e6ef;
-  border-radius: 9px;
-  color: #47536a;
-  background: white;
+  color: var(--primary-dark);
+  letter-spacing: -0.5px;
 }
 
 .welcome {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 35px;
-  padding: 35px;
-  border-radius: 18px;
-  color: white;
-  background: linear-gradient(110deg, #18316c, #315de7);
-}
-
-.welcome .eyebrow {
-  color: #b9caff;
+  background:
+    radial-gradient(circle at 90% 10%, #818cf8 0%, transparent 35%),
+    linear-gradient(120deg, #111827, #3730a3);
+  border-radius: 22px;
+  box-shadow: 0 15px 35px #312e811f;
 }
 
 .welcome h1 {
-  margin: 8px 0;
-  font-size: 30px;
-}
-
-.welcome p:last-child {
-  color: #d4defe;
-  font-size: 13px;
-}
-
-.welcome-icon {
-  width: 75px;
-  height: 75px;
-  display: grid;
-  place-items: center;
-  border-radius: 20px;
-  background: #ffffff20;
-}
-
-.section-heading {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 15px;
-  margin: 38px 0 20px;
-}
-
-.section-heading h2 {
-  margin: 0 0 7px;
-  font-size: 21px;
-}
-
-.section-heading p {
-  margin: 0;
-  color: #7c879a;
-  font-size: 13px;
-}
-
-.exam-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 18px;
+  letter-spacing: -1px;
 }
 
 .exam-card,
 .empty-state {
-  padding: 24px;
-  border: 1px solid #e8ecf3;
-  border-radius: 15px;
-  background: white;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+  transition: all 0.25s ease;
+}
+
+.exam-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 35px rgba(15,23,42,0.10);
+  border-color: #c7d2fe;
 }
 
 .exam-icon {
-  width: 46px;
-  height: 46px;
-  display: grid;
-  place-items: center;
-  color: #315de7;
-  background: #eef2ff;
-  border-radius: 12px;
+  background: linear-gradient(135deg, #eef2ff, #e0e7ff);
+  border-radius: 14px;
 }
 
 .exam-card h3 {
-  margin: 18px 0 8px;
-  font-size: 17px;
+  letter-spacing: -0.4px;
 }
 
-.exam-card p {
-  min-height: 38px;
-  color: #78849a;
-  font-size: 13px;
-  line-height: 1.6;
-}
+/* Teacher dashboard */
 
-.exam-meta {
-  color: #64718a;
-  font-size: 12px;
-  margin-top: 15px;
-}
-
-.empty-state {
-  text-align: center;
-  padding: 55px 20px;
-  color: #78849a;
-}
-
-.empty-state h3 {
-  color: #172033;
-}
-
-.dashboard-footer {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 9px;
-  padding: 45px 10px;
-  color: #8b95a7;
-  font-size: 12px;
-}
-
-.loading {
-  padding: 50px;
-  text-align: center;
-  color: #64718a;
-}
-
-@media (max-width: 600px) {
-  .login-card,
-  .setup-card {
-    padding: 26px;
-  }
-
-  .dashboard {
-    padding: 0 16px;
-  }
-
-  .welcome {
-    padding: 25px;
-  }
-
-  .welcome h1 {
-    font-size: 24px;
-  }
-
-  .welcome-icon {
-    width: 55px;
-    height: 55px;
-  }
-
-  .section-heading {
-    align-items: flex-start;
-  }
-}
-/* Teacher Dashboard */
 .teacher-dashboard {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 32px 20px;
+  max-width: 1250px;
+  padding: 36px 24px;
 }
 
 .teacher-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 28px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--border);
 }
 
 .teacher-header h1 {
-  margin: 0;
-  font-size: 28px;
+  color: var(--navy);
+  letter-spacing: -1px;
 }
 
-.teacher-form {
-  background: #fff;
-  padding: 24px;
-  border: 1px solid #e5e7eb;
-  border-radius: 14px;
-  margin-bottom: 28px;
+.teacher-form,
+.teacher-exam-card,
+.builder-section {
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
 }
 
 .teacher-form input,
 .teacher-form textarea,
-.teacher-form select {
-  width: 100%;
-  padding: 12px;
-  margin: 7px 0 16px;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  font: inherit;
-  box-sizing: border-box;
+.teacher-form select,
+.exam-builder select,
+.exam-builder input[type="text"] {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #fafbff;
+  transition: 0.2s;
 }
 
-.teacher-form label {
-  display: block;
-  font-weight: 600;
+.teacher-form input:focus,
+.teacher-form textarea:focus,
+.teacher-form select:focus,
+.exam-builder select:focus,
+.exam-builder input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px #4f46e51a;
 }
 
 .teacher-form button,
-.teacher-actions button {
-  padding: 10px 16px;
-  border: 0;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
+.builder-section > button {
+  background: var(--primary);
+  border-radius: 10px;
 }
 
-.teacher-form button {
-  background: #2563eb;
-  color: white;
-}
-
-.teacher-exam-list {
-  display: grid;
-  gap: 14px;
+.teacher-form button:hover,
+.builder-section > button:hover {
+  background: var(--primary-dark);
 }
 
 .teacher-exam-card {
-  background: #fff;
-  padding: 20px;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
+  transition: 0.2s;
 }
 
-.teacher-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 14px;
+.teacher-exam-card:hover {
+  border-color: #c7d2fe;
+  box-shadow: var(--shadow);
 }
 
 .teacher-actions button {
-  background: #eef2ff;
-  color: #3730a3;
+  border-radius: 9px;
 }
 
-.teacher-actions button.delete {
-  background: #fee2e2;
-  color: #991b1b;
-}
-
-/* Exam Builder */
-.exam-builder {
-  width: 100%;
-  margin-top: 20px;
-}
-
-.exam-builder h2 {
-  margin-bottom: 8px;
-}
-
-.exam-builder select,
-.exam-builder input[type="text"] {
-  width: 100%;
-  padding: 12px;
-  margin: 10px 0 18px;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  font-size: 15px;
-}
+/* Exam builder */
 
 .builder-section {
-  margin-top: 25px;
-  padding: 20px;
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
+  padding: 24px;
 }
 
 .builder-section h3 {
-  margin-bottom: 15px;
+  color: var(--navy);
+  letter-spacing: -0.4px;
 }
 
 .builder-question {
+  background: #fafbff;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  transition: 0.2s;
+}
+
+.builder-question:hover {
+  border-color: #c7d2fe;
+}
+
+.builder-actions button {
+  border-radius: 9px;
+}
+
+/* Student examination */
+
+.student-exam {
+  max-width: 1050px;
+  margin: 0 auto;
+  padding: 28px 22px;
+}
+
+.student-exam-header {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 22px 26px;
+  margin-bottom: 22px;
+  box-shadow: var(--shadow);
+}
+
+.student-exam-header h2 {
+  color: var(--navy);
+  letter-spacing: -0.5px;
+}
+
+.exam-timer {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 12px;
+  color: #4338ca;
+  background: #eef2ff;
+  font-weight: 700;
+}
+
+.exam-question-card {
+  background: white;
+  padding: 30px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+}
+
+.exam-question-card h3 {
+  color: var(--primary);
+}
+
+.exam-question-text {
+  font-size: 17px;
+  line-height: 1.8;
+  font-weight: 600;
+}
+
+.exam-option {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 12px;
-  padding: 14px;
-  margin: 10px 0;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  background: #fafafa;
+  padding: 16px;
+  margin: 12px 0;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #fafbff;
+  cursor: pointer;
+  transition: 0.2s;
 }
 
-.builder-question span,
-.builder-question > div:first-child {
-  flex: 1;
+.exam-option:hover {
+  border-color: #a5b4fc;
+  background: #f5f5ff;
 }
 
-.builder-question small {
-  display: block;
-  margin-top: 6px;
-  color: #6b7280;
+.exam-option.selected {
+  border: 1px solid var(--primary);
+  background: #eef2ff;
 }
 
-.builder-actions {
+.question-palette {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 10px;
+  margin: 24px 0;
 }
 
-.builder-actions button,
-.builder-section > button {
-  padding: 9px 14px;
-  border: none;
-  border-radius: 7px;
-  cursor: pointer;
+.question-palette button {
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  background: white;
+  color: var(--text);
+  font-weight: 700;
 }
 
-.builder-section > button {
-  margin-top: 12px;
-  background: #2563eb;
+.question-palette button.current {
+  background: var(--primary);
   color: white;
+  border-color: var(--primary);
 }
 
-.builder-actions button:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
+.question-palette button.answered {
+  background: #dcfce7;
+  color: #166534;
+  border-color: #86efac;
 }
 
-.builder-message {
-  padding: 12px;
-  margin: 12px 0;
-  background: #eff6ff;
-  border-radius: 8px;
-  color: #1d4ed8;
+.exam-navigation {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
 }
+
+.exam-navigation button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  background: white;
+  font-weight: 600;
+}
+
+.exam-navigation button:hover:not(:disabled) {
+  background: var(--primary-light);
+  border-color: #a5b4fc;
+}
+
+/* General polish */
+
+.message,
+.notice {
+  border-radius: 12px;
+}
+
+input,
+textarea,
+select {
+  font-family: inherit;
+}
+
+button:focus-visible,
+input:focus-visible {
+  outline: 3px solid #818cf8;
+  outline-offset: 2px;
+}
+
+/* Mobile responsive */
 
 @media (max-width: 600px) {
-  .builder-question {
+  .teacher-dashboard {
+    padding: 22px 14px;
+  }
+
+  .teacher-header {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .student-exam {
+    padding: 18px 12px;
+  }
+
+  .student-exam-header {
+    padding: 17px;
+  }
+
+  .exam-question-card {
+    padding: 20px 16px;
+  }
+
+  .exam-timer {
+    margin-top: 12px;
+  }
+
+  .exam-navigation button {
+    padding: 11px 13px;
+    font-size: 13px;
+  }
+
+  .question-palette button {
+    width: 38px;
+    height: 38px;
   }
 }
