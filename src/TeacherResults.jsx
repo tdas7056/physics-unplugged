@@ -241,6 +241,13 @@ function downloadExcel() {
       </div>
 
       <div className="results-toolbar">
+        <input
+  type="text"
+  className="results-search-input"
+  placeholder="Search student name or examination..."
+  value={searchTerm}
+  onChange={(e) => setSearchTerm(e.target.value)}
+/>
         <select
           value={selectedExam}
           onChange={(e) => setSelectedExam(e.target.value)}
