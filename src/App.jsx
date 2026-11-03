@@ -162,7 +162,27 @@ if (session && session.user.email === "tdas66142@gmail.com") {
             Learn, practise and test your understanding.
           </p>
 
-          <form onSubmit={handleLogin}>
+    <form
+  onSubmit={showSignup ? (e) => {
+    e.preventDefault();
+    handleSignup();
+  } : handleLogin}
+>
+  {showSignup && (
+    <>
+      <label>Full Name</label>
+      <div className="input-wrap">
+        <GraduationCap size={18} />
+        <input
+          type="text"
+          placeholder="Enter your full name"
+          value={studentName}
+          onChange={(e) => setStudentName(e.target.value)}
+          required
+        />
+      </div>
+    </>
+  )}
             <label>Email address</label>
             <div className="input-wrap">
               <Mail size={18} />
