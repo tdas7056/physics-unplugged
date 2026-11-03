@@ -8,6 +8,17 @@ import {
   EyeOff,
   RefreshCw,
   Trash2,
+  LayoutDashboard,
+  ClipboardList,
+  Users,
+  Trophy,
+  GraduationCap,
+  Settings,
+  LogOut,
+  X,
+  Clock,
+  FilePlus2,
+  ChartNoAxesCombined,
 } from "lucide-react";
 import { supabase } from "./supabase";
 import QuestionBank from "./QuestionBank";
