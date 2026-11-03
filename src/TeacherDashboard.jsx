@@ -245,23 +245,37 @@ return (
     <span>Create New Exam</span>
   </button>
 </header>
-      <section className="teacher-stats">
-        <div className="teacher-stat">
-          <BookOpen size={22} />
-          <strong>{exams.length}</strong>
-          <span>Total examinations</span>
-        </div>
-        <div className="teacher-stat">
-          <Eye size={22} />
-          <strong>{exams.filter((e) => e.is_published).length}</strong>
-          <span>Published examinations</span>
-        </div>
-        <div className="teacher-stat">
-          <EyeOff size={22} />
-          <strong>{exams.filter((e) => !e.is_published).length}</strong>
-          <span>Draft examinations</span>
-        </div>
-      </section>
+     <section className="teacher-stats">
+  <div className="teacher-stat stat-total">
+    <div className="stat-icon">
+      <BookOpen size={23} />
+    </div>
+    <div className="stat-info">
+      <strong>{exams.length}</strong>
+      <span>Total Examinations</span>
+    </div>
+  </div>
+
+  <div className="teacher-stat stat-published">
+    <div className="stat-icon">
+      <Eye size={23} />
+    </div>
+    <div className="stat-info">
+      <strong>{exams.filter((e) => e.is_published).length}</strong>
+      <span>Published Examinations</span>
+    </div>
+  </div>
+
+  <div className="teacher-stat stat-draft">
+    <div className="stat-icon">
+      <EyeOff size={23} />
+    </div>
+    <div className="stat-info">
+      <strong>{exams.filter((e) => !e.is_published).length}</strong>
+      <span>Draft Examinations</span>
+    </div>
+  </div>
+</section>
 
       {message && <p className="message">{message}</p>}
 
