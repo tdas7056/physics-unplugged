@@ -218,8 +218,19 @@ async function handleSignup() {
   }
   if (resetMode) {
   return (
-    <main className="login-screen">
-      <div className="login-card">
+<main className="login-screen">
+
+  <div className="login-brand">
+    <img
+      src={logo}
+      alt="Physics Unplugged Logo"
+      className="login-logo"
+    />
+    <h1>Physics Unplugged</h1>
+    <p>Learn Physics. Think Beyond.</p>
+  </div>
+
+  <div className="login-card">
         <h2>Reset Your Password</h2>
         <p>Enter your new password below.</p>
 
