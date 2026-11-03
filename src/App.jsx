@@ -117,7 +117,30 @@ async function handlePasswordReset() {
     setMessage("Please enter your registered email address.");
     return;
   }
+async function handleUpdatePassword() {
+  if (password.length < 6) {
+    setMessage("Password must be at least 6 characters.");
+    return;
+  }
 
+  setBusy(true);
+  setMessage("");
+
+  const { error } = await supabase.auth.updateUser({
+    password: password,
+  });
+
+  if (error) {
+    setMessage(error.message);
+  } else {
+    setMessage("Password updated successfully. Please sign in again.");
+    setPassword("");
+    setResetMode(false);
+    await supabase.auth.signOut();
+  }
+
+  setBusy(false);
+}
   setBusy(true);
   setMessage("");
 
