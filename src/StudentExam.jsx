@@ -357,6 +357,13 @@ async function clearResponse() {
 >
   <Bookmark size={17} />
   Mark for Review & Next
+  <button
+  className="cbt-clear-button"
+  onClick={clearResponse}
+  disabled={answers[question.id] === undefined}
+>
+  Clear Response
+</button>
 </button>
               className="cbt-previous-button"
               onClick={() => goToQuestion(current - 1)}
