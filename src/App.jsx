@@ -13,7 +13,14 @@ import {
   Trophy,
 } from "lucide-react";
 import { supabase, isSupabaseConfigured } from "./supabase";
-
+function SiteWatermark() {
+  return (
+    <div className="site-watermark">
+      <img src={logo} alt="" />
+      <span>Physics Unplugged by Tanmay</span>
+    </div>
+  );
+}
 export default function App() {
   const [session, setSession] = useState(null);
   const [exams, setExams] = useState([]);
