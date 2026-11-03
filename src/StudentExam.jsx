@@ -24,11 +24,12 @@ export default function StudentExam({ exam, onExit }) {
 
     if (error) {
       setMessage(error.message);
-    } else {
-      setAttemptId(data.attempt_id);
-      setQuestions(data.questions || []);
-      setStarted(true);
-    }
+} else {
+  setAttemptId(data.attempt_id);
+  setQuestions(data.questions || []);
+  setSecondsLeft(Number(data.duration_minutes || exam.duration_minutes) * 60);
+  setStarted(true);
+}
 
     setLoading(false);
   }
