@@ -12,6 +12,8 @@ export default function ExamBuilder() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 const [missingKeys, setMissingKeys] = useState(0);
+  const [previewQuestions, setPreviewQuestions] = useState(null);
+  const [previewLoading, setPreviewLoading] = useState(false);
   useEffect(() => {
     loadInitialData();
   }, []);
