@@ -411,38 +411,40 @@ if (session && selectedExam) {
     return (
       <main className="login-screen">
         <section className="login-card">
-<div className="login-brand">
+          <div className="login-brand">
             <img src={logo} alt="Physics Unplugged Logo" className="login-logo" />
-            <p className="login-eyebrow">YOUR PHYSICS EXAMINATION PORTAL</p>
-            <h1>Tanmay's Advanced Examination Portal</h1>
-            <p>Learn, practise and test your understanding.</p>
+            <p className="login-eyebrow">TANMAY'S ADVANCED EXAMINATION PORTAL</p>
+            <h1>Physics Unplugged</h1>
           </div>
-          <p className="subtitle">
-            Learn, practise and test your understanding.
-          </p>
 
-    <form
-  onSubmit={showSignup ? (e) => {
-    e.preventDefault();
-    handleSignup();
-  } : handleLogin}
->
-  {showSignup && (
-    <>
-      <label>Full Name</label>
-      <div className="input-wrap">
-        <GraduationCap size={18} />
-        <input
-          type="text"
-          placeholder="Enter your full name"
-          value={studentName}
-          onChange={(e) => setStudentName(e.target.value)}
-          required
-        />
-      </div>
-    </>
-  )}
-            <label>Email address</label>
+          <div className="login-welcome">
+            <h2>{showSignup ? "Create your account" : "Welcome"}</h2>
+            <p>{showSignup ? "Register to access your examinations" : "Sign in to your account"}</p>
+          </div>
+
+          <form
+            onSubmit={showSignup ? (e) => {
+              e.preventDefault();
+              handleSignup();
+            } : handleLogin}
+          >
+            {showSignup && (
+              <>
+                <label>FULL NAME</label>
+                <div className="input-wrap">
+                  <GraduationCap size={18} />
+                  <input
+                    type="text"
+                    placeholder="Enter your full name"
+                    value={studentName}
+                    onChange={(e) => setStudentName(e.target.value)}
+                    required
+                  />
+                </div>
+              </>
+            )}
+
+            <label>EMAIL ADDRESS</label>
             <div className="input-wrap">
               <Mail size={18} />
               <input
@@ -454,7 +456,19 @@ if (session && selectedExam) {
               />
             </div>
 
-            <label>Password</label>
+            <div className="login-password-heading">
+              <label>PASSWORD</label>
+              {!showSignup && (
+                <button
+                  type="button"
+                  className="forgot-password-link"
+                  onClick={handlePasswordReset}
+                  disabled={busy}
+                >
+                  Forgot Password?
+                </button>
+              )}
+            </div>
             <div className="input-wrap">
               <Lock size={18} />
               <input
@@ -465,44 +479,31 @@ if (session && selectedExam) {
                 required
                 minLength={6}
               />
-              {!showSignup && (
-  <button
-    type="button"
-    className="forgot-password-link"
-    onClick={handlePasswordReset}
-    disabled={busy}
-  >
-    Forgot Password?
-  </button>
-)}
             </div>
 
             {message && <p className="message">{message}</p>}
-<button className="primary-button" disabled={busy}>
-  {busy ? "Please wait..." : showSignup ? "Create Account" : "Sign in"}
-</button>
+            <button className="primary-button" disabled={busy}>
+              {busy ? "Please wait..." : showSignup ? "Create Account" : "Sign In"}
+            </button>
           </form>
 
-<button
-  type="button"
-  className="secondary-button"
-  onClick={() => {
-    setShowSignup(!showSignup);
-    setMessage("");
-  }}
->
-  {showSignup ? "Back to Sign in" : "Create student account"}
-</button>
+          <button
+            type="button"
+            className="secondary-button"
+            onClick={() => {
+              setShowSignup(!showSignup);
+              setMessage("");
+            }}
+          >
+            {showSignup ? "Back to Sign In" : "Create Student Account"}
+          </button>
 
-          <p className="footer-note">
-            Secure student access powered by Supabase.
-          </p>
+          <p className="footer-note">Secure student access powered by Supabase.</p>
         </section>
         <SiteWatermark />
       </main>
     );
   }
-
 return (
   <>
     <main className="dashboard">
