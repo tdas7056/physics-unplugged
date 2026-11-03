@@ -140,7 +140,19 @@ export default function StudentExam({ exam, onExit }) {
       [questionId]: !previous[questionId]
     }));
   }
+function markForReviewAndNext() {
+  const questionId = questions[current]?.id;
+  if (!questionId) return;
 
+  setMarked(previous => ({
+    ...previous,
+    [questionId]: true
+  }));
+
+  if (current < questions.length - 1) {
+    setCurrent(current + 1);
+  }
+}
 async function clearResponse() {
   const questionId = questions[current]?.id;
   if (!questionId) return;
