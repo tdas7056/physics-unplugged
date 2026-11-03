@@ -412,17 +412,11 @@ if (session && selectedExam) {
       <main className="login-screen">
         <section className="login-card">
 <div className="login-brand">
-  <img
-    src={logo}
-    alt="Physics Unplugged Logo"
-    className="login-logo"
-  />
-  <h1>Physics Unplugged</h1>
-  <p>Learn Physics. Think Beyond.</p>
-</div>
-
-          <p className="eyebrow">YOUR PHYSICS EXAMINATION PORTAL</p>
-          <h1>Physics Unplugged</h1>
+            <img src={logo} alt="Physics Unplugged Logo" className="login-logo" />
+            <p className="login-eyebrow">YOUR PHYSICS EXAMINATION PORTAL</p>
+            <h1>Tanmay's Advanced Examination Portal</h1>
+            <p>Learn, practise and test your understanding.</p>
+          </div>
           <p className="subtitle">
             Learn, practise and test your understanding.
           </p>
