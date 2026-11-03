@@ -295,6 +295,122 @@ function downloadExcel() {
           </table>
         </div>
       )}
+      
+{selectedResult && (
+  <section className="result-detail-panel">
+    <div className="result-detail-heading">
+      <div>
+        <h2>Attempt Details</h2>
+        <p>
+          {selectedResult.profiles?.display_name || "Student"} —{" "}
+          {selectedResult.exams?.title || "Examination"}
+        </p>
+      </div>
+
+      <button
+        className="close-details-button"
+        onClick={() => setSelectedResult(null)}
+      >
+        Close
+      </button>
+    </div>
+
+    <div className="result-detail-summary">
+      <div>
+        <span>Score</span>
+        <strong>
+          {selectedResult.score} / {selectedResult.max_marks}
+        </strong>
+      </div>
+
+      <div>
+        <span>Percentage</span>
+        <strong>{percentage(selectedResult)}%</strong>
+      </div>
+
+      <div>
+        <span>Correct</span>
+        <strong>{selectedResult.correct_count}</strong>
+      </div>
+
+      <div>
+        <span>Wrong</span>
+        <strong>{selectedResult.wrong_count}</strong>
+      </div>
+    </div>
+
+    {detailLoading ? (
+      <p>Loading question details...</p>
+    ) : detailQuestions.length === 0 ? (
+      <p>No question details found.</p>
+    ) : (
+      <div className="result-detail-questions">
+        {detailQuestions.map((question, index) => {
+          const options = Array.isArray(question.options)
+            ? question.options
+            : [];
+
+          return (
+            <article className="result-detail-question" key={question.id}>
+              <h3>
+                Question {index + 1}
+              </h3>
+
+              <p className="detail-question-text">
+                {question.question_text}
+              </p>
+
+              <div className="detail-options">
+                {options.map((option, optionIndex) => {
+                  const isSelected =
+                    question.selected_option === optionIndex;
+
+                  const isCorrect =
+                    question.correct_option === optionIndex;
+
+                  return (
+                    <div
+                      key={optionIndex}
+                      className={[
+                        "detail-option",
+                        isSelected ? "selected-option" : "",
+                        isCorrect ? "correct-option" : "",
+                        isSelected && !isCorrect ? "wrong-option" : ""
+                      ].join(" ")}
+                    >
+                      <span>
+                        {String.fromCharCode(65 + optionIndex)}.
+                      </span>{" "}
+                      {option}
+
+                      {isCorrect && <strong> — Correct Answer</strong>}
+
+                      {isSelected && <strong> — Student's Answer</strong>}
+                    </div>
+                  );
+                })}
+              </div>
+
+              {question.selected_option === null && (
+                <p className="unanswered-label">
+                  Student did not answer this question.
+                </p>
+              )}
+
+              {question.explanation && (
+                <div className="detail-explanation">
+                  <strong>Explanation</strong>
+                  <p>{question.explanation}</p>
+                </div>
+              )}
+            </article>
+          );
+        })}
+      </div>
+    )}
+  </section>
+)}
+
     </main>
   );
 }
