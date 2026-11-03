@@ -521,3 +521,8 @@
     text-align: center;
   }
 }
+.cbt-clear-button {
+  color: #b45309;
+  background: #fff7ed;
+  border: 1px solid #fed7aa !important;
+}
