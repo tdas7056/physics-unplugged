@@ -229,18 +229,22 @@ return (
   <TeacherResults />
 ) : (
   <>
-      <header className="teacher-header">
-        <div>
-          <p className="eyebrow">PHYSICS UNPLUGGED</p>
-          <h1>Teacher Dashboard</h1>
-          <p>Manage your physics examinations.</p>
-        </div>
+    <header className="teacher-header">
+  <div className="teacher-welcome">
+    <p className="eyebrow">
+      <GraduationCap size={16} />
+      PHYSICS UNPLUGGED · TEACHER PORTAL
+    </p>
 
-        <button className="primary-button new-exam-button" onClick={startNew}>
-          <PlusCircle size={18} /> Create examination
-        </button>
-      </header>
+    <h1>Welcome to your Dashboard</h1>
+    <p>Manage examinations, build question papers, and track student performance.</p>
+  </div>
 
+  <button className="primary-button new-exam-button" onClick={startNew}>
+    <PlusCircle size={19} />
+    <span>Create New Exam</span>
+  </button>
+</header>
       <section className="teacher-stats">
         <div className="teacher-stat">
           <BookOpen size={22} />
