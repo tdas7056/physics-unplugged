@@ -335,3 +335,20 @@
     align-items: flex-start;
   }
 }
+
+/* Standard image size in Teacher Question Bank */
+
+.qb-question-image {
+  display: block;
+  width: 100%;
+  max-width: 400px;
+  height: 220px;
+  object-fit: contain;
+  object-position: left center;
+  margin: 12px 0;
+  padding: 8px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  box-sizing: border-box;
+}
