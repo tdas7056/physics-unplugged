@@ -355,9 +355,22 @@ async function handleImportFile(event) {
           <p>Create and manage reusable MCQ questions.</p>
         </div>
 
-        <button className="primary-button" onClick={startNew}>
-          <PlusCircle size={18} /> Add question
-        </button>
+<div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+  <label className="primary-button" style={{ cursor: "pointer" }}>
+    <input
+      type="file"
+      accept=".json,application/json"
+      style={{ display: "none" }}
+      onChange={handleImportFile}
+      disabled={importing}
+    />
+    {importing ? "Importing..." : "Import from ChatGPT"}
+  </label>
+
+  <button className="primary-button" onClick={startNew}>
+    <PlusCircle size={18} /> Add question
+  </button>
+</div>
       </header>
 
       <div className="qb-summary">
