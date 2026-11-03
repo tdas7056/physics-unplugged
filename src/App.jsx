@@ -458,16 +458,6 @@ if (session && selectedExam) {
 
             <div className="login-password-heading">
               <label>PASSWORD</label>
-              {!showSignup && (
-                <button
-                  type="button"
-                  className="forgot-password-link"
-                  onClick={handlePasswordReset}
-                  disabled={busy}
-                >
-                  Forgot Password?
-                </button>
-              )}
             </div>
             <div className="input-wrap">
               <Lock size={18} />
@@ -497,6 +487,17 @@ if (session && selectedExam) {
           >
             {showSignup ? "Back to Sign In" : "Create Student Account"}
           </button>
+
+          {!showSignup && (
+            <button
+              type="button"
+              className="forgot-password-link login-forgot-below"
+              onClick={handlePasswordReset}
+              disabled={busy}
+            >
+              Forgot Password?
+            </button>
+          )}
 
           <p className="footer-note">Secure student access powered by Supabase.</p>
         </section>
