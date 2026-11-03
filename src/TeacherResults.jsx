@@ -260,6 +260,29 @@ function downloadExcel() {
           <strong>{results.length}</strong>
         </div>
 
+<div className="analytics-summary">
+  <div className="analytics-card">
+    <span>Average Performance</span>
+    <strong>{averagePercentage}%</strong>
+  </div>
+
+  <div className="analytics-card">
+    <span>Highest Percentage</span>
+    <strong>{highestPercentage}%</strong>
+  </div>
+
+  <div className="analytics-card">
+    <span>Lowest Percentage</span>
+    <strong>{lowestPercentage}%</strong>
+  </div>
+
+  <div className="analytics-card">
+    <span>Pass Rate (Above 80%)</span>
+    <strong>{passPercentage}%</strong>
+    <small>{passedCount} of {filteredResults.length} students</small>
+  </div>
+</div>
+
         <div>
           <Trophy size={22} />
           <span>Examinations</span>
