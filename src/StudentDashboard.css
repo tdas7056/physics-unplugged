@@ -369,3 +369,39 @@
   max-width: 420px;
   box-sizing: border-box;
 }
+
+/* Question images in student CBT exams */
+
+.cbt-question-image-container {
+  width: 100%;
+  margin: 20px 0;
+  padding: 14px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.cbt-question-image {
+  display: block;
+  max-width: 100%;
+  max-height: 420px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 6px;
+}
+
+@media (max-width: 600px) {
+  .cbt-question-image-container {
+    padding: 8px;
+    margin: 14px 0;
+  }
+
+  .cbt-question-image {
+    max-height: 300px;
+  }
+}
