@@ -215,6 +215,38 @@ async function handleSignup() {
   if (loading && !session) {
     return <main className="loading">Loading Physics Unplugged...</main>;
   }
+  if (resetMode) {
+  return (
+    <main className="login-screen">
+      <div className="login-card">
+        <h2>Reset Your Password</h2>
+        <p>Enter your new password below.</p>
+
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            handleUpdatePassword();
+          }}
+        >
+          <input
+            type="password"
+            placeholder="Enter new password"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            required
+            minLength={6}
+          />
+
+          {message && <p>{message}</p>}
+
+          <button type="submit" disabled={busy}>
+            {busy ? "Updating..." : "Update Password"}
+          </button>
+        </form>
+      </div>
+    </main>
+  );
+}
 if (session && session.user.email === "tdas66142@gmail.com") {
   return <TeacherDashboard />;
 }
