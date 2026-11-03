@@ -1,6 +1,7 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "./supabase";
+import "./QuestionBank.css";
 import { PlusCircle, Pencil, Trash2, RefreshCw } from "lucide-react";
 
 const emptyQuestion = {
