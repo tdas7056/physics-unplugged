@@ -1,4 +1,5 @@
 import TeacherDashboard from "./TeacherDashboard";
+import logo from "./physics-unplugged-logo.png";
 import "./StudentDashboard.css";
 import StudentExam from "./StudentExam";
 import { useEffect, useState } from "react";
