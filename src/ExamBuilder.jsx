@@ -254,6 +254,26 @@ const matchesExamClass = true;
       {selectedExam && (
         <>
           <section className="builder-section">
+  <h3>Attempt Settings</h3>
+
+  <label>
+    <input
+      type="checkbox"
+      checked={Boolean(
+        exams.find((exam) => exam.id === selectedExam)?.allow_reattempt
+      )}
+      onChange={(e) => updateReattemptSetting(e.target.checked)}
+      disabled={loading}
+    />
+    Allow students to re-attempt this examination
+  </label>
+
+  <p>
+    When enabled, students can start another attempt.
+    Previous results remain saved.
+  </p>
+</section>
+          <section className="builder-section">
             <h3>Questions in this examination ({assigned.length})</h3>
             <div className="exam-readiness">
   {assigned.length === 0 ? (
