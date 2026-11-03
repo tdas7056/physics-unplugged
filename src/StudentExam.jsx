@@ -118,7 +118,11 @@ if (error) {
       </main>
     );
   }
+const minutes = Math.floor(secondsLeft / 60);
+const seconds = secondsLeft % 60;
 
+const formattedTime =
+  `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
   const question = questions[current];
 if (result) {
   return (
@@ -153,9 +157,14 @@ if (result) {
     <main className="student-exam">
       <header className="student-exam-header">
         <h2>{exam.title}</h2>
-        <span>
-          Question {current + 1} of {questions.length}
-        </span>
+<span>
+  Question {current + 1} of {questions.length}
+</span>
+
+<span className="exam-timer">
+  <Clock size={18} />
+  Time Left: {formattedTime}
+</span>
       </header>
 
       {question && (
