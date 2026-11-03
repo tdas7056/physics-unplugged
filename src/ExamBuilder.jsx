@@ -96,7 +96,37 @@ if (keyError) {
 
     setLoading(false);
   }
+async function updateReattemptSetting(checked) {
+  if (!selectedExam) return;
 
+  setLoading(true);
+  setMessage("");
+
+  const { error } = await supabase
+    .from("exams")
+    .update({ allow_reattempt: checked })
+    .eq("id", selectedExam);
+
+  if (error) {
+    setMessage(error.message);
+  } else {
+    setExams((prev) =>
+      prev.map((exam) =>
+        exam.id === selectedExam
+          ? { ...exam, allow_reattempt: checked }
+          : exam
+      )
+    );
+
+    setMessage(
+      checked
+        ? "Re-attempts enabled for this examination."
+        : "Re-attempts disabled for this examination."
+    );
+  }
+
+  setLoading(false);
+}
   async function handleExamChange(examId) {
     setSelectedExam(examId);
     setSelectedQuestions([]);
