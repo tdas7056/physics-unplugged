@@ -404,3 +404,49 @@
     padding: 8px;
   }
 }
+/* Compact website watermark */
+.site-watermark {
+  position: fixed;
+  right: 12px;
+  bottom: 10px;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 8px;
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 20px;
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.site-watermark img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+.site-watermark span {
+  font-size: 10px;
+  font-weight: 600;
+  color: #475569;
+  white-space: nowrap;
+}
+
+@media (max-width: 480px) {
+  .site-watermark {
+    right: 6px;
+    bottom: 6px;
+    padding: 3px 6px;
+  }
+
+  .site-watermark img {
+    width: 17px;
+    height: 17px;
+  }
+
+  .site-watermark span {
+    font-size: 9px;
+  }
+}
