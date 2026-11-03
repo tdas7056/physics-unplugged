@@ -230,6 +230,13 @@ async function handleSignup() {
     <p>Learn Physics. Think Beyond.</p>
   </div>
 
+  <section className="login-card">
+    <h2>Welcome Back</h2>
+    <p className="subtitle">
+      Sign in to continue to your account.
+    </p>
+  </div>
+
   <div className="login-card">
         <h2>Reset Your Password</h2>
         <p>Enter your new password below.</p>
