@@ -445,7 +445,8 @@ if (session && selectedExam) {
     );
   }
 
-  return (
+return (
+  <>
     <main className="dashboard">
       <header className="topbar">
         <div className="brand">
@@ -521,5 +522,7 @@ if (session && selectedExam) {
         Keep learning. Keep questioning. Keep improving.
       </footer>
     </main>
+    <SiteWatermark />
+  </>
   );
 }
