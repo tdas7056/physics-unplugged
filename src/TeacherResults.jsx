@@ -164,10 +164,20 @@ async function openResultDetails(result) {
     ...new Set(results.map((r) => r.exams?.title).filter(Boolean))
   ];
 
-  const filteredResults =
-    selectedExam === "all"
-      ? results
-      : results.filter((r) => r.exams?.title === selectedExam);
+const filteredResults = results.filter((r) => {
+  const matchesExam =
+    selectedExam === "all" ||
+    r.exams?.title === selectedExam;
+
+  const search = searchTerm.trim().toLowerCase();
+
+  const matchesSearch =
+    !search ||
+    (r.profiles?.display_name || "").toLowerCase().includes(search) ||
+    (r.exams?.title || "").toLowerCase().includes(search);
+
+  return matchesExam && matchesSearch;
+});
 
   function percentage(result) {
     if (!result.max_marks || result.max_marks <= 0) return 0;
