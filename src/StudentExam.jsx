@@ -22,7 +22,11 @@ export default function StudentExam({ exam, onExit }) {
 
   return () => clearInterval(timer);
 }, [started, result]);
-
+useEffect(() => {
+  if (started && secondsLeft === 0 && !result && !loading) {
+    submitExam(false);
+  }
+}, [started, secondsLeft, result, loading]);
   async function startExam() {
     setLoading(true);
     setMessage("");
