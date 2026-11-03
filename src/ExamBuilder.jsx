@@ -1,7 +1,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "./supabase";
-
+import "./ExamBuilder.css";
 export default function ExamBuilder() {
   const [exams, setExams] = useState([]);
   const [questions, setQuestions] = useState([]);
