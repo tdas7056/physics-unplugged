@@ -22,7 +22,7 @@ const [missingKeys, setMissingKeys] = useState(0);
 
     const [examResult, questionResult] = await Promise.all([
       supabase.from("exams")
-        .select("id, title, class_name, positive_marks, negative_marks, allow_reattempt")
+        .select("id, title, class_name, positive_marks, negative_marks, allow_reattempt, is_published")
         .order("created_at", { ascending: false }),
       supabase.from("questions")
         .select("id, class_name, topic, question_text, options")
@@ -127,6 +127,58 @@ async function updateReattemptSetting(checked) {
 
   setLoading(false);
 }
+  async function previewExam() {
+    if (!selectedExam || assigned.length === 0) {
+      setMessage("Add questions before previewing the examination.");
+      return;
+    }
+    setPreviewLoading(true);
+    setMessage("");
+    const ids = assigned.map((q) => q.id);
+    const { data, error } = await supabase
+      .from("question_keys")
+      .select("question_id, correct_option, explanation")
+      .in("question_id", ids);
+    if (error) {
+      setMessage("Could not load answer key preview: " + error.message);
+    } else {
+      const keys = new Map((data || []).map((item) => [item.question_id, item]));
+      setPreviewQuestions(assigned.map((q) => ({
+        ...q,
+        correct_option: keys.get(q.id)?.correct_option ?? null,
+        explanation: keys.get(q.id)?.explanation || ""
+      })));
+    }
+    setPreviewLoading(false);
+  }
+
+  async function updatePublishStatus(publish) {
+    if (!selectedExam) return;
+    if (publish && (assigned.length === 0 || missingKeys > 0)) {
+      setMessage("Add questions and complete every answer key before publishing.");
+      return;
+    }
+    const confirmText = publish
+      ? "Publish this examination? Students will be able to see it."
+      : "Move this examination to draft? Students will no longer see it.";
+    if (!window.confirm(confirmText)) return;
+    setLoading(true);
+    setMessage("");
+    const { error } = await supabase
+      .from("exams")
+      .update({ is_published: publish })
+      .eq("id", selectedExam);
+    if (error) {
+      setMessage(error.message);
+    } else {
+      setExams((previous) => previous.map((exam) =>
+        exam.id === selectedExam ? { ...exam, is_published: publish } : exam
+      ));
+      setMessage(publish ? "Examination published successfully." : "Examination moved to draft.");
+    }
+    setLoading(false);
+  }
+
   async function handleExamChange(examId) {
     setSelectedExam(examId);
     setSelectedQuestions([]);
@@ -283,6 +335,33 @@ const matchesExamClass = true;
 
       {selectedExam && (
         <>
+          <section className="builder-section exam-control-panel">
+            <h3>Exam Preview & Publishing</h3>
+            <p>Review the complete question paper and answer key before making it available to students.</p>
+            <div className="exam-control-actions">
+              <button type="button" className="exam-preview-button" onClick={previewExam} disabled={previewLoading || loading || assigned.length === 0}>
+                {previewLoading ? "Preparing preview..." : "Preview Exam Questions"}
+              </button>
+              {(() => {
+                const published = Boolean(exams.find((exam) => exam.id === selectedExam)?.is_published);
+                return (
+                  <button
+                    type="button"
+                    className={published ? "exam-draft-button" : "exam-publish-button"}
+                    onClick={() => updatePublishStatus(!published)}
+                    disabled={loading || assigned.length === 0 || (!published && missingKeys > 0)}
+                  >
+                    {published ? "Move to Draft" : "Publish Exam"}
+                  </button>
+                );
+              })()}
+              <span className={exams.find((exam) => exam.id === selectedExam)?.is_published ? "exam-status published" : "exam-status draft"}>
+                {exams.find((exam) => exam.id === selectedExam)?.is_published ? "Published" : "Draft"}
+              </span>
+            </div>
+            {missingKeys > 0 && <small className="publish-warning">{missingKeys} answer key(s) still need to be completed before publishing.</small>}
+          </section>
+
           <section className="builder-section">
   <h3>Attempt Settings</h3>
 
@@ -433,6 +512,35 @@ const matchesExamClass = true;
             </button>
           </section>
         </>
+      )}
+
+      {previewQuestions && (
+        <div className="exam-preview-overlay" role="dialog" aria-modal="true" aria-label="Examination preview">
+          <div className="exam-preview-modal">
+            <div className="exam-preview-header">
+              <div>
+                <h3>Examination Preview</h3>
+                <p>{exams.find((exam) => exam.id === selectedExam)?.title} · {previewQuestions.length} questions</p>
+              </div>
+              <button type="button" className="exam-preview-close" onClick={() => setPreviewQuestions(null)}>Close</button>
+            </div>
+            {previewQuestions.map((question, index) => (
+              <article className="exam-preview-question" key={question.id}>
+                <h4>{index + 1}. {question.question_text}</h4>
+                <ol type="A">
+                  {(question.options || []).map((option, optionIndex) => {
+                    const optionText = typeof option === "string" ? option : option.text;
+                    const correct = question.correct_option === optionIndex;
+                    return <li key={optionIndex} className={correct ? "preview-correct-option" : ""}>{optionText}{correct ? " — Correct answer" : ""}</li>;
+                  })}
+                </ol>
+                {question.correct_option === null && <p className="preview-missing-key">Answer key missing</p>}
+                {question.explanation && <div className="preview-explanation"><strong>Explanation:</strong> {question.explanation}</div>}
+              </article>
+            ))}
+            <button type="button" className="exam-preview-bottom-close" onClick={() => setPreviewQuestions(null)}>Close Preview</button>
+          </div>
+        </div>
       )}
 
       {loading && <p>Loading...</p>}
