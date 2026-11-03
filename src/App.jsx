@@ -81,23 +81,33 @@ const [showSignup, setShowSignup] = useState(false);
     setBusy(false);
   }
 
-  async function handleSignup() {
-    setBusy(true);
-    setMessage("");
-
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-    });
-
-    setMessage(
-      error
-        ? error.message
-        : "Registration submitted. Check your email if confirmation is required."
-    );
-
-    setBusy(false);
+async function handleSignup() {
+  if (!studentName.trim()) {
+    setMessage("Please enter your full name.");
+    return;
   }
+
+  setBusy(true);
+  setMessage("");
+
+  const { error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      data: {
+        full_name: studentName.trim()
+      }
+    }
+  });
+
+  setMessage(
+    error
+      ? error.message
+      : "Registration submitted. Check your email if confirmation is required."
+  );
+
+  setBusy(false);
+}
 
   async function handleLogout() {
     await supabase.auth.signOut();
