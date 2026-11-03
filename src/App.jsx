@@ -442,6 +442,7 @@ if (session && selectedExam) {
             Secure student access powered by Supabase.
           </p>
         </section>
+        <SiteWatermark />
       </main>
     );
   }
