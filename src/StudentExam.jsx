@@ -351,15 +351,13 @@ async function clearResponse() {
           {message && <p className="message">{message}</p>}
 
           <div className="cbt-action-bar">
-            <button
-              className="cbt-review-button"
-              onClick={toggleMark}
-            >
-              <Bookmark size={17} />
-              {marked[question.id] ? "Unmark Review" : "Mark for Review"}
-            </button>
-
-            <button
+<button
+  className="cbt-review-button"
+  onClick={markForReviewAndNext}
+>
+  <Bookmark size={17} />
+  Mark for Review & Next
+</button>
               className="cbt-previous-button"
               onClick={() => goToQuestion(current - 1)}
               disabled={current === 0}
