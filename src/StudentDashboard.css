@@ -1,1 +1,326 @@
 
+/* ===================================
+   PHYSICS UNPLUGGED - STUDENT DASHBOARD
+=================================== */
+
+.dashboard {
+  min-height: 100vh;
+  padding: 28px;
+  background: #f3f6fc;
+  color: #172554;
+  font-family: Inter, Arial, sans-serif;
+}
+
+/* Top navigation */
+
+.dashboard .topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  padding: 17px 23px;
+  margin-bottom: 25px;
+  background: #ffffff;
+  border: 1px solid #e5eaf3;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(30, 64, 175, 0.05);
+}
+
+.dashboard .brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  color: #1d4ed8;
+  font-size: 19px;
+  font-weight: 800;
+}
+
+.dashboard .logout-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 15px;
+  border: 1px solid #fee2e2;
+  border-radius: 9px;
+  background: #fff1f2;
+  color: #dc2626;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.dashboard .logout-button:hover {
+  background: #ffe4e6;
+}
+
+/* Welcome banner */
+
+.dashboard .welcome {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 34px;
+  margin-bottom: 30px;
+  border-radius: 20px;
+  background: linear-gradient(120deg, #172554, #2563eb);
+  color: #ffffff;
+  box-shadow: 0 10px 25px rgba(37, 99, 235, 0.15);
+}
+
+.dashboard .welcome .eyebrow {
+  color: #bfdbfe;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+}
+
+.dashboard .welcome h1 {
+  margin: 12px 0 8px;
+  color: #ffffff;
+  font-size: 31px;
+}
+
+.dashboard .welcome p:not(.eyebrow) {
+  margin: 0;
+  color: #dbeafe;
+}
+
+.dashboard .welcome-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 85px;
+  height: 85px;
+  flex-shrink: 0;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+}
+
+/* Examination section heading */
+
+.dashboard .section-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 22px;
+}
+
+.dashboard .section-heading h2 {
+  margin: 0 0 7px;
+  color: #172554;
+  font-size: 22px;
+}
+
+.dashboard .section-heading p {
+  margin: 0;
+  color: #64748b;
+  font-size: 14px;
+}
+
+.dashboard .refresh-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 15px;
+  border: 1px solid #bfdbfe;
+  border-radius: 9px;
+  background: #eff6ff;
+  color: #2563eb;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.dashboard .refresh-button:hover {
+  background: #dbeafe;
+}
+
+/* Exam cards */
+
+.dashboard .exam-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.dashboard .exam-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+  padding: 23px;
+  background: #ffffff;
+  border: 1px solid #e5eaf3;
+  border-radius: 17px;
+  box-shadow: 0 5px 18px rgba(15, 23, 42, 0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dashboard .exam-card:hover {
+  transform: translateY(-4px);
+  border-color: #93c5fd;
+  box-shadow: 0 12px 25px rgba(37, 99, 235, 0.09);
+}
+
+.dashboard .exam-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 49px;
+  height: 49px;
+  margin-bottom: 16px;
+  border-radius: 13px;
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+.dashboard .exam-card h3 {
+  margin: 0 0 10px;
+  color: #172554;
+  font-size: 18px;
+  line-height: 1.4;
+}
+
+.dashboard .exam-card p {
+  margin: 0 0 17px;
+  color: #64748b;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.dashboard .exam-meta {
+  width: 100%;
+  padding: 11px 0;
+  margin-top: auto;
+  margin-bottom: 15px;
+  border-top: 1px solid #e5eaf3;
+  color: #475569;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.dashboard .primary-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 12px 16px;
+  border: none;
+  border-radius: 10px;
+  background: #2563eb;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.dashboard .primary-button:hover {
+  background: #1d4ed8;
+}
+
+/* Messages and empty state */
+
+.dashboard .message {
+  padding: 13px 16px;
+  margin-bottom: 18px;
+  border-radius: 10px;
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.dashboard .loading {
+  padding: 30px;
+  text-align: center;
+  color: #64748b;
+}
+
+.dashboard .empty-state {
+  padding: 45px 20px;
+  text-align: center;
+  background: #ffffff;
+  border: 1px dashed #cbd5e1;
+  border-radius: 16px;
+  color: #64748b;
+}
+
+.dashboard .empty-state svg {
+  color: #3b82f6;
+}
+
+.dashboard .empty-state h3 {
+  color: #172554;
+}
+
+/* Footer */
+
+.dashboard .dashboard-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 25px 10px;
+  margin-top: 30px;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.dashboard .dashboard-footer svg {
+  color: #eab308;
+}
+
+/* Responsive design */
+
+@media (max-width: 900px) {
+  .dashboard .exam-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .dashboard {
+    padding: 15px;
+  }
+
+  .dashboard .topbar {
+    padding: 14px;
+  }
+
+  .dashboard .brand {
+    font-size: 16px;
+  }
+
+  .dashboard .welcome {
+    padding: 23px;
+  }
+
+  .dashboard .welcome h1 {
+    font-size: 24px;
+  }
+
+  .dashboard .welcome-icon {
+    width: 60px;
+    height: 60px;
+  }
+
+  .dashboard .exam-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard .section-heading {
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 380px) {
+  .dashboard .welcome-icon {
+    display: none;
+  }
+
+  .dashboard .logout-button {
+    padding: 9px;
+  }
+}
+
