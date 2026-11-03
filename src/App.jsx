@@ -25,6 +25,7 @@ export default function App() {
 const [showSignup, setShowSignup] = useState(false);
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
+  const [resetMode, setResetMode] = useState(false);
 
   useEffect(() => {
     if (!isSupabaseConfigured) {
@@ -106,7 +107,30 @@ useEffect(() => {
     if (error) setMessage(error.message);
     setBusy(false);
   }
+async function handlePasswordReset() {
+  if (!email.trim()) {
+    setMessage("Please enter your registered email address.");
+    return;
+  }
 
+  setBusy(true);
+  setMessage("");
+
+  const { error } = await supabase.auth.resetPasswordForEmail(
+    email.trim(),
+    {
+      redirectTo: "https://physics-unplugged-zuu6.vercel.app/"
+    }
+  );
+
+  setMessage(
+    error
+      ? error.message
+      : "Password reset email sent. Please check your inbox."
+  );
+
+  setBusy(false);
+}
 async function handleSignup() {
   if (!studentName.trim()) {
     setMessage("Please enter your full name.");
