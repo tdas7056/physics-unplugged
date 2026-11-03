@@ -342,6 +342,7 @@ if (session && session.user.email === "tdas66142@gmail.com") {
   return (
     <>
       <TeacherDashboard />
+      <GlobalSignOut onClick={handleLogout} />
       <SiteWatermark />
     </>
   );
@@ -353,6 +354,7 @@ if (session && selectedExam) {
         exam={selectedExam}
         onExit={() => setSelectedExam(null)}
       />
+      <GlobalSignOut onClick={handleLogout} />
       <SiteWatermark />
     </>
   );
