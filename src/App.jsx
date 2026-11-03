@@ -322,6 +322,7 @@ async function handleSignup() {
   </p>
 
 </section>
+      <SiteWatermark />
     </main>
   );
 }
