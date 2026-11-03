@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "./supabase";
 import "./QuestionBank.css";
-import { PlusCircle, Pencil, Trash2, RefreshCw } from "lucide-react";
+import { PlusCircle, Pencil, Trash2, RefreshCw, ImagePlus, X } from "lucide-react";
 
 const emptyQuestion = {
   class_name: "",
@@ -11,6 +11,7 @@ const emptyQuestion = {
   options: ["", "", "", ""],
   correct_option: "0",
   explanation: "",
+  image_url: "",
 };
 
 export default function QuestionBank() {
@@ -20,6 +21,7 @@ export default function QuestionBank() {
   const [showForm, setShowForm] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState("");
   const [search, setSearch] = useState("");
 
@@ -33,7 +35,7 @@ export default function QuestionBank() {
 
     const { data, error } = await supabase
       .from("questions")
-      .select("id, class_name, topic, question_text, options, created_at")
+      .select("id, class_name, topic, question_text, options, image_url, created_at")
       .order("created_at", { ascending: false });
 
     if (error) {
@@ -60,6 +62,66 @@ export default function QuestionBank() {
     setMessage("");
   }
 
+  async function handleImageUpload(event) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+      setMessage("Please select a JPG, PNG or WEBP image.");
+      event.target.value = "";
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      setMessage("Image size must be less than 5 MB.");
+      event.target.value = "";
+      return;
+    }
+
+    setUploading(true);
+    setMessage("");
+
+    const { data: { user }, error: userError } = await supabase.auth.getUser();
+
+    if (userError || !user) {
+      setMessage("Please sign in again.");
+      setUploading(false);
+      event.target.value = "";
+      return;
+    }
+
+    const extension = file.name.split(".").pop().toLowerCase();
+    const filePath = `${user.id}/${crypto.randomUUID()}.${extension}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from("question-images")
+      .upload(filePath, file, {
+        cacheControl: "3600",
+        upsert: false,
+        contentType: file.type,
+      });
+
+    if (uploadError) {
+      setMessage("Image upload failed: " + uploadError.message);
+      setUploading(false);
+      event.target.value = "";
+      return;
+    }
+
+    const { data } = supabase.storage
+      .from("question-images")
+      .getPublicUrl(filePath);
+
+    setForm((previous) => ({
+      ...previous,
+      image_url: data.publicUrl,
+    }));
+
+    setMessage("Image uploaded successfully.");
+    setUploading(false);
+    event.target.value = "";
+  }
+
   async function startEdit(question) {
     const { data, error } = await supabase
       .from("question_keys")
@@ -81,6 +143,7 @@ export default function QuestionBank() {
         : ["", "", "", ""],
       correct_option: String(data.correct_option),
       explanation: data.explanation || "",
+      image_url: question.image_url || "",
     });
 
     setEditingId(question.id);
@@ -112,6 +175,7 @@ export default function QuestionBank() {
       topic: form.topic.trim() || null,
       question_text: form.question_text.trim(),
       options: form.options.map((text) => ({ text: text.trim() })),
+      image_url: form.image_url.trim() || null,
       created_by: user.id,
     };
 
@@ -262,6 +326,56 @@ export default function QuestionBank() {
               />
             </label>
 
+            <section className="qb-image-section">
+              <h3><ImagePlus size={18} /> Question image (optional)</h3>
+              <p>Upload a diagram, graph, circuit or other question image.</p>
+
+              <label>
+                Upload from computer
+                <input
+                  type="file"
+                  accept="image/png,image/jpeg,image/webp"
+                  onChange={handleImageUpload}
+                  disabled={uploading}
+                />
+              </label>
+
+              {uploading && <p>Uploading image...</p>}
+
+              <label>
+                Or paste image URL
+                <input
+                  type="url"
+                  value={form.image_url}
+                  onChange={(e) =>
+                    setForm({ ...form, image_url: e.target.value })
+                  }
+                  placeholder="https://example.com/image.png"
+                />
+              </label>
+
+              {form.image_url && (
+                <div className="qb-image-preview">
+                  <img
+                    src={form.image_url}
+                    alt="Question preview"
+                    onError={(e) => {
+                      e.currentTarget.style.display = "none";
+                    }}
+                  />
+                  <button
+                    type="button"
+                    className="secondary-button"
+                    onClick={() =>
+                      setForm({ ...form, image_url: "" })
+                    }
+                  >
+                    <X size={16} /> Remove image
+                  </button>
+                </div>
+              )}
+            </section>
+
             <h3>Answer options</h3>
 
             {form.options.map((option, index) => (
@@ -304,8 +418,15 @@ export default function QuestionBank() {
             </label>
 
             <div className="qb-actions">
-              <button className="primary-button" disabled={saving}>
-                {saving ? "Saving..." : editingId ? "Update question" : "Save question"}
+              <button
+                className="primary-button"
+                disabled={saving || uploading}
+              >
+                {saving
+                  ? "Saving..."
+                  : editingId
+                    ? "Update question"
+                    : "Save question"}
               </button>
 
               <button
@@ -356,6 +477,14 @@ export default function QuestionBank() {
                     {question.topic ? ` · ${question.topic}` : ""}
                   </span>
                   <h3>{question.question_text}</h3>
+
+                  {question.image_url && (
+                    <img
+                      className="qb-question-image"
+                      src={question.image_url}
+                      alt="Question diagram"
+                    />
+                  )}
 
                   <ol type="A">
                     {(question.options || []).map((option, index) => (
