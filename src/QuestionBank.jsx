@@ -47,7 +47,88 @@ export default function QuestionBank() {
 
     setLoading(false);
   }
+async function handleImportFile(event) {
+  const file = event.target.files?.[0];
+  if (!file) return;
 
+  setImporting(true);
+  setMessage("");
+
+  try {
+    const text = await file.text();
+    const importedQuestions = JSON.parse(text);
+
+    if (!Array.isArray(importedQuestions) || importedQuestions.length === 0) {
+      throw new Error("The JSON file must contain a non-empty array of questions.");
+    }
+
+    const { data: { user }, error: userError } =
+      await supabase.auth.getUser();
+
+    if (userError || !user) {
+      throw new Error("Please sign in again.");
+    }
+
+    let successCount = 0;
+
+    for (const item of importedQuestions) {
+      if (
+        !item.class_name ||
+        !item.question_text ||
+        !Array.isArray(item.options) ||
+        item.options.length !== 4 ||
+        !Number.isInteger(Number(item.correct_option)) ||
+        Number(item.correct_option) < 0 ||
+        Number(item.correct_option) > 3
+      ) {
+        throw new Error("Invalid question format. Each question needs four options and a correct answer from 0 to 3.");
+      }
+
+      const options = item.options.map((option) =>
+        typeof option === "string" ? option.trim() : option?.text?.trim()
+      );
+
+      if (options.some((option) => !option)) {
+        throw new Error("Every question must have four non-empty options.");
+      }
+
+      const { data: question, error: questionError } = await supabase
+        .from("questions")
+        .insert({
+          class_name: item.class_name,
+          topic: item.topic || null,
+          question_text: item.question_text,
+          options: options.map((text) => ({ text })),
+          image_url: item.image_url || null,
+          created_by: user.id,
+        })
+        .select("id")
+        .single();
+
+      if (questionError) throw questionError;
+
+      const { error: keyError } = await supabase
+        .from("question_keys")
+        .insert({
+          question_id: question.id,
+          correct_option: Number(item.correct_option),
+          explanation: item.explanation || null,
+        });
+
+      if (keyError) throw keyError;
+
+      successCount++;
+    }
+
+    setMessage(`${successCount} questions imported successfully.`);
+    await loadQuestions();
+  } catch (error) {
+    setMessage("Import error: " + error.message);
+  } finally {
+    setImporting(false);
+    event.target.value = "";
+  }
+}
   function updateOption(index, value) {
     setForm((previous) => {
       const options = [...previous.options];
