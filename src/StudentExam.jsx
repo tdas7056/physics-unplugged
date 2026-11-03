@@ -315,11 +315,21 @@ async function clearResponse() {
               )}
             </div>
 
-            <p className="cbt-question-text">
-              {question.question_text}
-            </p>
+<p className="cbt-question-text">
+  {question.question_text}
+</p>
 
-            <div className="cbt-options">
+{question.image_url && (
+  <div className="cbt-question-image-container">
+    <img
+      src={question.image_url}
+      alt="Question diagram"
+      className="cbt-question-image"
+    />
+  </div>
+)}
+
+<div className="cbt-options">
               {(question.options || []).map((option, index) => (
                 <label
                   key={index}
