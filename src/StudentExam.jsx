@@ -47,12 +47,24 @@ useEffect(() => {
     setLoading(false);
   }
 
-  function selectAnswer(questionId, optionIndex) {
-    setAnswers(previous => ({
-      ...previous,
-      [questionId]: optionIndex
-    }));
+async function selectAnswer(questionId, optionIndex) {
+  setAnswers(previous => ({
+    ...previous,
+    [questionId]: optionIndex
+  }));
+
+  const { error } = await supabase.rpc("save_exam_answer", {
+    p_attempt_id: attemptId,
+    p_question_id: questionId,
+    p_selected_option: optionIndex
+  });
+
+  if (error) {
+    setMessage("Answer could not be saved: " + error.message);
+  } else {
+    setMessage("");
   }
+}
 
 async function submitExam(askConfirmation = true) {
   if (askConfirmation) {
