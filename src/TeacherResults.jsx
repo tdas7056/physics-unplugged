@@ -74,6 +74,86 @@ const [detailLoading, setDetailLoading] = useState(false);
   setLoading(false);
 }
 
+async function openResultDetails(result) {
+  setSelectedResult(result);
+  setDetailQuestions([]);
+  setDetailLoading(true);
+  setMessage("");
+
+  const { data: examQuestions, error: examError } = await supabase
+    .from("exam_questions")
+    .select("question_id, position, questions(id, question_text, options)")
+    .eq("exam_id", result.exam_id)
+    .order("position", { ascending: true });
+
+  if (examError) {
+    setMessage(examError.message);
+    setDetailLoading(false);
+    return;
+  }
+
+  const questionIds = (examQuestions || []).map(
+    (item) => item.question_id
+  );
+
+  if (questionIds.length === 0) {
+    setDetailLoading(false);
+    return;
+  }
+
+  const { data: answerKeys, error: keyError } = await supabase
+    .from("question_keys")
+    .select("question_id, correct_option, explanation")
+    .in("question_id", questionIds);
+
+  if (keyError) {
+    setMessage(keyError.message);
+    setDetailLoading(false);
+    return;
+  }
+
+  const { data: studentAnswers, error: answerError } = await supabase
+    .from("attempt_answers")
+    .select("question_id, selected_option")
+    .eq("attempt_id", result.id)
+    .in("question_id", questionIds);
+
+  if (answerError) {
+    setMessage(answerError.message);
+    setDetailLoading(false);
+    return;
+  }
+
+  const keyMap = Object.fromEntries(
+    (answerKeys || []).map((item) => [item.question_id, item])
+  );
+
+  const answerMap = Object.fromEntries(
+    (studentAnswers || []).map((item) => [
+      item.question_id,
+      item.selected_option
+    ])
+  );
+
+  const details = (examQuestions || []).map((item) => {
+    const question = item.questions || {};
+    const key = keyMap[item.question_id] || {};
+
+    return {
+      id: item.question_id,
+      position: item.position,
+      question_text: question.question_text || "Question unavailable",
+      options: question.options || [],
+      selected_option: answerMap[item.question_id] ?? null,
+      correct_option: key.correct_option ?? null,
+      explanation: key.explanation || ""
+    };
+  });
+
+  setDetailQuestions(details);
+  setDetailLoading(false);
+}
+
   useEffect(() => {
     loadResults();
   }, []);
