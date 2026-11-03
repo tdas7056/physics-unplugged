@@ -10,6 +10,7 @@ export default function TeacherResults() {
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
   const [selectedExam, setSelectedExam] = useState("all");
+  const [searchTerm, setSearchTerm] = useState("");
   const [selectedResult, setSelectedResult] = useState(null);
 const [detailQuestions, setDetailQuestions] = useState([]);
 const [detailLoading, setDetailLoading] = useState(false);
