@@ -184,6 +184,33 @@ const filteredResults = results.filter((r) => {
     return Math.round((Number(result.score) / Number(result.max_marks)) * 100);
   }
 
+const averagePercentage = filteredResults.length
+  ? Math.round(
+      filteredResults.reduce((sum, r) => sum + percentage(r), 0) /
+      filteredResults.length
+    )
+  : 0;
+
+const highestPercentage = filteredResults.length
+  ? Math.max(...filteredResults.map(percentage))
+  : 0;
+
+const lowestPercentage = filteredResults.length
+  ? Math.min(...filteredResults.map(percentage))
+  : 0;
+
+const passedCount = filteredResults.filter(
+  (r) => percentage(r) > 80
+).length;
+
+const passPercentage = filteredResults.length
+  ? Math.round((passedCount / filteredResults.length) * 100)
+  : 0;
+
+const topStudents = [...filteredResults]
+  .sort((a, b) => Number(b.score) - Number(a.score))
+  .slice(0, 10);
+
 function downloadExcel() {
   const rows = filteredResults.map((r, index) => ({
     Rank: index + 1,
