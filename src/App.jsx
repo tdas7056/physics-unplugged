@@ -326,14 +326,22 @@ async function handleSignup() {
   );
 }
 if (session && session.user.email === "tdas66142@gmail.com") {
-  return <TeacherDashboard />;
-}
-  if (session && selectedExam) {
   return (
-    <StudentExam
-      exam={selectedExam}
-      onExit={() => setSelectedExam(null)}
-    />
+    <>
+      <TeacherDashboard />
+      <SiteWatermark />
+    </>
+  );
+}
+if (session && selectedExam) {
+  return (
+    <>
+      <StudentExam
+        exam={selectedExam}
+        onExit={() => setSelectedExam(null)}
+      />
+      <SiteWatermark />
+    </>
   );
 }
   if (!session) {
