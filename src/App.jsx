@@ -256,6 +256,16 @@ if (session && session.user.email === "tdas66142@gmail.com") {
                 required
                 minLength={6}
               />
+              {!showSignup && (
+  <button
+    type="button"
+    className="forgot-password-link"
+    onClick={handlePasswordReset}
+    disabled={busy}
+  >
+    Forgot Password?
+  </button>
+)}
             </div>
 
             {message && <p className="message">{message}</p>}
