@@ -49,7 +49,26 @@ const [showSignup, setShowSignup] = useState(false);
   useEffect(() => {
     if (session) loadExams();
   }, [session]);
+useEffect(() => {
+  async function loadStudentProfile() {
+    if (!session) {
+      setProfileName("");
+      return;
+    }
 
+    const { data, error } = await supabase
+      .from("profiles")
+      .select("display_name")
+      .eq("id", session.user.id)
+      .single();
+
+    if (!error && data) {
+      setProfileName(data.display_name || "");
+    }
+  }
+
+  loadStudentProfile();
+}, [session]);
   async function loadExams() {
     setLoading(true);
     setMessage("");
