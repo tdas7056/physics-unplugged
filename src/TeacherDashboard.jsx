@@ -21,6 +21,7 @@ import {
   ChartNoAxesCombined,
 } from "lucide-react";
 import { supabase } from "./supabase";
+import "./TeacherDashboard.css";
 import QuestionBank from "./QuestionBank";
 import TeacherResults from "./TeacherResults";
 import ExamBuilder from "./ExamBuilder";
