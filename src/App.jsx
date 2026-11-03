@@ -267,12 +267,12 @@ if (session && session.user.email === "tdas66142@gmail.com") {
         </button>
       </header>
 
-      <section className="welcome">
-        <div>
-          <p className="eyebrow">STUDENT DASHBOARD</p>
-          <h1>Welcome back!</h1>
-          <p>{session.user.email}</p>
-        </div>
+<section className="welcome">
+  <div>
+    <p className="eyebrow">STUDENT DASHBOARD</p>
+    <h1>Welcome back, {profileName || "Student"}!</h1>
+    <p>{session.user.email}</p>
+  </div>
         <div className="welcome-icon">
           <BookOpen size={42} />
         </div>
