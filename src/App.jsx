@@ -219,32 +219,102 @@ async function handleSignup() {
  if (resetMode) {
   return (
     <main className="login-screen">
-      <section className="login-card">
-        <h2>Reset Your Password</h2>
-        <p>Enter your new password below.</p>
+<section className="login-card">
 
-        <form
-          onSubmit={(event) => {
-            event.preventDefault();
-            handleUpdatePassword();
-          }}
-        >
+  <div className="login-brand">
+    <img
+      src={logo}
+      alt="Physics Unplugged Logo"
+      className="login-logo"
+    />
+    <h1>Physics Unplugged</h1>
+    <p>Learn Physics. Think Beyond.</p>
+  </div>
+
+  <p className="subtitle">
+    Learn, practise and test your understanding.
+  </p>
+
+  <form
+    onSubmit={showSignup ? (e) => {
+      e.preventDefault();
+      handleSignup();
+    } : handleLogin}
+  >
+    {showSignup && (
+      <>
+        <label>Full Name</label>
+        <div className="input-wrap">
+          <GraduationCap size={18} />
           <input
-            type="password"
-            placeholder="Enter new password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
+            type="text"
+            placeholder="Enter your full name"
+            value={studentName}
+            onChange={(e) => setStudentName(e.target.value)}
             required
-            minLength={6}
           />
+        </div>
+      </>
+    )}
 
-          {message && <p>{message}</p>}
+    <label>Email address</label>
+    <div className="input-wrap">
+      <Mail size={18} />
+      <input
+        type="email"
+        placeholder="Enter your email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        required
+      />
+    </div>
 
-          <button type="submit" disabled={busy}>
-            {busy ? "Updating..." : "Update Password"}
-          </button>
-        </form>
-      </section>
+    <label>Password</label>
+    <div className="input-wrap">
+      <Lock size={18} />
+      <input
+        type="password"
+        placeholder="Enter your password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        required
+        minLength={6}
+      />
+      {!showSignup && (
+        <button
+          type="button"
+          className="forgot-password-link"
+          onClick={handlePasswordReset}
+          disabled={busy}
+        >
+          Forgot Password?
+        </button>
+      )}
+    </div>
+
+    {message && <p className="message">{message}</p>}
+
+    <button className="primary-button" disabled={busy}>
+      {busy ? "Please wait..." : showSignup ? "Create Account" : "Sign in"}
+    </button>
+  </form>
+
+  <button
+    type="button"
+    className="secondary-button"
+    onClick={() => {
+      setShowSignup(!showSignup);
+      setMessage("");
+    }}
+  >
+    {showSignup ? "Back to Sign in" : "Create student account"}
+  </button>
+
+  <p className="footer-note">
+    Secure student access powered by Supabase.
+  </p>
+
+</section>
     </main>
   );
 }
