@@ -50,7 +50,6 @@ const [showSignup, setShowSignup] = useState(false);
     if (session) loadExams();
   }, [session]);
 useEffect(() => {
-useEffect(() => {
   async function loadStudentProfile() {
     if (!session) {
       setProfileName("");
