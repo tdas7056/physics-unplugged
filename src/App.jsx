@@ -1,3 +1,4 @@
+
 import { Turnstile } from "@marsidev/react-turnstile";
 import TeacherDashboard from "./TeacherDashboard";
 import logo from "./physics-unplugged-logo.png";
@@ -15,6 +16,7 @@ import {
   ClipboardList,
 } from "lucide-react";
 import { supabase, isSupabaseConfigured } from "./supabase";
+
 function SiteWatermark() {
   return (
     <div className="site-watermark">
@@ -23,6 +25,7 @@ function SiteWatermark() {
     </div>
   );
 }
+
 function GlobalSignOut({ onClick }) {
   return (
     <button
@@ -35,29 +38,36 @@ function GlobalSignOut({ onClick }) {
     </button>
   );
 }
+
 export default function App() {
   const [session, setSession] = useState(null);
   const [exams, setExams] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedExam, setSelectedExam] = useState(null);
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [studentName, setStudentName] = useState("");
   const [profileName, setProfileName] = useState("");
+
   const [attemptHistory, setAttemptHistory] = useState([]);
   const [historyLoading, setHistoryLoading] = useState(false);
   const [selectedReview, setSelectedReview] = useState(null);
   const [reviewLoading, setReviewLoading] = useState(false);
-const [showSignup, setShowSignup] = useState(false);
+
+  const [showSignup, setShowSignup] = useState(false);
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
   const [resetMode, setResetMode] = useState(false);
+
+  // Cloudflare Turnstile CAPTCHA
   const [captchaToken, setCaptchaToken] = useState("");
-const [captchaWidgetKey, setCaptchaWidgetKey] = useState(0);
+  const [captchaWidgetKey, setCaptchaWidgetKey] = useState(0);
 
-const turnstileSiteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY;
+  const turnstileSiteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY;
 
+  // Authentication and session management
   useEffect(() => {
     if (!isSupabaseConfigured) {
       setLoading(false);
@@ -72,17 +82,18 @@ const turnstileSiteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY;
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, newSession) => {
-  setSession(newSession);
+      setSession(newSession);
 
-  if (event === "PASSWORD_RECOVERY") {
-    setResetMode(true);
-    setMessage("Enter your new password.");
-  }
-});
+      if (event === "PASSWORD_RECOVERY") {
+        setResetMode(true);
+        setMessage("Enter your new password.");
+      }
+    });
 
     return () => subscription.unsubscribe();
   }, []);
 
+  // Load exams and student history
   useEffect(() => {
     if (session) {
       loadExams();
@@ -92,31 +103,35 @@ const turnstileSiteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY;
       setSelectedReview(null);
     }
   }, [session]);
-useEffect(() => {
-  async function loadStudentProfile() {
-    if (!session) {
-      setProfileName("");
-      return;
+
+  // Load student profile
+  useEffect(() => {
+    async function loadStudentProfile() {
+      if (!session) {
+        setProfileName("");
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("display_name")
+        .eq("id", session.user.id)
+        .single();
+
+      if (error) {
+        console.error("Profile loading error:", error);
+        setMessage("Profile error: " + error.message);
+        return;
+      }
+
+      console.log("Student profile:", data);
+      setProfileName(data?.display_name || "");
     }
 
-    const { data, error } = await supabase
-      .from("profiles")
-      .select("display_name")
-      .eq("id", session.user.id)
-      .single();
+    loadStudentProfile();
+  }, [session]);
 
-    if (error) {
-      console.error("Profile loading error:", error);
-      setMessage("Profile error: " + error.message);
-      return;
-    }
-
-    console.log("Student profile:", data);
-    setProfileName(data?.display_name || "");
-  }
-
-  loadStudentProfile();
-}, [session]);
+  // Load published examinations
   async function loadExams() {
     setLoading(true);
     setMessage("");
@@ -136,13 +151,17 @@ useEffect(() => {
     setLoading(false);
   }
 
+  // Load student's examination history
   async function loadAttemptHistory() {
     if (!session?.user?.id) return;
 
     setHistoryLoading(true);
+
     const { data, error } = await supabase
       .from("attempts")
-      .select("id, exam_id, submitted_at, score, max_marks, correct_count, wrong_count, unanswered_count, exams(title)")
+      .select(
+        "id, exam_id, submitted_at, score, max_marks, correct_count, wrong_count, unanswered_count, exams(title)"
+      )
       .eq("student_id", session.user.id)
       .not("submitted_at", "is", null)
       .order("submitted_at", { ascending: false });
@@ -153,15 +172,17 @@ useEffect(() => {
     } else {
       setAttemptHistory(data || []);
     }
+
     setHistoryLoading(false);
   }
 
+  // Open examination answer review
   async function openAttemptReview(attemptId) {
     setReviewLoading(true);
     setSelectedReview(null);
 
     const { data, error } = await supabase.rpc("get_attempt_review", {
-      p_attempt_id: attemptId
+      p_attempt_id: attemptId,
     });
 
     if (error) {
@@ -170,53 +191,62 @@ useEffect(() => {
       setSelectedReview(data);
       setMessage("");
     }
+
     setReviewLoading(false);
   }
 
-async function handleLogin(event) {
-  event.preventDefault();
+  // Student and teacher login
+  async function handleLogin(event) {
+    event.preventDefault();
 
-  if (!captchaToken) {
-    setMessage("Please complete the CAPTCHA verification.");
-    return;
+    if (!captchaToken) {
+      setMessage("Please complete the CAPTCHA verification.");
+      return;
+    }
+
+    setBusy(true);
+    setMessage("");
+
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+      options: {
+        captchaToken,
+      },
+    });
+
+    // CAPTCHA tokens are single-use, so reset the widget
+    setCaptchaToken("");
+    setCaptchaWidgetKey((key) => key + 1);
+
+    if (error) {
+      setMessage(error.message);
+    }
+
+    setBusy(false);
   }
 
-  setBusy(true);
-  setMessage("");
-
-  const { error } = await supabase.auth.signInWithPassword({
-    email,
-    password,
-    options: {
-      captchaToken,
-    },
-  });
-
-  setCaptchaToken("");
-  setCaptchaWidgetKey((key) => key + 1);
-
-  if (error) setMessage(error.message);
-
-  setBusy(false);
-}
-async function handlePasswordReset() {
+  // Password reset email request
+  async function handlePasswordReset() {
     if (!email.trim()) {
       setMessage("Please enter your registered email address.");
       return;
     }
-if (!captchaToken) {
-  setMessage("Please complete the CAPTCHA verification.");
-  return;
-}
+
+    if (!captchaToken) {
+      setMessage("Please complete the CAPTCHA verification.");
+      return;
+    }
+
     setBusy(true);
     setMessage("");
 
     const { error } = await supabase.auth.resetPasswordForEmail(
       email.trim(),
-{
-  redirectTo: window.location.origin + "/",
-  captchaToken,
-}
+      {
+        redirectTo: window.location.origin + "/",
+        captchaToken,
+      }
     );
 
     setMessage(
@@ -224,11 +254,14 @@ if (!captchaToken) {
         ? error.message
         : "Password reset email sent. Please check your inbox."
     );
-setCaptchaToken("");
-setCaptchaWidgetKey((key) => key + 1);
+
+    setCaptchaToken("");
+    setCaptchaWidgetKey((key) => key + 1);
+
     setBusy(false);
   }
 
+  // Update password after recovery email
   async function handleUpdatePassword(event) {
     event.preventDefault();
 
@@ -258,53 +291,58 @@ setCaptchaWidgetKey((key) => key + 1);
     setPassword("");
     setConfirmPassword("");
     setResetMode(false);
+
     await supabase.auth.signOut();
+
     setMessage("Password updated successfully. Please sign in again.");
     setBusy(false);
   }
 
- async function handleSignup() {
-  if (!studentName.trim()) {
-    setMessage("Please enter your full name.");
-    return;
-  }
+  // Student registration
+  async function handleSignup() {
+    if (!studentName.trim()) {
+      setMessage("Please enter your full name.");
+      return;
+    }
 
-  if (!captchaToken) {
-    setMessage("Please complete the CAPTCHA verification.");
-    return;
-  }
+    if (!captchaToken) {
+      setMessage("Please complete the CAPTCHA verification.");
+      return;
+    }
 
-  setBusy(true);
-  setMessage("");
+    setBusy(true);
+    setMessage("");
 
-  const { error } = await supabase.auth.signUp({
-    email,
-    password,
-    options: {
-      captchaToken,
-      data: {
-        full_name: studentName.trim(),
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        captchaToken,
+        data: {
+          full_name: studentName.trim(),
+        },
       },
-    },
-  });
+    });
 
-  setCaptchaToken("");
-  setCaptchaWidgetKey((key) => key + 1);
+    setCaptchaToken("");
+    setCaptchaWidgetKey((key) => key + 1);
 
-  setMessage(
-    error
-      ? error.message
-      : "Registration submitted. Check your email if confirmation is required."
-  );
+    setMessage(
+      error
+        ? error.message
+        : "Registration submitted. Check your email if confirmation is required."
+    );
 
-  setBusy(false);
-}
+    setBusy(false);
+  }
 
+  // Sign out
   async function handleLogout() {
     await supabase.auth.signOut();
     setExams([]);
   }
 
+  // Supabase configuration check
   if (!isSupabaseConfigured) {
     return (
       <main className="setup-screen">
@@ -312,9 +350,11 @@ setCaptchaWidgetKey((key) => key + 1);
           <GraduationCap size={42} />
           <h1>Physics Unplugged</h1>
           <p>Your online physics examination portal.</p>
+
           <div className="notice">
             Supabase connection details are not configured yet.
           </div>
+
           <p>
             The next setup step is to add your Supabase Project URL and
             publishable key as environment variables in your deployment
@@ -325,15 +365,22 @@ setCaptchaWidgetKey((key) => key + 1);
     );
   }
 
+  // Initial loading screen
   if (loading && !session) {
     return <main className="loading">Loading Physics Unplugged...</main>;
   }
- if (resetMode) {
+
+  // Password recovery screen
+  if (resetMode) {
     return (
       <main className="login-screen">
         <section className="login-card">
           <div className="login-brand">
-            <img src={logo} alt="Physics Unplugged Logo" className="login-logo" />
+            <img
+              src={logo}
+              alt="Physics Unplugged Logo"
+              className="login-logo"
+            />
             <h1>Physics Unplugged</h1>
           </div>
 
@@ -344,6 +391,7 @@ setCaptchaWidgetKey((key) => key + 1);
 
           <form onSubmit={handleUpdatePassword}>
             <label>NEW PASSWORD</label>
+
             <div className="input-wrap">
               <Lock size={18} />
               <input
@@ -357,6 +405,7 @@ setCaptchaWidgetKey((key) => key + 1);
             </div>
 
             <label>CONFIRM PASSWORD</label>
+
             <div className="input-wrap">
               <Lock size={18} />
               <input
@@ -369,89 +418,95 @@ setCaptchaWidgetKey((key) => key + 1);
               />
             </div>
 
-{turnstileSiteKey ? (
-  <div className="captcha-container">
-    <Turnstile
-      key={captchaWidgetKey}
-      siteKey={turnstileSiteKey}
-      onSuccess={(token) => {
-        setCaptchaToken(token);
-        setMessage("");
-      }}
-      onExpire={() => setCaptchaToken("")}
-      onError={() => {
-        setCaptchaToken("");
-        setMessage("CAPTCHA failed to load. Please refresh.");
-      }}
-    />
-  </div>
-) : (
-  <p className="message">
-    CAPTCHA configuration missing. Contact administrator.
-  </p>
-)}
+            {message && <p className="message">{message}</p>}
 
-{message && <p className="message">{message}</p>}
-
-<button
-  className="primary-button"
-  disabled={busy || !captchaToken || !turnstileSiteKey}
->
+            <button
+              type="submit"
+              className="primary-button"
+              disabled={busy}
+            >
               {busy ? "Please wait..." : "Update Password"}
             </button>
           </form>
         </section>
+
         <SiteWatermark />
       </main>
     );
   }
+
+  // Teacher dashboard
   if (session && session.user.email === "tdas66142@gmail.com") {
-  return (
-    <>
-      <TeacherDashboard />
-      <GlobalSignOut onClick={handleLogout} />
-      <SiteWatermark />
-    </>
-  );
-}
-if (session && selectedExam) {
-  return (
-    <>
-      <StudentExam
-        exam={selectedExam}
-        onExit={() => setSelectedExam(null)}
-      />
-      <GlobalSignOut onClick={handleLogout} />
-      <SiteWatermark />
-    </>
-  );
-}
+    return (
+      <>
+        <TeacherDashboard />
+        <GlobalSignOut onClick={handleLogout} />
+        <SiteWatermark />
+      </>
+    );
+  }
+
+  // Student examination screen
+  if (session && selectedExam) {
+    return (
+      <>
+        <StudentExam
+          exam={selectedExam}
+          onExit={() => setSelectedExam(null)}
+        />
+
+        <GlobalSignOut onClick={handleLogout} />
+        <SiteWatermark />
+      </>
+    );
+  }
+
+  // Login and registration screen
   if (!session) {
     return (
       <main className="login-screen">
         <section className="login-card">
           <div className="login-brand">
-            <img src={logo} alt="Physics Unplugged Logo" className="login-logo" />
-            <p className="login-eyebrow">TANMAY'S ADVANCED EXAMINATION PORTAL</p>
+            <img
+              src={logo}
+              alt="Physics Unplugged Logo"
+              className="login-logo"
+            />
+
+            <p className="login-eyebrow">
+              TANMAY'S ADVANCED EXAMINATION PORTAL
+            </p>
+
             <h1>Physics Unplugged</h1>
           </div>
 
           <div className="login-welcome">
             <h2>{showSignup ? "Create your account" : "Welcome"}</h2>
-            <p>{showSignup ? "Register to access your examinations" : "Sign in to your account"}</p>
+
+            <p>
+              {showSignup
+                ? "Register to access your examinations"
+                : "Sign in to your account"}
+            </p>
           </div>
 
           <form
-            onSubmit={showSignup ? (e) => {
-              e.preventDefault();
-              handleSignup();
-            } : handleLogin}
+            onSubmit={
+              showSignup
+                ? (e) => {
+                    e.preventDefault();
+                    handleSignup();
+                  }
+                : handleLogin
+            }
           >
             {showSignup && (
               <>
                 <label>FULL NAME</label>
+
                 <div className="input-wrap">
                   <GraduationCap size={18} />
+
                   <input
                     type="text"
                     placeholder="Enter your full name"
@@ -464,8 +519,10 @@ if (session && selectedExam) {
             )}
 
             <label>EMAIL ADDRESS</label>
+
             <div className="input-wrap">
               <Mail size={18} />
+
               <input
                 type="email"
                 placeholder="Enter your email"
@@ -478,8 +535,10 @@ if (session && selectedExam) {
             <div className="login-password-heading">
               <label>PASSWORD</label>
             </div>
+
             <div className="input-wrap">
               <Lock size={18} />
+
               <input
                 type="password"
                 placeholder="Enter your password"
@@ -490,9 +549,46 @@ if (session && selectedExam) {
               />
             </div>
 
+            {/* Cloudflare Turnstile CAPTCHA */}
+            {turnstileSiteKey ? (
+              <div className="captcha-container">
+                <Turnstile
+                  key={captchaWidgetKey}
+                  siteKey={turnstileSiteKey}
+                  onSuccess={(token) => {
+                    setCaptchaToken(token);
+                    setMessage("");
+                  }}
+                  onExpire={() => {
+                    setCaptchaToken("");
+                  }}
+                  onError={() => {
+                    setCaptchaToken("");
+                    setMessage(
+                      "CAPTCHA failed to load. Please refresh."
+                    );
+                  }}
+                />
+              </div>
+            ) : (
+              <p className="message">
+                CAPTCHA configuration missing. Please contact the
+                administrator.
+              </p>
+            )}
+
             {message && <p className="message">{message}</p>}
-            <button className="primary-button" disabled={busy}>
-              {busy ? "Please wait..." : showSignup ? "Create Account" : "Sign In"}
+
+            <button
+              type="submit"
+              className="primary-button"
+              disabled={busy || !captchaToken || !turnstileSiteKey}
+            >
+              {busy
+                ? "Please wait..."
+                : showSignup
+                  ? "Create Account"
+                  : "Sign In"}
             </button>
           </form>
 
@@ -518,194 +614,307 @@ if (session && selectedExam) {
             </button>
           )}
 
-          <p className="footer-note">Secure student access powered by Supabase.</p>
+          <p className="footer-note">
+            Secure student access powered by Supabase.
+          </p>
         </section>
+
         <SiteWatermark />
       </main>
     );
   }
-return (
-  <>
-    <main className="dashboard">
-      <header className="topbar">
-        <div className="brand">
-          <GraduationCap size={27} />
-          <span>Physics Unplugged</span>
-        </div>
 
-      </header>
-
-<section className="welcome">
-  <div>
-    <p className="eyebrow">STUDENT DASHBOARD</p>
-    <h1>Welcome back, {profileName || "Student"}!</h1>
-    <p>{session.user.email}</p>
-  </div>
-        <div className="welcome-icon">
-          <BookOpen size={42} />
-        </div>
-      </section>
-
-      <section className="section-heading">
-        <div>
-          <h2>Available examinations</h2>
-          <p>Choose a published examination to get started.</p>
-        </div>
-        <button className="refresh-button" onClick={loadExams}>
-          <RefreshCw size={16} />
-          Refresh
-        </button>
-      </section>
-
-      {message && <p className="message">{message}</p>}
-
-      {loading ? (
-        <p className="loading">Loading examinations...</p>
-      ) : exams.length === 0 ? (
-        <div className="empty-state">
-          <BookOpen size={35} />
-          <h3>No examinations available</h3>
-          <p>Published examinations will appear here.</p>
-        </div>
-      ) : (
-        <div className="exam-grid">
-          {exams.map((exam) => (
-            <article className="exam-card" key={exam.id}>
-              <div className="exam-icon">
-                <BookOpen size={23} />
-              </div>
-              <h3>{exam.title}</h3>
-              <p>{exam.description || "Physics examination"}</p>
-              <div className="exam-meta">
-                <span>{exam.duration_minutes} minutes</span>
-              </div>
-<button
-  className="primary-button"
-  onClick={() => {
-    setMessage("");
-    setSelectedExam(exam);
-  }}
->
-  Start Examination
-</button>
-            </article>
-          ))}
-        </div>
-      )}
-
-      <section className="history-section">
-        <div className="section-heading">
-          <div>
-            <h2><ClipboardList size={21} /> My Exam History</h2>
-            <p>Review your submitted examinations, answers and explanations.</p>
+  // Student dashboard
+  return (
+    <>
+      <main className="dashboard">
+        <header className="topbar">
+          <div className="brand">
+            <GraduationCap size={27} />
+            <span>Physics Unplugged</span>
           </div>
-          <button className="refresh-button" onClick={loadAttemptHistory} disabled={historyLoading}>
-            <RefreshCw size={16} />
-            {historyLoading ? "Loading..." : "Refresh history"}
-          </button>
-        </div>
+        </header>
 
-        {historyLoading ? (
-          <p className="loading">Loading your exam history...</p>
-        ) : attemptHistory.length === 0 ? (
+        <section className="welcome">
+          <div>
+            <p className="eyebrow">STUDENT DASHBOARD</p>
+
+            <h1>
+              Welcome back, {profileName || "Student"}!
+            </h1>
+
+            <p>{session.user.email}</p>
+          </div>
+
+          <div className="welcome-icon">
+            <BookOpen size={42} />
+          </div>
+        </section>
+
+        <section className="section-heading">
+          <div>
+            <h2>Available examinations</h2>
+            <p>Choose a published examination to get started.</p>
+          </div>
+
+          <button className="refresh-button" onClick={loadExams}>
+            <RefreshCw size={16} />
+            Refresh
+          </button>
+        </section>
+
+        {message && <p className="message">{message}</p>}
+
+        {loading ? (
+          <p className="loading">Loading examinations...</p>
+        ) : exams.length === 0 ? (
           <div className="empty-state">
-            <ClipboardList size={32} />
-            <h3>No submitted examinations yet</h3>
-            <p>Your completed exam attempts will appear here.</p>
+            <BookOpen size={35} />
+            <h3>No examinations available</h3>
+            <p>Published examinations will appear here.</p>
           </div>
         ) : (
-          <div className="history-list">
-            {attemptHistory.map((attempt) => (
-              <article className="history-card" key={attempt.id}>
-                <div className="history-card-main">
-                  <div>
-                    <h3>{attempt.exams?.title || "Physics examination"}</h3>
-                    <p>{attempt.submitted_at ? new Date(attempt.submitted_at).toLocaleString() : ""}</p>
-                  </div>
-                  <div className="history-score">
-                    <strong>{attempt.score ?? 0} / {attempt.max_marks ?? 0}</strong>
-                    <span>{attempt.correct_count ?? 0} correct · {attempt.wrong_count ?? 0} wrong · {attempt.unanswered_count ?? 0} unanswered</span>
-                  </div>
+          <div className="exam-grid">
+            {exams.map((exam) => (
+              <article className="exam-card" key={exam.id}>
+                <div className="exam-icon">
+                  <BookOpen size={23} />
                 </div>
+
+                <h3>{exam.title}</h3>
+
+                <p>
+                  {exam.description || "Physics examination"}
+                </p>
+
+                <div className="exam-meta">
+                  <span>{exam.duration_minutes} minutes</span>
+                </div>
+
                 <button
-                  className="history-review-button"
-                  onClick={() => openAttemptReview(attempt.id)}
-                  disabled={reviewLoading}
+                  className="primary-button"
+                  onClick={() => {
+                    setMessage("");
+                    setSelectedExam(exam);
+                  }}
                 >
-                  View answers and explanations
+                  Start Examination
                 </button>
               </article>
             ))}
           </div>
         )}
 
-        {reviewLoading && <p className="loading">Loading answer review...</p>}
+        {/* Examination history */}
+        <section className="history-section">
+          <div className="section-heading">
+            <div>
+              <h2>
+                <ClipboardList size={21} /> My Exam History
+              </h2>
 
-        {selectedReview && (
-          <div className="review-panel">
-            <div className="review-panel-heading">
-              <div>
-                <h3>{selectedReview.exam_title}</h3>
-                <p>Score: <strong>{selectedReview.score} / {selectedReview.max_marks}</strong></p>
-              </div>
-              <button className="history-close-button" onClick={() => setSelectedReview(null)}>
-                Close review
-              </button>
+              <p>
+                Review your submitted examinations, answers and
+                explanations.
+              </p>
             </div>
 
-            {(selectedReview.questions || []).map((question, index) => {
-              const options = Array.isArray(question.options) ? question.options : [];
-              const selected = question.selected_option;
-              const correct = question.correct_option;
-              return (
-                <article className="review-question" key={question.question_id}>
-                  <h4>Q{index + 1}. {question.question_text}</h4>
-                  {question.image_url && (
-                    <img className="review-question-image" src={question.image_url} alt="Question" />
-                  )}
-                  <div className="review-options">
-                    {options.map((option, optionIndex) => {
-                      const optionText = typeof option === "string" ? option : option?.text || "";
-                      const isCorrect = optionIndex === correct;
-                      const isSelected = optionIndex === selected;
-                      return (
-                        <div
-                          className={`review-option ${isCorrect ? "correct" : ""} ${isSelected && !isCorrect ? "incorrect" : ""}`}
-                          key={optionIndex}
-                        >
-                          <span>{String.fromCharCode(65 + optionIndex)}. {optionText}</span>
-                          {isCorrect && <strong>Correct answer</strong>}
-                          {isSelected && <small>Your answer</small>}
-                        </div>
-                      );
-                    })}
-                  </div>
-                  <div className="review-question-footer">
-                    <span className={question.marks > 0 ? "marks-positive" : question.marks < 0 ? "marks-negative" : "marks-neutral"}>
-                      Marks: {question.marks > 0 ? "+" : ""}{question.marks}
-                    </span>
-                    <span>{selected === null ? "Not answered" : selected === correct ? "Correct" : "Incorrect"}</span>
-                  </div>
-                  {question.explanation && (
-                    <div className="review-explanation">
-                      <strong>Explanation</strong>
-                      <p>{question.explanation}</p>
-                    </div>
-                  )}
-                </article>
-              );
-            })}
+            <button
+              className="refresh-button"
+              onClick={loadAttemptHistory}
+              disabled={historyLoading}
+            >
+              <RefreshCw size={16} />
+              {historyLoading ? "Loading..." : "Refresh history"}
+            </button>
           </div>
-        )}
-      </section>
 
-      <footer className="dashboard-footer">
-        <Trophy size={17} />
-        Keep learning. Keep questioning. Keep improving.
-      </footer>
-    </main>
-    <GlobalSignOut onClick={handleLogout} />
-    <SiteWatermark />
-  </>
+          {historyLoading ? (
+            <p className="loading">Loading your exam history...</p>
+          ) : attemptHistory.length === 0 ? (
+            <div className="empty-state">
+              <ClipboardList size={32} />
+              <h3>No submitted examinations yet</h3>
+              <p>Your completed exam attempts will appear here.</p>
+            </div>
+          ) : (
+            <div className="history-list">
+              {attemptHistory.map((attempt) => (
+                <article className="history-card" key={attempt.id}>
+                  <div className="history-card-main">
+                    <div>
+                      <h3>
+                        {attempt.exams?.title || "Physics examination"}
+                      </h3>
+
+                      <p>
+                        {attempt.submitted_at
+                          ? new Date(attempt.submitted_at).toLocaleString()
+                          : ""}
+                      </p>
+                    </div>
+
+                    <div className="history-score">
+                      <strong>
+                        {attempt.score ?? 0} / {attempt.max_marks ?? 0}
+                      </strong>
+
+                      <span>
+                        {attempt.correct_count ?? 0} correct ·{" "}
+                        {attempt.wrong_count ?? 0} wrong ·{" "}
+                        {attempt.unanswered_count ?? 0} unanswered
+                      </span>
+                    </div>
+                  </div>
+
+                  <button
+                    className="history-review-button"
+                    onClick={() => openAttemptReview(attempt.id)}
+                    disabled={reviewLoading}
+                  >
+                    View answers and explanations
+                  </button>
+                </article>
+              ))}
+            </div>
+          )}
+
+          {reviewLoading && (
+            <p className="loading">Loading answer review...</p>
+          )}
+
+          {selectedReview && (
+            <div className="review-panel">
+              <div className="review-panel-heading">
+                <div>
+                  <h3>{selectedReview.exam_title}</h3>
+
+                  <p>
+                    Score:{" "}
+                    <strong>
+                      {selectedReview.score} / {selectedReview.max_marks}
+                    </strong>
+                  </p>
+                </div>
+
+                <button
+                  className="history-close-button"
+                  onClick={() => setSelectedReview(null)}
+                >
+                  Close review
+                </button>
+              </div>
+
+              {(selectedReview.questions || []).map(
+                (question, index) => {
+                  const options = Array.isArray(question.options)
+                    ? question.options
+                    : [];
+
+                  const selected = question.selected_option;
+                  const correct = question.correct_option;
+
+                  return (
+                    <article
+                      className="review-question"
+                      key={question.question_id}
+                    >
+                      <h4>
+                        Q{index + 1}. {question.question_text}
+                      </h4>
+
+                      {question.image_url && (
+                        <img
+                          className="review-question-image"
+                          src={question.image_url}
+                          alt="Question"
+                        />
+                      )}
+
+                      <div className="review-options">
+                        {options.map((option, optionIndex) => {
+                          const optionText =
+                            typeof option === "string"
+                              ? option
+                              : option?.text || "";
+
+                          const isCorrect = optionIndex === correct;
+                          const isSelected = optionIndex === selected;
+
+                          return (
+                            <div
+                              className={`review-option ${
+                                isCorrect ? "correct" : ""
+                              } ${
+                                isSelected && !isCorrect
+                                  ? "incorrect"
+                                  : ""
+                              }`}
+                              key={optionIndex}
+                            >
+                              <span>
+                                {String.fromCharCode(65 + optionIndex)}.{" "}
+                                {optionText}
+                              </span>
+
+                              {isCorrect && (
+                                <strong>Correct answer</strong>
+                              )}
+
+                              {isSelected && (
+                                <small>Your answer</small>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+
+                      <div className="review-question-footer">
+                        <span
+                          className={
+                            question.marks > 0
+                              ? "marks-positive"
+                              : question.marks < 0
+                                ? "marks-negative"
+                                : "marks-neutral"
+                          }
+                        >
+                          Marks:{" "}
+                          {question.marks > 0 ? "+" : ""}
+                          {question.marks}
+                        </span>
+
+                        <span>
+                          {selected === null
+                            ? "Not answered"
+                            : selected === correct
+                              ? "Correct"
+                              : "Incorrect"}
+                        </span>
+                      </div>
+
+                      {question.explanation && (
+                        <div className="review-explanation">
+                          <strong>Explanation</strong>
+                          <p>{question.explanation}</p>
+                        </div>
+                      )}
+                    </article>
+                  );
+                }
+              )}
+            </div>
+          )}
+        </section>
+
+        <footer className="dashboard-footer">
+          <Trophy size={17} />
+          Keep learning. Keep questioning. Keep improving.
+        </footer>
+      </main>
+
+      <GlobalSignOut onClick={handleLogout} />
+      <SiteWatermark />
+    </>
   );
 }
