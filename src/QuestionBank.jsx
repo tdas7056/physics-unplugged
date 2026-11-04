@@ -2,7 +2,14 @@
 import { useEffect, useState } from "react";
 import { supabase } from "./supabase";
 import "./QuestionBank.css";
-import { PlusCircle, Pencil, Trash2, RefreshCw, ImagePlus, X } from "lucide-react";
+import {
+  PlusCircle,
+  Pencil,
+  Trash2,
+  RefreshCw,
+  ImagePlus,
+  X,
+} from "lucide-react";
 
 const emptyQuestion = {
   class_name: "",
@@ -36,7 +43,9 @@ export default function QuestionBank() {
 
     const { data, error } = await supabase
       .from("questions")
-      .select("id, class_name, topic, question_text, options, image_url, created_at")
+      .select(
+        "id, class_name, topic, question_text, options, image_url, created_at"
+      )
       .order("created_at", { ascending: false });
 
     if (error) {
@@ -47,112 +56,112 @@ export default function QuestionBank() {
 
     setLoading(false);
   }
-async function handleImportFile(event) {
-  const file = event.target.files?.[0];
-  if (!file) return;
 
-  setImporting(true);
-  setMessage("");
+  async function handleImportFile(event) {
+    const file = event.target.files?.[0];
+    if (!file) return;
 
-  try {
-    const text = await file.text();
-    const importedQuestions = JSON.parse(text);
+    setImporting(true);
+    setMessage("");
 
-    if (!Array.isArray(importedQuestions) || importedQuestions.length === 0) {
-      throw new Error("The JSON file must contain a non-empty array of questions.");
-    }
+    try {
+      const text = await file.text();
+      const importedQuestions = JSON.parse(text);
 
-    const { data: { user }, error: userError } =
-      await supabase.auth.getUser();
-
-    if (userError || !user) {
-      throw new Error("Please sign in again.");
-    }
-
-    let successCount = 0;
-
-    for (const item of importedQuestions) {
-      if (item.image_url) {
-  let imageUrl;
-
-  try {
-    imageUrl = new URL(item.image_url);
-  } catch {
-    throw new Error("Invalid question image URL.");
-  }
-
-  if (
-    imageUrl.origin !== "https://hsqnwkutcdhbmmitoblt.supabase.co" ||
-    !imageUrl.pathname.startsWith(
-      "/storage/v1/object/public/question-images/"
-    )
-  ) {
-    throw new Error(
-      "Only images uploaded to Physics Unplugged storage are allowed."
-    );
-  }
-}
       if (
-        !item.class_name ||
-        !item.question_text ||
-        !Array.isArray(item.options) ||
-        item.options.length !== 4 ||
-        !Number.isInteger(Number(item.correct_option)) ||
-        Number(item.correct_option) < 0 ||
-        Number(item.correct_option) > 3
+        !Array.isArray(importedQuestions) ||
+        importedQuestions.length === 0
       ) {
-        throw new Error("Invalid question format. Each question needs four options and a correct answer from 0 to 3.");
+        throw new Error(
+          "The JSON file must contain a non-empty array of questions."
+        );
       }
 
-      const options = item.options.map((option) =>
-        typeof option === "string" ? option.trim() : option?.text?.trim()
+      const {
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser();
+
+      if (userError || !user) {
+        throw new Error("Please sign in again.");
+      }
+
+      let successCount = 0;
+
+      for (const item of importedQuestions) {
+        if (
+          !item.class_name ||
+          !item.question_text ||
+          !Array.isArray(item.options) ||
+          item.options.length !== 4 ||
+          !Number.isInteger(Number(item.correct_option)) ||
+          Number(item.correct_option) < 0 ||
+          Number(item.correct_option) > 3
+        ) {
+          throw new Error(
+            "Invalid question format. Each question needs four options and a correct answer from 0 to 3."
+          );
+        }
+
+        const options = item.options.map((option) =>
+          typeof option === "string"
+            ? option.trim()
+            : option?.text?.trim()
+        );
+
+        if (options.some((option) => !option)) {
+          throw new Error(
+            "Every question must have four non-empty options."
+          );
+        }
+
+        const { data: question, error: questionError } =
+          await supabase
+            .from("questions")
+            .insert({
+              class_name: item.class_name,
+              topic: item.topic || null,
+              question_text: item.question_text,
+              options: options.map((text) => ({ text })),
+              image_url: null,
+              created_by: user.id,
+            })
+            .select("id")
+            .single();
+
+        if (questionError) throw questionError;
+
+        const { error: keyError } = await supabase
+          .from("question_keys")
+          .insert({
+            question_id: question.id,
+            correct_option: Number(item.correct_option),
+            explanation: item.explanation || null,
+          });
+
+        if (keyError) throw keyError;
+
+        successCount++;
+      }
+
+      setMessage(
+        `${successCount} questions imported successfully.`
       );
 
-      if (options.some((option) => !option)) {
-        throw new Error("Every question must have four non-empty options.");
-      }
-
-      const { data: question, error: questionError } = await supabase
-        .from("questions")
-        .insert({
-          class_name: item.class_name,
-          topic: item.topic || null,
-          question_text: item.question_text,
-          options: options.map((text) => ({ text })),
-          image_url: item.image_url || null,
-          created_by: user.id,
-        })
-        .select("id")
-        .single();
-
-      if (questionError) throw questionError;
-
-      const { error: keyError } = await supabase
-        .from("question_keys")
-        .insert({
-          question_id: question.id,
-          correct_option: Number(item.correct_option),
-          explanation: item.explanation || null,
-        });
-
-      if (keyError) throw keyError;
-
-      successCount++;
+      await loadQuestions();
+    } catch (error) {
+      setMessage("Import error: " + error.message);
+    } finally {
+      setImporting(false);
+      event.target.value = "";
     }
-
-    setMessage(`${successCount} questions imported successfully.`);
-    await loadQuestions();
-  } catch (error) {
-    setMessage("Import error: " + error.message);
-  } finally {
-    setImporting(false);
-    event.target.value = "";
   }
-}
+
   function updateOption(index, value) {
     setForm((previous) => {
       const options = [...previous.options];
       options[index] = value;
+
       return { ...previous, options };
     });
   }
@@ -168,7 +177,9 @@ async function handleImportFile(event) {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+    if (
+      !["image/jpeg", "image/png", "image/webp"].includes(file.type)
+    ) {
       setMessage("Please select a JPG, PNG or WEBP image.");
       event.target.value = "";
       return;
@@ -183,7 +194,10 @@ async function handleImportFile(event) {
     setUploading(true);
     setMessage("");
 
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
 
     if (userError || !user) {
       setMessage("Please sign in again.");
@@ -258,7 +272,9 @@ async function handleImportFile(event) {
     setSaving(true);
     setMessage("");
 
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
     if (!user) {
       setMessage("Please sign in again.");
@@ -276,7 +292,9 @@ async function handleImportFile(event) {
       class_name: form.class_name.trim(),
       topic: form.topic.trim() || null,
       question_text: form.question_text.trim(),
-      options: form.options.map((text) => ({ text: text.trim() })),
+      options: form.options.map((text) => ({
+        text: text.trim(),
+      })),
       image_url: form.image_url.trim() || null,
       created_by: user.id,
     };
@@ -316,22 +334,29 @@ async function handleImportFile(event) {
 
     const { error: keyError } = await supabase
       .from("question_keys")
-      .upsert(answerData, { onConflict: "question_id" });
+      .upsert(answerData, {
+        onConflict: "question_id",
+      });
 
     if (keyError) {
       setMessage(
         "Question saved, but answer key could not be saved: " +
-        keyError.message
+          keyError.message
       );
+
       setSaving(false);
       await loadQuestions();
       return;
     }
 
-    setMessage(editingId ? "Question updated." : "Question created.");
+    setMessage(
+      editingId ? "Question updated." : "Question created."
+    );
+
     setForm(emptyQuestion);
     setEditingId(null);
     setShowForm(false);
+
     await loadQuestions();
     setSaving(false);
   }
@@ -361,7 +386,9 @@ async function handleImportFile(event) {
       question.question_text,
       question.class_name,
       question.topic,
-    ].join(" ").toLowerCase();
+    ]
+      .join(" ")
+      .toLowerCase();
 
     return text.includes(search.toLowerCase());
   });
@@ -375,22 +402,34 @@ async function handleImportFile(event) {
           <p>Create and manage reusable MCQ questions.</p>
         </div>
 
-<div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
-  <label className="primary-button" style={{ cursor: "pointer" }}>
-    <input
-      type="file"
-      accept=".json,application/json"
-      style={{ display: "none" }}
-      onChange={handleImportFile}
-      disabled={importing}
-    />
-    {importing ? "Importing..." : "Import from ChatGPT"}
-  </label>
+        <div
+          style={{
+            display: "flex",
+            gap: "10px",
+            flexWrap: "wrap",
+          }}
+        >
+          <label
+            className="primary-button"
+            style={{ cursor: "pointer" }}
+          >
+            <input
+              type="file"
+              accept=".json,application/json"
+              style={{ display: "none" }}
+              onChange={handleImportFile}
+              disabled={importing}
+            />
+            {importing ? "Importing..." : "Import from ChatGPT"}
+          </label>
 
-  <button className="primary-button" onClick={startNew}>
-    <PlusCircle size={18} /> Add question
-  </button>
-</div>
+          <button
+            className="primary-button"
+            onClick={startNew}
+          >
+            <PlusCircle size={18} /> Add question
+          </button>
+        </div>
       </header>
 
       <div className="qb-summary">
@@ -410,7 +449,10 @@ async function handleImportFile(event) {
               <input
                 value={form.class_name}
                 onChange={(e) =>
-                  setForm({ ...form, class_name: e.target.value })
+                  setForm({
+                    ...form,
+                    class_name: e.target.value,
+                  })
                 }
                 placeholder="Example: Class 9"
                 required
@@ -422,7 +464,10 @@ async function handleImportFile(event) {
               <input
                 value={form.topic}
                 onChange={(e) =>
-                  setForm({ ...form, topic: e.target.value })
+                  setForm({
+                    ...form,
+                    topic: e.target.value,
+                  })
                 }
                 placeholder="Example: Laws of Motion"
               />
@@ -433,7 +478,10 @@ async function handleImportFile(event) {
               <textarea
                 value={form.question_text}
                 onChange={(e) =>
-                  setForm({ ...form, question_text: e.target.value })
+                  setForm({
+                    ...form,
+                    question_text: e.target.value,
+                  })
                 }
                 rows="4"
                 placeholder="Enter your question..."
@@ -442,8 +490,13 @@ async function handleImportFile(event) {
             </label>
 
             <section className="qb-image-section">
-              <h3><ImagePlus size={18} /> Question image (optional)</h3>
-              <p>Upload a diagram, graph, circuit or other question image.</p>
+              <h3>
+                <ImagePlus size={18} /> Question image (optional)
+              </h3>
+
+              <p>
+                Upload a diagram, graph, circuit or other question image.
+              </p>
 
               <label>
                 Upload from computer
@@ -457,7 +510,6 @@ async function handleImportFile(event) {
 
               {uploading && <p>Uploading image...</p>}
 
-
               {form.image_url && (
                 <div className="qb-image-preview">
                   <img
@@ -467,11 +519,15 @@ async function handleImportFile(event) {
                       e.currentTarget.style.display = "none";
                     }}
                   />
+
                   <button
                     type="button"
                     className="secondary-button"
                     onClick={() =>
-                      setForm({ ...form, image_url: "" })
+                      setForm({
+                        ...form,
+                        image_url: "",
+                      })
                     }
                   >
                     <X size={16} /> Remove image
@@ -487,8 +543,12 @@ async function handleImportFile(event) {
                 Option {String.fromCharCode(65 + index)}
                 <input
                   value={option}
-                  onChange={(e) => updateOption(index, e.target.value)}
-                  placeholder={`Enter option ${String.fromCharCode(65 + index)}`}
+                  onChange={(e) =>
+                    updateOption(index, e.target.value)
+                  }
+                  placeholder={`Enter option ${String.fromCharCode(
+                    65 + index
+                  )}`}
                   required
                 />
               </label>
@@ -499,7 +559,10 @@ async function handleImportFile(event) {
               <select
                 value={form.correct_option}
                 onChange={(e) =>
-                  setForm({ ...form, correct_option: e.target.value })
+                  setForm({
+                    ...form,
+                    correct_option: e.target.value,
+                  })
                 }
               >
                 <option value="0">Option A</option>
@@ -514,7 +577,10 @@ async function handleImportFile(event) {
               <textarea
                 value={form.explanation}
                 onChange={(e) =>
-                  setForm({ ...form, explanation: e.target.value })
+                  setForm({
+                    ...form,
+                    explanation: e.target.value,
+                  })
                 }
                 rows="4"
                 placeholder="Explain why the correct answer is right..."
@@ -552,7 +618,11 @@ async function handleImportFile(event) {
       <section className="qb-list-section">
         <div className="qb-list-heading">
           <h2>All questions</h2>
-          <button className="refresh-button" onClick={loadQuestions}>
+
+          <button
+            className="refresh-button"
+            onClick={loadQuestions}
+          >
             <RefreshCw size={16} /> Refresh
           </button>
         </div>
@@ -580,6 +650,7 @@ async function handleImportFile(event) {
                     {question.class_name}
                     {question.topic ? ` · ${question.topic}` : ""}
                   </span>
+
                   <h3>{question.question_text}</h3>
 
                   {question.image_url && (
@@ -591,16 +662,22 @@ async function handleImportFile(event) {
                   )}
 
                   <ol type="A">
-                    {(question.options || []).map((option, index) => (
-                      <li key={index}>{option.text}</li>
-                    ))}
+                    {(question.options || []).map(
+                      (option, index) => (
+                        <li key={index}>{option.text}</li>
+                      )
+                    )}
                   </ol>
                 </div>
 
                 <div className="qb-card-actions">
-                  <button onClick={() => startEdit(question)} title="Edit">
+                  <button
+                    onClick={() => startEdit(question)}
+                    title="Edit"
+                  >
                     <Pencil size={17} />
                   </button>
+
                   <button
                     onClick={() => deleteQuestion(question)}
                     title="Delete"
