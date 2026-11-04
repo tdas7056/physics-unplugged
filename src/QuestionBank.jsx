@@ -72,6 +72,26 @@ async function handleImportFile(event) {
     let successCount = 0;
 
     for (const item of importedQuestions) {
+      if (item.image_url) {
+  let imageUrl;
+
+  try {
+    imageUrl = new URL(item.image_url);
+  } catch {
+    throw new Error("Invalid question image URL.");
+  }
+
+  if (
+    imageUrl.origin !== "https://hsqnwkutcdhbmmitoblt.supabase.co" ||
+    !imageUrl.pathname.startsWith(
+      "/storage/v1/object/public/question-images/"
+    )
+  ) {
+    throw new Error(
+      "Only images uploaded to Physics Unplugged storage are allowed."
+    );
+  }
+}
       if (
         !item.class_name ||
         !item.question_text ||
@@ -437,17 +457,6 @@ async function handleImportFile(event) {
 
               {uploading && <p>Uploading image...</p>}
 
-              <label>
-                Or paste image URL
-                <input
-                  type="url"
-                  value={form.image_url}
-                  onChange={(e) =>
-                    setForm({ ...form, image_url: e.target.value })
-                  }
-                  placeholder="https://example.com/image.png"
-                />
-              </label>
 
               {form.image_url && (
                 <div className="qb-image-preview">
