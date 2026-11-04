@@ -369,7 +369,7 @@ setCaptchaWidgetKey((key) => key + 1);
               />
             </div>
 
- {turnstileSiteKey ? (
+{turnstileSiteKey ? (
   <div className="captcha-container">
     <Turnstile
       key={captchaWidgetKey}
@@ -387,13 +387,16 @@ setCaptchaWidgetKey((key) => key + 1);
   </div>
 ) : (
   <p className="message">
-    CAPTCHA configuration missing. Please contact the administrator.
+    CAPTCHA configuration missing. Contact administrator.
   </p>
 )}
 
 {message && <p className="message">{message}</p>}
 
-            <button className="primary-button" disabled={busy}>
+<button
+  className="primary-button"
+  disabled={busy || !captchaToken || !turnstileSiteKey}
+>
               {busy ? "Please wait..." : "Update Password"}
             </button>
           </form>
