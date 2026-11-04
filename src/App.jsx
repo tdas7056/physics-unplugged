@@ -41,6 +41,7 @@ export default function App() {
   const [selectedExam, setSelectedExam] = useState(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [studentName, setStudentName] = useState("");
   const [profileName, setProfileName] = useState("");
   const [attemptHistory, setAttemptHistory] = useState([]);
@@ -181,53 +182,65 @@ useEffect(() => {
     setBusy(false);
   }
 async function handlePasswordReset() {
-  if (!email.trim()) {
-    setMessage("Please enter your registered email address.");
-    return;
+    if (!email.trim()) {
+      setMessage("Please enter your registered email address.");
+      return;
+    }
+
+    setBusy(true);
+    setMessage("");
+
+    const { error } = await supabase.auth.resetPasswordForEmail(
+      email.trim(),
+      {
+        redirectTo: window.location.origin + "/"
+      }
+    );
+
+    setMessage(
+      error
+        ? error.message
+        : "Password reset email sent. Please check your inbox."
+    );
+
+    setBusy(false);
   }
-async function handleUpdatePassword() {
-  if (password.length < 6) {
-    setMessage("Password must be at least 6 characters.");
-    return;
-  }
 
-  setBusy(true);
-  setMessage("");
+  async function handleUpdatePassword(event) {
+    event.preventDefault();
 
-  const { error } = await supabase.auth.updateUser({
-    password: password,
-  });
+    if (password.length < 6) {
+      setMessage("Password must be at least 6 characters.");
+      return;
+    }
 
-  if (error) {
-    setMessage(error.message);
-  } else {
-    setMessage("Password updated successfully. Please sign in again.");
+    if (password !== confirmPassword) {
+      setMessage("Passwords do not match.");
+      return;
+    }
+
+    setBusy(true);
+    setMessage("");
+
+    const { error } = await supabase.auth.updateUser({
+      password: password,
+    });
+
+    if (error) {
+      setMessage(error.message);
+      setBusy(false);
+      return;
+    }
+
     setPassword("");
+    setConfirmPassword("");
     setResetMode(false);
     await supabase.auth.signOut();
+    setMessage("Password updated successfully. Please sign in again.");
+    setBusy(false);
   }
 
-  setBusy(false);
-}
-  setBusy(true);
-  setMessage("");
-
-  const { error } = await supabase.auth.resetPasswordForEmail(
-    email.trim(),
-    {
-      redirectTo: "https://physics-unplugged-zuu6.vercel.app/"
-    }
-  );
-
-  setMessage(
-    error
-      ? error.message
-      : "Password reset email sent. Please check your inbox."
-  );
-
-  setBusy(false);
-}
-async function handleSignup() {
+  async function handleSignup() {
   if (!studentName.trim()) {
     setMessage("Please enter your full name.");
     return;
@@ -284,109 +297,58 @@ async function handleSignup() {
     return <main className="loading">Loading Physics Unplugged...</main>;
   }
  if (resetMode) {
-  return (
-    <main className="login-screen">
-<section className="login-card">
+    return (
+      <main className="login-screen">
+        <section className="login-card">
+          <div className="login-brand">
+            <img src={logo} alt="Physics Unplugged Logo" className="login-logo" />
+            <h1>Physics Unplugged</h1>
+          </div>
 
-  <div className="login-brand">
-    <img
-      src={logo}
-      alt="Physics Unplugged Logo"
-      className="login-logo"
-    />
-    <h1>Physics Unplugged</h1>
-    <p>Learn Physics. Think Beyond.</p>
-  </div>
+          <div className="login-welcome">
+            <h2>Set a new password</h2>
+            <p>Choose a new password for your account</p>
+          </div>
 
-  <p className="subtitle">
-    Learn, practise and test your understanding.
-  </p>
+          <form onSubmit={handleUpdatePassword}>
+            <label>NEW PASSWORD</label>
+            <div className="input-wrap">
+              <Lock size={18} />
+              <input
+                type="password"
+                placeholder="Enter new password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                minLength={6}
+              />
+            </div>
 
-  <form
-    onSubmit={showSignup ? (e) => {
-      e.preventDefault();
-      handleSignup();
-    } : handleLogin}
-  >
-    {showSignup && (
-      <>
-        <label>Full Name</label>
-        <div className="input-wrap">
-          <GraduationCap size={18} />
-          <input
-            type="text"
-            placeholder="Enter your full name"
-            value={studentName}
-            onChange={(e) => setStudentName(e.target.value)}
-            required
-          />
-        </div>
-      </>
-    )}
+            <label>CONFIRM PASSWORD</label>
+            <div className="input-wrap">
+              <Lock size={18} />
+              <input
+                type="password"
+                placeholder="Re-enter new password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+                minLength={6}
+              />
+            </div>
 
-    <label>Email address</label>
-    <div className="input-wrap">
-      <Mail size={18} />
-      <input
-        type="email"
-        placeholder="Enter your email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        required
-      />
-    </div>
+            {message && <p className="message">{message}</p>}
 
-    <label>Password</label>
-    <div className="input-wrap">
-      <Lock size={18} />
-      <input
-        type="password"
-        placeholder="Enter your password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        required
-        minLength={6}
-      />
-      {!showSignup && (
-        <button
-          type="button"
-          className="forgot-password-link"
-          onClick={handlePasswordReset}
-          disabled={busy}
-        >
-          Forgot Password?
-        </button>
-      )}
-    </div>
-
-    {message && <p className="message">{message}</p>}
-
-    <button className="primary-button" disabled={busy}>
-      {busy ? "Please wait..." : showSignup ? "Create Account" : "Sign in"}
-    </button>
-  </form>
-
-  <button
-    type="button"
-    className="secondary-button"
-    onClick={() => {
-      setShowSignup(!showSignup);
-      setMessage("");
-    }}
-  >
-    {showSignup ? "Back to Sign in" : "Create student account"}
-  </button>
-
-  <p className="footer-note">
-    Secure student access powered by Supabase.
-  </p>
-
-</section>
-      <SiteWatermark />
-    </main>
-  );
-}
-if (session && session.user.email === "tdas66142@gmail.com") {
+            <button className="primary-button" disabled={busy}>
+              {busy ? "Please wait..." : "Update Password"}
+            </button>
+          </form>
+        </section>
+        <SiteWatermark />
+      </main>
+    );
+  }
+  if (session && session.user.email === "tdas66142@gmail.com") {
   return (
     <>
       <TeacherDashboard />
