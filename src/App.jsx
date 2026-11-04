@@ -1,3 +1,4 @@
+import { Turnstile } from "@marsidev/react-turnstile";
 import TeacherDashboard from "./TeacherDashboard";
 import logo from "./physics-unplugged-logo.png";
 import "./StudentDashboard.css";
@@ -52,6 +53,10 @@ const [showSignup, setShowSignup] = useState(false);
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
   const [resetMode, setResetMode] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState("");
+const [captchaWidgetKey, setCaptchaWidgetKey] = useState(0);
+
+const turnstileSiteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY;
 
   useEffect(() => {
     if (!isSupabaseConfigured) {
@@ -168,33 +173,50 @@ useEffect(() => {
     setReviewLoading(false);
   }
 
-  async function handleLogin(event) {
-    event.preventDefault();
-    setBusy(true);
-    setMessage("");
+async function handleLogin(event) {
+  event.preventDefault();
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
-    if (error) setMessage(error.message);
-    setBusy(false);
+  if (!captchaToken) {
+    setMessage("Please complete the CAPTCHA verification.");
+    return;
   }
+
+  setBusy(true);
+  setMessage("");
+
+  const { error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+    options: {
+      captchaToken,
+    },
+  });
+
+  setCaptchaToken("");
+  setCaptchaWidgetKey((key) => key + 1);
+
+  if (error) setMessage(error.message);
+
+  setBusy(false);
+}
 async function handlePasswordReset() {
     if (!email.trim()) {
       setMessage("Please enter your registered email address.");
       return;
     }
-
+if (!captchaToken) {
+  setMessage("Please complete the CAPTCHA verification.");
+  return;
+}
     setBusy(true);
     setMessage("");
 
     const { error } = await supabase.auth.resetPasswordForEmail(
       email.trim(),
-      {
-        redirectTo: window.location.origin + "/"
-      }
+{
+  redirectTo: window.location.origin + "/",
+  captchaToken,
+}
     );
 
     setMessage(
@@ -202,7 +224,8 @@ async function handlePasswordReset() {
         ? error.message
         : "Password reset email sent. Please check your inbox."
     );
-
+setCaptchaToken("");
+setCaptchaWidgetKey((key) => key + 1);
     setBusy(false);
   }
 
@@ -240,9 +263,14 @@ async function handlePasswordReset() {
     setBusy(false);
   }
 
-  async function handleSignup() {
+ async function handleSignup() {
   if (!studentName.trim()) {
     setMessage("Please enter your full name.");
+    return;
+  }
+
+  if (!captchaToken) {
+    setMessage("Please complete the CAPTCHA verification.");
     return;
   }
 
@@ -253,11 +281,15 @@ async function handlePasswordReset() {
     email,
     password,
     options: {
+      captchaToken,
       data: {
-        full_name: studentName.trim()
-      }
-    }
+        full_name: studentName.trim(),
+      },
+    },
   });
+
+  setCaptchaToken("");
+  setCaptchaWidgetKey((key) => key + 1);
 
   setMessage(
     error
@@ -337,7 +369,29 @@ async function handlePasswordReset() {
               />
             </div>
 
-            {message && <p className="message">{message}</p>}
+ {turnstileSiteKey ? (
+  <div className="captcha-container">
+    <Turnstile
+      key={captchaWidgetKey}
+      siteKey={turnstileSiteKey}
+      onSuccess={(token) => {
+        setCaptchaToken(token);
+        setMessage("");
+      }}
+      onExpire={() => setCaptchaToken("")}
+      onError={() => {
+        setCaptchaToken("");
+        setMessage("CAPTCHA failed to load. Please refresh.");
+      }}
+    />
+  </div>
+) : (
+  <p className="message">
+    CAPTCHA configuration missing. Please contact the administrator.
+  </p>
+)}
+
+{message && <p className="message">{message}</p>}
 
             <button className="primary-button" disabled={busy}>
               {busy ? "Please wait..." : "Update Password"}
