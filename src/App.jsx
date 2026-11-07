@@ -1,6 +1,7 @@
 
 import { Turnstile } from "@marsidev/react-turnstile";
 import TeacherDashboard from "./TeacherDashboard";
+import DeskLampLogin from "./DeskLampLogin";
 import logo from "./physics-unplugged-logo.png";
 import "./StudentDashboard.css";
 import StudentExam from "./StudentExam";
@@ -373,65 +374,32 @@ export default function App() {
   // Password recovery screen
   if (resetMode) {
     return (
-      <main className="login-screen">
-        <section className="login-card">
-          <div className="login-brand">
-            <img
-              src={logo}
-              alt="Physics Unplugged Logo"
-              className="login-logo"
-            />
-            <h1>Physics Unplugged</h1>
-          </div>
-
-          <div className="login-welcome">
-            <h2>Set a new password</h2>
-            <p>Choose a new password for your account</p>
-          </div>
-
-          <form onSubmit={handleUpdatePassword}>
-            <label>NEW PASSWORD</label>
-
-            <div className="input-wrap">
-              <Lock size={18} />
-              <input
-                type="password"
-                placeholder="Enter new password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                minLength={6}
-              />
-            </div>
-
-            <label>CONFIRM PASSWORD</label>
-
-            <div className="input-wrap">
-              <Lock size={18} />
-              <input
-                type="password"
-                placeholder="Re-enter new password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                required
-                minLength={6}
-              />
-            </div>
-
-            {message && <p className="message">{message}</p>}
-
-            <button
-              type="submit"
-              className="primary-button"
-              disabled={busy}
-            >
-              {busy ? "Please wait..." : "Update Password"}
-            </button>
-          </form>
-        </section>
-
-        <SiteWatermark />
-      </main>
+      <DeskLampLogin
+        email={email}
+        setEmail={setEmail}
+        password={password}
+        setPassword={setPassword}
+        confirmPassword={confirmPassword}
+        setConfirmPassword={setConfirmPassword}
+        studentName={studentName}
+        setStudentName={setStudentName}
+        showSignup={showSignup}
+        setShowSignup={setShowSignup}
+        handleLogin={handleLogin}
+        handleSignup={handleSignup}
+        handlePasswordReset={handlePasswordReset}
+        handleUpdatePassword={handleUpdatePassword}
+        resetMode={true}
+        busy={busy}
+        message={message}
+        turnstileSiteKey={turnstileSiteKey}
+        captchaWidgetKey={captchaWidgetKey}
+        setCaptchaToken={setCaptchaToken}
+        captchaToken={captchaToken}
+        setMessage={setMessage}
+        logo={logo}
+        SiteWatermark={SiteWatermark}
+      />
     );
   }
 
@@ -464,163 +432,32 @@ export default function App() {
   // Login and registration screen
   if (!session) {
     return (
-      <main className="login-screen">
-        <section className="login-card">
-          <div className="login-brand">
-            <img
-              src={logo}
-              alt="Physics Unplugged Logo"
-              className="login-logo"
-            />
-
-            <p className="login-eyebrow">
-              TANMAY'S ADVANCED EXAMINATION PORTAL
-            </p>
-
-            <h1>Physics Unplugged</h1>
-          </div>
-
-          <div className="login-welcome">
-            <h2>{showSignup ? "Create your account" : "Welcome"}</h2>
-
-            <p>
-              {showSignup
-                ? "Register to access your examinations"
-                : "Sign in to your account"}
-            </p>
-          </div>
-
-          <form
-            onSubmit={
-              showSignup
-                ? (e) => {
-                    e.preventDefault();
-                    handleSignup();
-                  }
-                : handleLogin
-            }
-          >
-            {showSignup && (
-              <>
-                <label>FULL NAME</label>
-
-                <div className="input-wrap">
-                  <GraduationCap size={18} />
-
-                  <input
-                    type="text"
-                    placeholder="Enter your full name"
-                    value={studentName}
-                    onChange={(e) => setStudentName(e.target.value)}
-                    required
-                  />
-                </div>
-              </>
-            )}
-
-            <label>EMAIL ADDRESS</label>
-
-            <div className="input-wrap">
-              <Mail size={18} />
-
-              <input
-                type="email"
-                placeholder="Enter your email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </div>
-
-            <div className="login-password-heading">
-              <label>PASSWORD</label>
-            </div>
-
-            <div className="input-wrap">
-              <Lock size={18} />
-
-              <input
-                type="password"
-                placeholder="Enter your password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                minLength={6}
-              />
-            </div>
-
-            {/* Cloudflare Turnstile CAPTCHA */}
-            {turnstileSiteKey ? (
-              <div className="captcha-container">
-                <Turnstile
-                  key={captchaWidgetKey}
-                  siteKey={turnstileSiteKey}
-                  onSuccess={(token) => {
-                    setCaptchaToken(token);
-                    setMessage("");
-                  }}
-                  onExpire={() => {
-                    setCaptchaToken("");
-                  }}
-                  onError={() => {
-                    setCaptchaToken("");
-                    setMessage(
-                      "CAPTCHA failed to load. Please refresh."
-                    );
-                  }}
-                />
-              </div>
-            ) : (
-              <p className="message">
-                CAPTCHA configuration missing. Please contact the
-                administrator.
-              </p>
-            )}
-
-            {message && <p className="message">{message}</p>}
-
-            <button
-              type="submit"
-              className="primary-button"
-              disabled={busy || !captchaToken || !turnstileSiteKey}
-            >
-              {busy
-                ? "Please wait..."
-                : showSignup
-                  ? "Create Account"
-                  : "Sign In"}
-            </button>
-          </form>
-
-          <button
-            type="button"
-            className="secondary-button"
-            onClick={() => {
-              setShowSignup(!showSignup);
-              setMessage("");
-            }}
-          >
-            {showSignup ? "Back to Sign In" : "Create Student Account"}
-          </button>
-
-          {!showSignup && (
-            <button
-              type="button"
-              className="forgot-password-link login-forgot-below"
-              onClick={handlePasswordReset}
-              disabled={busy}
-            >
-              Forgot Password?
-            </button>
-          )}
-
-          <p className="footer-note">
-            Secure student access powered by Supabase.
-          </p>
-        </section>
-
-        <SiteWatermark />
-      </main>
+      <DeskLampLogin
+        email={email}
+        setEmail={setEmail}
+        password={password}
+        setPassword={setPassword}
+        confirmPassword={confirmPassword}
+        setConfirmPassword={setConfirmPassword}
+        studentName={studentName}
+        setStudentName={setStudentName}
+        showSignup={showSignup}
+        setShowSignup={setShowSignup}
+        handleLogin={handleLogin}
+        handleSignup={handleSignup}
+        handlePasswordReset={handlePasswordReset}
+        handleUpdatePassword={handleUpdatePassword}
+        resetMode={false}
+        busy={busy}
+        message={message}
+        turnstileSiteKey={turnstileSiteKey}
+        captchaWidgetKey={captchaWidgetKey}
+        setCaptchaToken={setCaptchaToken}
+        captchaToken={captchaToken}
+        setMessage={setMessage}
+        logo={logo}
+        SiteWatermark={SiteWatermark}
+      />
     );
   }
 
