@@ -518,7 +518,7 @@ export default function DeskLampLogin({
   // Cord dragging & spring back physics
   const updateCordVisual = (pull) => {
     if (cordLineRef.current) {
-      cordLineRef.current.setAttribute("y2", 285 + pull);
+      cordLineRef.current.setAttribute("y2", 280 + pull);
     }
     if (cordHandleRef.current) {
       cordHandleRef.current.style.transform = `translateY(${pull}px)`;
@@ -740,7 +740,7 @@ export default function DeskLampLogin({
           <div className="lamp-beam-radial" />
         </div>
 
-        {/* Left Column: Interactive Lamp & Theme Swatches */}
+        {/* Left Column: Industrial Architect Lamp & Theme Swatches */}
         <div className="lamp-column">
           <div className="lamp-svg-box">
             <svg
@@ -753,8 +753,8 @@ export default function DeskLampLogin({
               <defs>
                 <linearGradient id="pup-base-grad" x1="0%" y1="0%" x2="100%" y2="0%">
                   <stop offset="0%" stopColor="#1e2430" />
-                  <stop offset="20%" stopColor="#3a4454" />
-                  <stop offset="50%" stopColor="#4f5b70" />
+                  <stop offset="25%" stopColor="#3a4454" />
+                  <stop offset="50%" stopColor="#556275" />
                   <stop offset="75%" stopColor="#2a323f" />
                   <stop offset="100%" stopColor="#141820" />
                 </linearGradient>
@@ -774,25 +774,17 @@ export default function DeskLampLogin({
                 </linearGradient>
 
                 <linearGradient id="pup-shade-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#384556" />
+                  <stop offset="0%" stopColor="#475569" />
                   <stop offset="35%" stopColor="#1e293b" />
                   <stop offset="70%" stopColor="#0f172a" />
                   <stop offset="100%" stopColor="#020617" />
                 </linearGradient>
 
-                <radialGradient id="pup-inner-glow" cx="45%" cy="50%" r="55%">
-                  <stop offset="0%" stopColor="#fffbeb" stopOpacity="0.95" />
-                  <stop
-                    offset="35%"
-                    stopColor={currentTheme.hex}
-                    stopOpacity="0.8"
-                  />
-                  <stop
-                    offset="75%"
-                    stopColor={currentTheme.hex}
-                    stopOpacity="0.3"
-                  />
-                  <stop offset="100%" stopColor="#1e293b" stopOpacity="0.1" />
+                <radialGradient id="pup-inner-glow" cx="48%" cy="50%" r="52%">
+                  <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
+                  <stop offset="35%" stopColor={currentTheme.hex} stopOpacity="0.8" />
+                  <stop offset="75%" stopColor={currentTheme.hex} stopOpacity="0.3" />
+                  <stop offset="100%" stopColor="#0f172a" stopOpacity="0.1" />
                 </radialGradient>
 
                 <radialGradient id="pup-filament-glow" cx="50%" cy="50%" r="50%">
@@ -809,149 +801,89 @@ export default function DeskLampLogin({
                 </linearGradient>
               </defs>
 
-              {/* Lamp Ground Shadow */}
-              <ellipse
-                cx="140"
-                cy="510"
-                rx="90"
-                ry="18"
-                fill="rgba(0,0,0,0.55)"
-              />
+              {/* 1. Cast Base Ground Shadow */}
+              <ellipse cx="170" cy="515" rx="95" ry="18" fill="rgba(0,0,0,0.55)" filter="blur(6px)" />
 
-              {/* Base */}
-              <path
-                d="M 60 500 Q 140 514 220 500 L 222 505 Q 140 520 58 505 Z"
-                fill="#0f172a"
-              />
-              <path
-                d="M 60 495 C 60 475 220 475 220 495 L 220 502 C 220 514 60 514 60 502 Z"
-                fill="url(#pup-base-grad)"
-              />
-              <ellipse
-                cx="140"
-                cy="485"
-                rx="72"
-                ry="14"
-                fill="#2a323f"
-                stroke="#475569"
-                strokeWidth="1.5"
-              />
-              <path
-                d="M 124 485 L 124 455 C 124 450 156 450 156 455 L 156 485 Z"
-                fill="url(#pup-base-grad)"
-                stroke="#334155"
-                strokeWidth="1"
-              />
-              <circle
-                cx="140"
-                cy="460"
-                r="10"
-                fill="url(#pup-brass-grad)"
-                stroke="#78350f"
-                strokeWidth="1.5"
-              />
+              {/* 2. Heavy Puck Base (Beveled Cylinder) */}
+              <path d="M 80 500 Q 170 514 260 500 L 260 508 Q 170 522 80 508 Z" fill="#0f172a" />
+              <path d="M 80 492 C 80 472 260 472 260 492 L 260 502 C 260 516 80 516 80 502 Z" fill="url(#pup-base-grad)" stroke="#334155" strokeWidth="1.2" />
+              <ellipse cx="170" cy="484" rx="78" ry="14" fill="#242c38" stroke="#475569" strokeWidth="1.5" />
 
-              {/* Lower Arm (Angled more forward across desk) */}
-              <line
-                x1="135"
-                y1="460"
-                x2="230"
-                y2="300"
-                stroke="url(#pup-rod-grad)"
-                strokeWidth="7"
-                strokeLinecap="round"
-              />
-              <line
-                x1="145"
-                y1="460"
-                x2="242"
-                y2="300"
-                stroke="url(#pup-rod-grad)"
-                strokeWidth="7"
-                strokeLinecap="round"
-              />
+              {/* Vertical Swivel Stem on Base with Knurled Tightening Screw */}
+              <path d="M 158 484 L 158 450 L 182 450 L 182 484 Z" fill="url(#pup-base-grad)" stroke="#334155" strokeWidth="1" />
+              <rect x="182" y="454" width="8" height="6" rx="1.5" fill="url(#pup-brass-grad)" />
 
-              {/* Elbow Joint (Positioned at 236, 300) */}
-              <circle
-                cx="236"
-                cy="300"
-                r="14"
-                fill="url(#pup-base-grad)"
-                stroke="#64748b"
-                strokeWidth="2"
-              />
-              <circle
-                cx="236"
-                cy="300"
-                r="8"
-                fill="url(#pup-brass-grad)"
-                stroke="#78350f"
-                strokeWidth="1.5"
-              />
+              {/* 3. Base Pivot Bracket (Triangular Plate) */}
+              <path d="M 152 452 L 188 452 L 175 425 L 160 425 Z" fill="#2a3442" stroke="#475569" strokeWidth="1.5" />
+              <circle cx="165" cy="438" r="4.5" fill="url(#pup-brass-grad)" />
+              <circle cx="175" cy="438" r="4.5" fill="url(#pup-brass-grad)" />
 
-              {/* Upper Arm (Reaching cleanly to 310, 170) */}
-              <line
-                x1="232"
-                y1="300"
-                x2="305"
-                y2="170"
-                stroke="url(#pup-rod-grad)"
-                strokeWidth="6.5"
-                strokeLinecap="round"
-              />
-              <line
-                x1="240"
-                y1="300"
-                x2="315"
-                y2="170"
-                stroke="url(#pup-rod-grad)"
-                strokeWidth="6.5"
-                strokeLinecap="round"
-              />
+              {/* 4. Lower Arm (Leaning UP & LEFT towards Elbow: 105, 270) */}
+              <line x1="165" y1="438" x2="105" y2="272" stroke="url(#pup-rod-grad)" strokeWidth="6" strokeLinecap="round" />
+              <line x1="175" y1="438" x2="115" y2="272" stroke="url(#pup-rod-grad)" strokeWidth="6" strokeLinecap="round" />
+              {/* Lower Counter-Balance Coil Spring */}
+              <path d="M 172 420 Q 155 385 145 350 T 120 295" fill="none" stroke="#64748b" strokeWidth="2.5" strokeDasharray="3,3" />
 
-              {/* Wrist Swivel Pivot */}
-              <circle
-                cx="310"
-                cy="170"
-                r="11"
-                fill="url(#pup-brass-grad)"
-                stroke="#78350f"
-                strokeWidth="1.5"
-              />
+              {/* 5. Elbow Joint (Industrial Triangular Bracket at 105, 270) */}
+              {/* Looped Slack Power Cable */}
+              <path d="M 145 310 C 70 300 70 230 135 245" fill="none" stroke="#1e2430" strokeWidth="3" strokeLinecap="round" />
+              <polygon points="90,285 125,285 110,250" fill="#242c38" stroke="#475569" strokeWidth="1.5" />
+              <circle cx="100" cy="272" r="5" fill="url(#pup-brass-grad)" />
+              <circle cx="115" cy="272" r="5" fill="url(#pup-brass-grad)" />
+              <circle cx="108" cy="256" r="5" fill="url(#pup-brass-grad)" />
+              {/* Tightening Wing Nut / Thumb Knob */}
+              <rect x="78" y="268" width="12" height="6" rx="2" fill="url(#pup-brass-grad)" />
 
-              {/* Lamp Head Group */}
+              {/* 6. Upper Arm (Extending UP & RIGHT from Elbow to Wrist: 285, 145) */}
+              <line x1="108" y1="256" x2="280" y2="145" stroke="url(#pup-rod-grad)" strokeWidth="6" strokeLinecap="round" />
+              <line x1="116" y1="262" x2="288" y2="151" stroke="url(#pup-rod-grad)" strokeWidth="6" strokeLinecap="round" />
+              {/* Upper Tension Spring */}
+              <path d="M 125 250 Q 170 220 215 190 T 270 160" fill="none" stroke="#64748b" strokeWidth="2.5" strokeDasharray="3,3" />
+
+              {/* 7. Wrist Swivel Pivot Bracket (At 285, 145) */}
+              <polygon points="275,155 295,158 290,135" fill="#242c38" stroke="#475569" strokeWidth="1.5" />
+              <circle cx="285" cy="145" r="5.5" fill="url(#pup-brass-grad)" />
+              <rect x="268" y="142" width="7" height="6" rx="1.5" fill="url(#pup-brass-grad)" />
+
+              {/* 8. Lamp Head Assembly (Matching Your Exact Sketch) */}
               <g ref={lampHeadRef}>
-                {/* Mount Collar */}
-                <path
-                  d="M 305 170 L 328 152 L 336 162 L 315 178 Z"
-                  fill="url(#pup-base-grad)"
-                  stroke="#475569"
-                  strokeWidth="1"
-                />
+                {/* Cylindrical Socket Housing with Cooling Louvers */}
+                {/* Upper socket cylinder angled along 45-degree axis */}
+                <path d="M 292 140 L 328 108 C 334 114 346 128 350 134 L 314 166 Z" fill="url(#pup-base-grad)" stroke="#334155" strokeWidth="1.2" />
+                
+                {/* Vertical Ventilation / Heat Louver Slots */}
+                <line x1="312" y1="126" x2="330" y2="110" stroke="#0f172a" strokeWidth="2" strokeLinecap="round" />
+                <line x1="318" y1="134" x2="336" y2="118" stroke="#0f172a" strokeWidth="2" strokeLinecap="round" />
+                <line x1="324" y1="142" x2="342" y2="126" stroke="#0f172a" strokeWidth="2" strokeLinecap="round" />
 
-                {/* Symmetrical Circular Cap Outer Shell */}
+                {/* Flared Conical Bell Lampshade (Wide Circular Flare) */}
                 <path
-                  d="M 285 220 
-                     A 62 62 0 1 1 385 165 
-                     C 375 195 330 235 285 220 Z"
+                  d="M 314 166 
+                     C 305 185 295 215 285 240 
+                     C 310 262 360 252 395 215 
+                     C 400 195 385 160 350 134 Z"
                   fill="url(#pup-shade-grad)"
                   stroke="#475569"
                   strokeWidth="2"
                 />
 
-                {/* Smooth Circular Inner Reflector Opening */}
-                <path
-                  d="M 285 220 
-                     C 330 235 375 195 385 165 
-                     C 365 190 320 220 285 220 Z"
-                  fill={lampOn ? "url(#pup-inner-glow)" : "#1e293b"}
+                {/* Rolled Circular Lip / Opening Ellipse (Facing Down-Right) */}
+                <ellipse
+                  cx="340"
+                  cy="228"
+                  rx="60"
+                  ry="25"
+                  transform="rotate(-28 340 228)"
+                  fill={lampOn ? "url(#pup-inner-glow)" : "#141c28"}
+                  stroke="#475569"
+                  strokeWidth="2"
                 />
 
-                {/* Bulb & Filament */}
+                {/* Glowing Bulb Centered Inside the Bell */}
                 <g>
                   <circle
-                    cx="336"
-                    cy="200"
+                    cx="340"
+                    cy="216"
                     r="22"
                     fill="rgba(255, 255, 255, 0.15)"
                     stroke="rgba(255, 255, 255, 0.4)"
@@ -959,14 +891,14 @@ export default function DeskLampLogin({
                   />
                   <circle
                     ref={bulbRef}
-                    cx="336"
-                    cy="200"
+                    cx="340"
+                    cy="216"
                     r="20"
                     fill={lampOn ? "url(#pup-filament-glow)" : "transparent"}
                     opacity={lampOn ? 1 : 0.05}
                   />
                   <path
-                    d="M 328 190 L 333 200 L 339 190 L 344 200"
+                    d="M 332 208 L 337 218 L 343 208 L 348 218"
                     fill="none"
                     stroke={lampOn ? "#ffffff" : "#334155"}
                     strokeWidth="2.5"
@@ -974,22 +906,15 @@ export default function DeskLampLogin({
                   />
                 </g>
 
-                {/* Interactive Pull Cord */}
+                {/* Interactive Pull-Cord Chain */}
                 <g className="lamp-interactive-cord">
-                  <rect
-                    x="296"
-                    y="210"
-                    width="8"
-                    height="6"
-                    rx="2"
-                    fill="url(#pup-brass-grad)"
-                  />
+                  <rect x="296" y="210" width="8" height="6" rx="2" fill="url(#pup-brass-grad)" />
                   <line
                     ref={cordLineRef}
                     x1="300"
                     y1="216"
                     x2="300"
-                    y2="285"
+                    y2="280"
                     stroke="#94a3b8"
                     strokeWidth="2.5"
                     strokeLinecap="round"
@@ -1012,19 +937,19 @@ export default function DeskLampLogin({
                       }
                     }}
                   >
-                    <circle cx="300" cy="287" r="18" fill="transparent" />
+                    <circle cx="300" cy="282" r="18" fill="transparent" />
                     <path
-                      d="M 296 283 L 304 283 L 305 293 C 305 298 295 298 295 293 Z"
+                      d="M 296 278 L 304 278 L 305 288 C 305 293 295 293 295 288 Z"
                       fill="url(#pup-bead-grad)"
                       stroke="#334155"
                       strokeWidth="1.2"
                     />
-                    <circle cx="300" cy="281" r="3" fill="url(#pup-brass-grad)" />
-                    <circle cx="300" cy="291" r="2.5" fill="#cbd5e1" />
+                    <circle cx="300" cy="276" r="3" fill="url(#pup-brass-grad)" />
+                    <circle cx="300" cy="286" r="2.5" fill="#cbd5e1" />
                     <circle
                       className="cord-pulse"
                       cx="300"
-                      cy="290"
+                      cy="285"
                       r="14"
                       fill="none"
                       stroke={currentTheme.hex}
