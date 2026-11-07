@@ -518,7 +518,7 @@ export default function DeskLampLogin({
   // Cord dragging & spring back physics
   const updateCordVisual = (pull) => {
     if (cordLineRef.current) {
-      cordLineRef.current.setAttribute("y2", 280 + pull);
+      cordLineRef.current.setAttribute("y2", 285 + pull);
     }
     if (cordHandleRef.current) {
       cordHandleRef.current.style.transform = `translateY(${pull}px)`;
@@ -773,9 +773,9 @@ export default function DeskLampLogin({
                   <stop offset="100%" stopColor="#78350f" />
                 </linearGradient>
 
-                <linearGradient id="pup-shade-grad" x1="0%" y1="0%" x2="100%" y2="80%">
-                  <stop offset="0%" stopColor="#334155" />
-                  <stop offset="30%" stopColor="#1e293b" />
+                <linearGradient id="pup-shade-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#384556" />
+                  <stop offset="35%" stopColor="#1e293b" />
                   <stop offset="70%" stopColor="#0f172a" />
                   <stop offset="100%" stopColor="#020617" />
                 </linearGradient>
@@ -851,12 +851,12 @@ export default function DeskLampLogin({
                 strokeWidth="1.5"
               />
 
-              {/* Lower Arm */}
+              {/* Lower Arm (Angled more forward across desk) */}
               <line
                 x1="135"
                 y1="460"
-                x2="225"
-                y2="280"
+                x2="230"
+                y2="300"
                 stroke="url(#pup-rod-grad)"
                 strokeWidth="7"
                 strokeLinecap="round"
@@ -864,55 +864,55 @@ export default function DeskLampLogin({
               <line
                 x1="145"
                 y1="460"
-                x2="236"
-                y2="280"
+                x2="242"
+                y2="300"
                 stroke="url(#pup-rod-grad)"
                 strokeWidth="7"
                 strokeLinecap="round"
               />
 
-              {/* Elbow Joint */}
+              {/* Elbow Joint (Positioned at 236, 300) */}
               <circle
-                cx="206"
-                cy="280"
+                cx="236"
+                cy="300"
                 r="14"
                 fill="url(#pup-base-grad)"
                 stroke="#64748b"
                 strokeWidth="2"
               />
               <circle
-                cx="206"
-                cy="280"
+                cx="236"
+                cy="300"
                 r="8"
                 fill="url(#pup-brass-grad)"
                 stroke="#78350f"
                 strokeWidth="1.5"
               />
 
-              {/* Upper Arm */}
+              {/* Upper Arm (Reaching cleanly to 310, 170) */}
               <line
-                x1="225"
-                y1="280"
+                x1="232"
+                y1="300"
                 x2="305"
-                y2="155"
+                y2="170"
                 stroke="url(#pup-rod-grad)"
                 strokeWidth="6.5"
                 strokeLinecap="round"
               />
               <line
-                x1="235"
-                y1="280"
+                x1="240"
+                y1="300"
                 x2="315"
-                y2="155"
+                y2="170"
                 stroke="url(#pup-rod-grad)"
                 strokeWidth="6.5"
                 strokeLinecap="round"
               />
 
-              {/* Wrist Swivel */}
+              {/* Wrist Swivel Pivot */}
               <circle
-                cx="300"
-                cy="155"
+                cx="310"
+                cy="170"
                 r="11"
                 fill="url(#pup-brass-grad)"
                 stroke="#78350f"
@@ -921,39 +921,37 @@ export default function DeskLampLogin({
 
               {/* Lamp Head Group */}
               <g ref={lampHeadRef}>
+                {/* Mount Collar */}
                 <path
-                  d="M 295 155 L 320 142 L 328 152 L 305 165 Z"
+                  d="M 305 170 L 328 152 L 336 162 L 315 178 Z"
                   fill="url(#pup-base-grad)"
                   stroke="#475569"
                   strokeWidth="1"
                 />
 
-<!-- Perfectly Circular Dome Shell (Smooth Arc) -->
-<path
-  d="M 285 210 
-     A 60 60 0 0 1 380 155 
-     C 390 180 375 220 345 235 
-     C 315 245 290 230 285 210 Z"
-  fill="url(#pup-shade-grad)"
-  stroke="#475569"
-  strokeWidth="2"
-/>
+                {/* Symmetrical Circular Cap Outer Shell */}
+                <path
+                  d="M 285 220 
+                     A 62 62 0 1 1 385 165 
+                     C 375 195 330 235 285 220 Z"
+                  fill="url(#pup-shade-grad)"
+                  stroke="#475569"
+                  strokeWidth="2"
+                />
 
-<!-- Circular Inner Rim / Opening -->
-<ellipse
-  cx="332"
-  cy="205"
-  rx="38"
-  ry="24"
-  transform="rotate(-28 332 205)"
-  fill={lampOn ? "url(#pup-inner-glow)" : "#1e293b"}
-/>
+                {/* Smooth Circular Inner Reflector Opening */}
+                <path
+                  d="M 285 220 
+                     C 330 235 375 195 385 165 
+                     C 365 190 320 220 285 220 Z"
+                  fill={lampOn ? "url(#pup-inner-glow)" : "#1e293b"}
+                />
 
                 {/* Bulb & Filament */}
                 <g>
                   <circle
-                    cx="330"
-                    cy="205"
+                    cx="336"
+                    cy="200"
                     r="22"
                     fill="rgba(255, 255, 255, 0.15)"
                     stroke="rgba(255, 255, 255, 0.4)"
@@ -961,14 +959,14 @@ export default function DeskLampLogin({
                   />
                   <circle
                     ref={bulbRef}
-                    cx="330"
-                    cy="205"
+                    cx="336"
+                    cy="200"
                     r="20"
                     fill={lampOn ? "url(#pup-filament-glow)" : "transparent"}
                     opacity={lampOn ? 1 : 0.05}
                   />
                   <path
-                    d="M 322 195 L 327 205 L 333 195 L 338 205"
+                    d="M 328 190 L 333 200 L 339 190 L 344 200"
                     fill="none"
                     stroke={lampOn ? "#ffffff" : "#334155"}
                     strokeWidth="2.5"
@@ -980,7 +978,7 @@ export default function DeskLampLogin({
                 <g className="lamp-interactive-cord">
                   <rect
                     x="296"
-                    y="200"
+                    y="210"
                     width="8"
                     height="6"
                     rx="2"
@@ -989,9 +987,9 @@ export default function DeskLampLogin({
                   <line
                     ref={cordLineRef}
                     x1="300"
-                    y1="206"
+                    y1="216"
                     x2="300"
-                    y2="280"
+                    y2="285"
                     stroke="#94a3b8"
                     strokeWidth="2.5"
                     strokeLinecap="round"
@@ -1014,19 +1012,19 @@ export default function DeskLampLogin({
                       }
                     }}
                   >
-                    <circle cx="300" cy="282" r="18" fill="transparent" />
+                    <circle cx="300" cy="287" r="18" fill="transparent" />
                     <path
-                      d="M 296 278 L 304 278 L 305 288 C 305 293 295 293 295 288 Z"
+                      d="M 296 283 L 304 283 L 305 293 C 305 298 295 298 295 293 Z"
                       fill="url(#pup-bead-grad)"
                       stroke="#334155"
                       strokeWidth="1.2"
                     />
-                    <circle cx="300" cy="276" r="3" fill="url(#pup-brass-grad)" />
-                    <circle cx="300" cy="286" r="2.5" fill="#cbd5e1" />
+                    <circle cx="300" cy="281" r="3" fill="url(#pup-brass-grad)" />
+                    <circle cx="300" cy="291" r="2.5" fill="#cbd5e1" />
                     <circle
                       className="cord-pulse"
                       cx="300"
-                      cy="285"
+                      cy="290"
                       r="14"
                       fill="none"
                       stroke={currentTheme.hex}
