@@ -855,7 +855,7 @@ export default function DeskLampLogin({
               <line
                 x1="135"
                 y1="460"
-                x2="200"
+                x2="225"
                 y2="280"
                 stroke="url(#pup-rod-grad)"
                 strokeWidth="7"
@@ -864,7 +864,7 @@ export default function DeskLampLogin({
               <line
                 x1="145"
                 y1="460"
-                x2="212"
+                x2="236"
                 y2="280"
                 stroke="url(#pup-rod-grad)"
                 strokeWidth="7"
@@ -891,18 +891,18 @@ export default function DeskLampLogin({
 
               {/* Upper Arm */}
               <line
-                x1="202"
+                x1="225"
                 y1="280"
-                x2="295"
+                x2="305"
                 y2="155"
                 stroke="url(#pup-rod-grad)"
                 strokeWidth="6.5"
                 strokeLinecap="round"
               />
               <line
-                x1="210"
+                x1="235"
                 y1="280"
-                x2="305"
+                x2="315"
                 y2="155"
                 stroke="url(#pup-rod-grad)"
                 strokeWidth="6.5"
@@ -928,19 +928,26 @@ export default function DeskLampLogin({
                   strokeWidth="1"
                 />
 
-                {/* Outer Shell */}
-                <path
-                  d="M 315 130 C 340 115 375 125 395 155 C 410 175 415 205 380 230 C 345 250 310 235 285 205 C 265 180 270 155 315 130 Z"
-                  fill="url(#pup-shade-grad)"
-                  stroke="#475569"
-                  strokeWidth="2"
-                />
+<!-- Perfectly Circular Dome Shell (Smooth Arc) -->
+<path
+  d="M 285 210 
+     A 60 60 0 0 1 380 155 
+     C 390 180 375 220 345 235 
+     C 315 245 290 230 285 210 Z"
+  fill="url(#pup-shade-grad)"
+  stroke="#475569"
+  strokeWidth="2"
+/>
 
-                {/* Inner Reflector */}
-                <path
-                  d="M 285 205 C 310 235 345 250 380 230 C 360 215 330 195 305 175 C 290 190 285 200 285 205 Z"
-                  fill={lampOn ? "url(#pup-inner-glow)" : "#1e293b"}
-                />
+<!-- Circular Inner Rim / Opening -->
+<ellipse
+  cx="332"
+  cy="205"
+  rx="38"
+  ry="24"
+  transform="rotate(-28 332 205)"
+  fill={lampOn ? "url(#pup-inner-glow)" : "#1e293b"}
+/>
 
                 {/* Bulb & Filament */}
                 <g>
