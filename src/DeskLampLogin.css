@@ -1,0 +1,797 @@
+/* ==========================================================================
+   PHYSICS UNPLUGGED • Interactive Animated Desk Lamp Login Experience
+   ========================================================================== */
+
+:root {
+  --lamp-color: #ffaa40;
+  --lamp-rgb: 255, 170, 64;
+  --lamp-glow: rgba(255, 170, 64, 0.45);
+  --lamp-beam-gradient: linear-gradient(135deg, rgba(255, 180, 75, 0.55) 0%, rgba(255, 140, 40, 0.22) 45%, rgba(255, 120, 20, 0.03) 100%);
+  --card-highlight: rgba(255, 180, 80, 0.28);
+  --ambient-bg: radial-gradient(circle at 35% 35%, rgba(60, 40, 25, 0.4) 0%, #0d0f14 100%);
+}
+
+.lamp-login-wrapper {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  background-color: #06080c;
+  color: #f8fafc;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  overflow-x: hidden;
+  user-select: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Ambient Room Glow Layer */
+.lamp-ambient-glow {
+  position: fixed;
+  inset: 0;
+  background: var(--ambient-bg);
+  opacity: 0.85;
+  z-index: 0;
+  pointer-events: none;
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), background 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.lamp-login-wrapper.lamp-off .lamp-ambient-glow {
+  opacity: 0.08;
+}
+
+/* Particle Canvas */
+.lamp-particle-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Header */
+.lamp-header {
+  position: relative;
+  width: 100%;
+  height: 72px;
+  padding: 0 36px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 50;
+}
+
+.lamp-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.lamp-brand-logo {
+  width: 38px;
+  height: 38px;
+  object-fit: contain;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 0 15px var(--lamp-glow);
+  transition: box-shadow 0.65s ease;
+}
+
+.lamp-brand-text h1 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.lamp-brand-text span {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #94a3b8;
+}
+
+.lamp-header-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.lamp-status-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  background: rgba(18, 24, 38, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(10px);
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #94a3b8;
+}
+
+.lamp-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--lamp-color);
+  box-shadow: 0 0 10px var(--lamp-color);
+  transition: all 0.4s ease;
+}
+
+.lamp-login-wrapper.lamp-off .lamp-status-dot {
+  background-color: #64748b;
+  box-shadow: none;
+}
+
+.lamp-icon-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  background: rgba(18, 24, 38, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #f8fafc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  transition: all 0.25s ease;
+}
+
+.lamp-icon-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
+}
+
+/* Desk Stage */
+.lamp-desk-stage {
+  position: relative;
+  width: 100%;
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 40px 40px 40px;
+  max-width: 1400px;
+  margin: 0 auto;
+  z-index: 10;
+}
+
+/* Desk Surface Reflection */
+.lamp-desk-surface {
+  position: absolute;
+  bottom: 0;
+  left: -10vw;
+  width: 120vw;
+  height: 140px;
+  background: linear-gradient(180deg, rgba(20, 26, 38, 0.65) 0%, rgba(10, 14, 20, 0.98) 100%);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.lamp-desk-reflection {
+  position: absolute;
+  top: 0;
+  left: 28%;
+  width: 60%;
+  height: 100%;
+  background: radial-gradient(ellipse 65% 55% at 45% 0%, var(--lamp-glow) 0%, transparent 80%);
+  opacity: 0.85;
+  mix-blend-mode: screen;
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), background 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.lamp-login-wrapper.lamp-off .lamp-desk-reflection {
+  opacity: 0;
+}
+
+/* Light Beam Cone */
+.lamp-light-beam {
+  position: absolute;
+  top: 15%;
+  left: 24%;
+  width: 68%;
+  height: 85%;
+  pointer-events: none;
+  z-index: 3;
+  opacity: 0.88;
+  mix-blend-mode: screen;
+  clip-path: polygon(18% 18%, 100% 45%, 92% 100%, 0% 100%);
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.lamp-beam-radial {
+  width: 100%;
+  height: 100%;
+  background: var(--lamp-beam-gradient);
+  filter: blur(28px);
+  transition: background 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.lamp-login-wrapper.lamp-off .lamp-light-beam {
+  opacity: 0;
+}
+
+/* Left Section: Lamp */
+.lamp-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 15;
+}
+
+.lamp-svg-box {
+  position: relative;
+  width: 440px;
+  height: 530px;
+  max-width: 95vw;
+}
+
+.lamp-svg-element {
+  filter: drop-shadow(0 15px 35px rgba(0, 0, 0, 0.65));
+}
+
+.lamp-bounce {
+  animation: lampBounceAnim 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+@keyframes lampBounceAnim {
+  0% { transform: translateY(0); }
+  30% { transform: translateY(8px) rotate(-1.5deg); }
+  60% { transform: translateY(-4px) rotate(0.8deg); }
+  80% { transform: translateY(2px); }
+  100% { transform: translateY(0); }
+}
+
+/* Cord Handle and Drag */
+.lamp-interactive-cord {
+  cursor: grab;
+}
+
+.lamp-interactive-cord:active {
+  cursor: grabbing;
+}
+
+.cord-handle-group {
+  transition: transform 0.05s linear;
+  transform-origin: 300px 206px;
+}
+
+.cord-pulse {
+  animation: cordPulseAnim 2.4s infinite ease-out;
+  transform-origin: 300px 285px;
+  opacity: 0.6;
+}
+
+@keyframes cordPulseAnim {
+  0% { transform: scale(0.6); opacity: 0.8; }
+  70% { transform: scale(1.6); opacity: 0; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+
+.lamp-cord-tooltip {
+  position: absolute;
+  top: 55%;
+  left: 72%;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(10px);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #94a3b8;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+  animation: floatTooltipAnim 3s ease-in-out infinite;
+}
+
+.lamp-cord-tooltip-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--lamp-color);
+  box-shadow: 0 0 8px var(--lamp-color);
+}
+
+@keyframes floatTooltipAnim {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+/* Theme Picker Dock */
+.lamp-theme-dock {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 14px;
+  padding: 7px 16px;
+  border-radius: 30px;
+  background: rgba(18, 24, 38, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.lamp-theme-title {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.lamp-theme-swatches {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.lamp-swatch {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  outline: none;
+}
+
+.lamp-swatch:hover {
+  transform: scale(1.22);
+}
+
+.lamp-swatch.active {
+  transform: scale(1.3);
+  border-color: #ffffff;
+  box-shadow: 0 0 14px currentColor;
+}
+
+/* Right Section: 3D Login Card */
+.lamp-card-column {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1200px;
+  position: relative;
+  z-index: 20;
+}
+
+.lamp-auth-card {
+  position: relative;
+  width: 100%;
+  max-width: 450px;
+  padding: 36px 34px;
+  background: rgba(18, 24, 38, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 28px;
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  box-shadow: 
+    0 25px 60px rgba(0, 0, 0, 0.55),
+    0 0 40px var(--card-highlight);
+  transform-style: preserve-3d;
+  transition: box-shadow 0.65s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+
+.lamp-login-wrapper.lamp-off .lamp-auth-card {
+  background: rgba(12, 16, 26, 0.88);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85);
+}
+
+/* Card Glare */
+.lamp-card-glare {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: 28px;
+  opacity: 0.6;
+  mix-blend-mode: overlay;
+  transition: opacity 0.3s ease;
+}
+
+/* Card Header */
+.lamp-card-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.lamp-tabs-pill {
+  position: relative;
+  display: flex;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 4px;
+  margin-bottom: 20px;
+}
+
+.lamp-tab-slider {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: calc(50% - 4px);
+  height: calc(100% - 8px);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  transition: transform 0.35s cubic-bezier(0.34, 1.25, 0.64, 1);
+  pointer-events: none;
+}
+
+.lamp-tab-btn {
+  flex: 1;
+  padding: 9px 14px;
+  border: none;
+  background: transparent;
+  color: #94a3b8;
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 12px;
+  position: relative;
+  z-index: 2;
+  transition: color 0.25s ease;
+}
+
+.lamp-tab-btn.active {
+  color: #ffffff;
+}
+
+.lamp-card-eyebrow {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--lamp-color);
+  margin-bottom: 4px;
+}
+
+.lamp-card-title {
+  font-size: 1.65rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: #ffffff;
+  margin: 0 0 6px 0;
+}
+
+.lamp-card-subtitle {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  margin: 0;
+}
+
+/* Form */
+.lamp-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.lamp-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: left;
+}
+
+.lamp-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.lamp-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #94a3b8;
+  text-transform: uppercase;
+}
+
+.lamp-forgot-btn {
+  background: none;
+  border: none;
+  color: var(--lamp-color);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  transition: opacity 0.2s ease;
+}
+
+.lamp-forgot-btn:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
+.lamp-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.lamp-input-icon {
+  position: absolute;
+  left: 14px;
+  color: #64748b;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  transition: color 0.25s ease;
+}
+
+.lamp-input {
+  width: 100%;
+  padding: 12px 42px 12px 42px;
+  background: rgba(12, 16, 26, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  font-family: inherit;
+  font-size: 0.92rem;
+  color: #ffffff;
+  outline: none;
+  transition: all 0.25s ease;
+}
+
+.lamp-input::placeholder {
+  color: #475569;
+}
+
+.lamp-input:focus {
+  background: rgba(16, 22, 35, 0.8);
+  border-color: var(--lamp-color);
+  box-shadow: 0 0 0 3px var(--lamp-glow);
+}
+
+.lamp-input-wrap:focus-within .lamp-input-icon {
+  color: var(--lamp-color);
+}
+
+/* Password Toggle */
+.lamp-pwd-toggle {
+  position: absolute;
+  right: 12px;
+  background: transparent;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border-radius: 8px;
+  transition: color 0.2s ease;
+}
+
+.lamp-pwd-toggle:hover {
+  color: #ffffff;
+}
+
+/* Password Strength */
+.lamp-strength-box {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.lamp-strength-track {
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.lamp-strength-bar {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.35s ease, background-color 0.35s ease;
+}
+
+.lamp-strength-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  align-self: flex-end;
+}
+
+/* Turnstile CAPTCHA Box in Card */
+.lamp-captcha-box {
+  display: flex;
+  justify-content: center;
+  margin: 6px 0;
+  min-height: 65px;
+}
+
+/* Status Message */
+.lamp-message-banner {
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  color: #fca5a5;
+  font-size: 0.82rem;
+  font-weight: 500;
+  text-align: center;
+  animation: lampShakeAnim 0.45s ease-in-out;
+}
+
+.lamp-message-banner.success {
+  background: rgba(16, 185, 129, 0.15);
+  border-color: rgba(16, 185, 129, 0.35);
+  color: #6ee7b7;
+}
+
+@keyframes lampShakeAnim {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-6px); }
+  40%, 80% { transform: translateX(6px); }
+}
+
+/* Submit Button */
+.lamp-submit-btn {
+  position: relative;
+  width: 100%;
+  padding: 13px 20px;
+  margin-top: 4px;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--lamp-color) 0%, rgba(var(--lamp-rgb), 0.82) 100%);
+  color: #0f172a;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 10px 25px var(--lamp-glow);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.lamp-submit-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 32px var(--lamp-glow);
+  filter: brightness(1.08);
+}
+
+.lamp-submit-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.lamp-btn-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(15, 23, 42, 0.25);
+  border-top-color: #0f172a;
+  border-radius: 50%;
+  animation: lampSpinAnim 0.7s linear infinite;
+}
+
+@keyframes lampSpinAnim {
+  to { transform: rotate(360deg); }
+}
+
+/* Card Footer Note */
+.lamp-card-footer-note {
+  margin-top: 16px;
+  font-size: 0.75rem;
+  color: #64748b;
+  text-align: center;
+}
+
+/* Footer Shortcuts */
+.lamp-footer {
+  position: relative;
+  width: 100%;
+  padding: 14px 30px;
+  display: flex;
+  justify-content: center;
+  z-index: 50;
+  pointer-events: none;
+}
+
+.lamp-footer-tips {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 18px;
+  border-radius: 30px;
+  background: rgba(15, 23, 42, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(12px);
+  font-size: 0.76rem;
+  color: #94a3b8;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  pointer-events: auto;
+}
+
+.lamp-tip-badge {
+  padding: 2px 7px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--lamp-color);
+  font-weight: 700;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+}
+
+.lamp-kbd {
+  padding: 2px 6px;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .lamp-desk-stage {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .lamp-svg-box {
+    width: 360px;
+    height: 440px;
+  }
+
+  .lamp-light-beam {
+    left: 10%;
+    width: 80%;
+    top: 25%;
+  }
+
+  .lamp-footer-tips {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 640px) {
+  .lamp-header {
+    padding: 0 18px;
+  }
+
+  .lamp-desk-stage {
+    padding: 20px 16px 80px 16px;
+  }
+
+  .lamp-auth-card {
+    padding: 28px 20px;
+  }
+
+  .lamp-svg-box {
+    width: 300px;
+    height: 380px;
+  }
+
+  .lamp-footer-tips {
+    font-size: 0.7rem;
+    padding: 6px 12px;
+  }
+}
