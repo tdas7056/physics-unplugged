@@ -1,17 +1,431 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#0b1220" />
-    <meta
-      name="description"
-      content="Physics Unplugged — online physics MCQ exams and practice."
-    />
-    <title>Physics Unplugged</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lumen • Interactive Animated Desk Lamp & Auth Experience</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+
+    <!-- Modern Google Fonts: Inter & Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="lamp-on">
+    <!-- Atmospheric Ambient Particle Canvas -->
+    <canvas id="dust-canvas"></canvas>
+
+    <!-- Ambient Room Glow Layer -->
+    <div id="ambient-room-glow"></div>
+
+    <!-- Top Navigation Bar -->
+    <header class="app-header">
+        <div class="brand">
+            <div class="brand-bulb-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 18h6m-4 4h2M12 2a7 7 0 0 0-7 7c0 2.5 1.5 4.5 3 6h8c1.5-1.5 3-3.5 3-6a7 7 0 0 0-7-7z"/>
+                </svg>
+            </div>
+            <span class="brand-name">LUMEN</span>
+            <span class="brand-tag">Studio</span>
+        </div>
+
+        <div class="header-controls">
+            <!-- Lamp State Indicator -->
+            <div id="lamp-state-badge" class="state-badge" title="Lamp Status">
+                <span class="badge-dot"></span>
+                <span class="badge-text">Lamp: ON</span>
+            </div>
+
+            <!-- Audio Mute Toggle Button -->
+            <button id="audio-toggle-btn" class="header-btn" title="Toggle Sound [M]" aria-label="Toggle Sound Effects">
+                <span class="mute-icon">🔊</span>
+                <span class="btn-tooltip">Sound On</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Desk Workspace Stage -->
+    <main class="desk-stage">
+        <!-- Desk Surface Reflection Layer -->
+        <div id="desk-surface">
+            <div id="desk-light-reflection"></div>
+        </div>
+
+        <!-- Light Cone Projection (Positioned behind lamp and card) -->
+        <div id="lamp-light-beam" class="light-beam">
+            <div class="beam-radial"></div>
+        </div>
+
+        <!-- Left Column: Articulated Desk Lamp & Theme Switcher -->
+        <div class="lamp-section">
+            <div id="desk-lamp-wrapper" class="desk-lamp-container">
+                <!-- High Precision Vector Desk Lamp SVG -->
+                <svg id="lamp-svg" viewBox="0 0 460 560" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <!-- Metallic Gradients for Lamp Base & Arm -->
+                        <linearGradient id="metal-base-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#1e2430" />
+                            <stop offset="20%" stop-color="#3a4454" />
+                            <stop offset="50%" stop-color="#4f5b70" />
+                            <stop offset="75%" stop-color="#2a323f" />
+                            <stop offset="100%" stop-color="#141820" />
+                        </linearGradient>
+
+                        <linearGradient id="metal-rod-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#2c3440" />
+                            <stop offset="40%" stop-color="#5a687d" />
+                            <stop offset="70%" stop-color="#7e8da3" />
+                            <stop offset="100%" stop-color="#1e2430" />
+                        </linearGradient>
+
+                        <linearGradient id="brass-joint-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#d97706" />
+                            <stop offset="45%" stop-color="#fbbf24" />
+                            <stop offset="80%" stop-color="#b45309" />
+                            <stop offset="100%" stop-color="#78350f" />
+                        </linearGradient>
+
+                        <!-- Lamp Shade Gradients -->
+                        <linearGradient id="shade-outer-grad" x1="0%" y1="0%" x2="100%" y2="80%">
+                            <stop offset="0%" stop-color="#334155" />
+                            <stop offset="30%" stop-color="#1e293b" />
+                            <stop offset="70%" stop-color="#0f172a" />
+                            <stop offset="100%" stop-color="#020617" />
+                        </linearGradient>
+
+                        <radialGradient id="shade-inner-glow" cx="45%" cy="50%" r="55%">
+                            <stop offset="0%" stop-color="#fffbeb" stop-opacity="0.95" />
+                            <stop offset="35%" stop-color="var(--lamp-color, #ffaa40)" stop-opacity="0.8" />
+                            <stop offset="75%" stop-color="var(--lamp-color, #ffaa40)" stop-opacity="0.3" />
+                            <stop offset="100%" stop-color="#1e293b" stop-opacity="0.1" />
+                        </radialGradient>
+
+                        <radialGradient id="bulb-filament-glow" cx="50%" cy="50%" r="50%">
+                            <stop offset="0%" stop-color="#ffffff" />
+                            <stop offset="30%" stop-color="#fff8db" />
+                            <stop offset="65%" stop-color="var(--lamp-color, #ffaa40)" />
+                            <stop offset="100%" stop-color="transparent" />
+                        </radialGradient>
+
+                        <!-- Cord Chain Pattern / Beads -->
+                        <linearGradient id="cord-bead-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#e2e8f0" />
+                            <stop offset="50%" stop-color="#94a3b8" />
+                            <stop offset="100%" stop-color="#475569" />
+                        </linearGradient>
+
+                        <!-- Filter for Bulb Bloom -->
+                        <filter id="bulb-bloom-filter" x="-50%" y="-50%" width="200%" height="200%">
+                            <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur1" />
+                            <feGaussianBlur in="SourceGraphic" stdDeviation="22" result="blur2" />
+                            <feMerge>
+                                <feMergeNode in="blur2" />
+                                <feMergeNode in="blur1" />
+                                <feMergeNode in="SourceGraphic" />
+                            </feMerge>
+                        </filter>
+                    </defs>
+
+                    <!-- 1. Lamp Base Ground Shadow -->
+                    <ellipse cx="140" cy="510" rx="90" ry="18" fill="rgba(0,0,0,0.55)" filter="blur(6px)" />
+
+                    <!-- 2. Lamp Base Assembly -->
+                    <!-- Bottom rubber ring -->
+                    <path d="M 60 500 Q 140 514 220 500 L 222 505 Q 140 520 58 505 Z" fill="#0f172a" />
+                    <!-- Main Weighted Metallic Beveled Base -->
+                    <path d="M 60 495 C 60 475 220 475 220 495 L 220 502 C 220 514 60 514 60 502 Z" fill="url(#metal-base-grad)" />
+                    <ellipse cx="140" cy="485" rx="72" ry="14" fill="#2a323f" stroke="#475569" stroke-width="1.5" />
+                    <!-- Base Pivot Socket Housing -->
+                    <path d="M 124 485 L 124 455 C 124 450 156 450 156 455 L 156 485 Z" fill="url(#metal-base-grad)" stroke="#334155" stroke-width="1" />
+                    <circle cx="140" cy="460" r="10" fill="url(#brass-joint-grad)" stroke="#78350f" stroke-width="1.5" />
+                    <circle cx="140" cy="460" r="4" fill="#1e2430" />
+
+                    <!-- 3. Lower Arm Dual Rods (from base to elbow) -->
+                    <!-- Rod 1 -->
+                    <line x1="135" y1="460" x2="200" y2="280" stroke="url(#metal-rod-grad)" stroke-width="7" stroke-linecap="round" />
+                    <!-- Rod 2 -->
+                    <line x1="145" y1="460" x2="212" y2="280" stroke="url(#metal-rod-grad)" stroke-width="7" stroke-linecap="round" />
+                    <!-- Counter-balance Tension Spring -->
+                    <path d="M 137 435 Q 148 420 152 390 T 168 350 T 184 310 T 198 285" fill="none" stroke="#64748b" stroke-width="2.5" stroke-dasharray="3,3" />
+
+                    <!-- 4. Elbow Joint (Mid-hinge) -->
+                    <circle cx="206" cy="280" r="14" fill="url(#metal-base-grad)" stroke="#64748b" stroke-width="2" />
+                    <circle cx="206" cy="280" r="8" fill="url(#brass-joint-grad)" stroke="#78350f" stroke-width="1.5" />
+                    <circle cx="206" cy="280" r="3.5" fill="#0f172a" />
+                    <!-- Tightening Knob Screw -->
+                    <rect x="200" y="260" width="12" height="6" rx="2" fill="url(#brass-joint-grad)" />
+
+                    <!-- 5. Upper Arm Dual Rods (from elbow to wrist) -->
+                    <line x1="202" y1="280" x2="295" y2="155" stroke="url(#metal-rod-grad)" stroke-width="6.5" stroke-linecap="round" />
+                    <line x1="210" y1="280" x2="305" y2="155" stroke="url(#metal-rod-grad)" stroke-width="6.5" stroke-linecap="round" />
+                    <!-- Secondary Tension Spring -->
+                    <path d="M 215 265 Q 235 245 255 220 T 290 170" fill="none" stroke="#64748b" stroke-width="2.5" stroke-dasharray="3,3" />
+
+                    <!-- 6. Wrist Swivel Joint (Lamp Head Mount) -->
+                    <circle cx="300" cy="155" r="11" fill="url(#brass-joint-grad)" stroke="#78350f" stroke-width="1.5" />
+                    <circle cx="300" cy="155" r="4" fill="#0f172a" />
+
+                    <!-- 7. Lamp Head Assembly (Shade, Bulb, Socket, Cord) -->
+                    <g id="lamp-head-group">
+                        <!-- Socket Neck -->
+                        <path d="M 295 155 L 320 142 L 328 152 L 305 165 Z" fill="url(#metal-base-grad)" stroke="#475569" stroke-width="1" />
+
+                        <!-- Classic Parabolic Lampshade (Outer Shell) -->
+                        <!-- Tilted downwards towards the right (pointing at login card) -->
+                        <path d="M 315 130 
+                                 C 340 115 375 125 395 155 
+                                 C 410 175 415 205 380 230 
+                                 C 345 250 310 235 285 205 
+                                 C 265 180 270 155 315 130 Z" 
+                              fill="url(#shade-outer-grad)" 
+                              stroke="#475569" 
+                              stroke-width="2" />
+
+                        <!-- Inner Reflector Rim (Visible when viewed at angle) -->
+                        <path id="lamp-inner-reflector" 
+                              d="M 285 205 
+                                 C 310 235 345 250 380 230 
+                                 C 360 215 330 195 305 175 
+                                 C 290 190 285 200 285 205 Z" 
+                              fill="url(#shade-inner-glow)" />
+
+                        <!-- Exposed Vintage Filament Bulb -->
+                        <g id="lamp-bulb-group">
+                            <!-- Bulb Outer Glass Shell -->
+                            <circle id="lamp-bulb-glass" cx="330" cy="205" r="22" 
+                                    fill="rgba(255, 255, 255, 0.15)" 
+                                    stroke="rgba(255, 255, 255, 0.4)" 
+                                    stroke-width="1.5" />
+
+                            <!-- Bulb Intense Core Glow (Switches with lamp state) -->
+                            <circle id="lamp-bulb-glow" cx="330" cy="205" r="20" 
+                                    fill="url(#bulb-filament-glow)" 
+                                    filter="url(#bulb-bloom-filter)" />
+
+                            <!-- Glowing Filament Wires -->
+                            <path id="lamp-filament" 
+                                  d="M 322 195 L 327 205 L 333 195 L 338 205" 
+                                  fill="none" 
+                                  stroke="#ffffff" 
+                                  stroke-width="2.5" 
+                                  stroke-linecap="round" 
+                                  stroke-linejoin="round" />
+                        </g>
+
+                        <!-- 8. Interactive Pull-Cord Chain -->
+                        <g id="lamp-pull-cord-group" class="interactive-cord-group">
+                            <!-- Cord Socket Fixture on shade base -->
+                            <rect x="296" y="200" width="8" height="6" rx="2" fill="url(#brass-joint-grad)" />
+
+                            <!-- Beaded Cord Line (y2 dynamically updated by JS physics engine) -->
+                            <line id="lamp-cord-line" 
+                                  x1="300" y1="206" 
+                                  x2="300" y2="280" 
+                                  stroke="#94a3b8" 
+                                  stroke-width="2.5" 
+                                  stroke-linecap="round" 
+                                  stroke-dasharray="2,3.5" />
+
+                            <!-- Pull Cord End Weighted Bead Handle (Draggable / Clickable) -->
+                            <g id="lamp-cord-handle" class="cord-handle-element" transform="translate(0, 0)">
+                                <!-- Hit area for easy grabbing/clicking -->
+                                <circle cx="300" cy="282" r="18" fill="transparent" class="cord-hit-area" />
+                                
+                                <!-- Metallic Teardrop / Capsule -->
+                                <path d="M 296 278 L 304 278 L 305 288 C 305 293 295 293 295 288 Z" 
+                                      fill="url(#cord-bead-grad)" 
+                                      stroke="#334155" 
+                                      stroke-width="1.2" 
+                                      filter="drop-shadow(0 2px 5px rgba(0,0,0,0.5))" />
+                                <circle cx="300" cy="276" r="3" fill="url(#brass-joint-grad)" />
+                                <circle cx="300" cy="286" r="2.5" fill="#cbd5e1" />
+
+                                <!-- Pull Hint Indicator Ring -->
+                                <circle id="cord-pulse-ring" cx="300" cy="285" r="14" fill="none" stroke="var(--lamp-color, #ffaa40)" stroke-width="1.5" />
+                            </g>
+                        </g>
+                    </g>
+                </svg>
+
+                <!-- Floating Pull Cord Tooltip -->
+                <div class="cord-tooltip-label">
+                    <span class="tooltip-arrow"></span>
+                    <span class="tooltip-text">Pull Cord ↕</span>
+                </div>
+            </div>
+
+            <!-- Color Palette / Theme Switcher Dock on the Desk -->
+            <div class="theme-picker-panel">
+                <span class="theme-label">Lamp Light Hue:</span>
+                <div id="theme-dock" class="theme-swatches-container">
+                    <!-- Populated dynamically by LampController -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Interactive 3D Sign-In / Sign-Up Form Card -->
+        <div class="card-section">
+            <div id="auth-card" class="auth-card-container">
+                <!-- Dynamic Specular Glare Layer -->
+                <div id="card-glare" class="card-specular-glare"></div>
+
+                <!-- Card Header with Sliding Tab Switcher -->
+                <div class="card-header">
+                    <div class="tabs-slider-wrapper">
+                        <div id="tab-indicator" class="tab-indicator-pill"></div>
+                        <button type="button" id="tab-signin" class="tab-btn active">Sign In</button>
+                        <button type="button" id="tab-signup" class="tab-btn">Create Account</button>
+                    </div>
+                    <h2 class="card-title">Welcome to Lumen</h2>
+                    <p class="card-subtitle">Illuminating creative digital experiences</p>
+                </div>
+
+                <!-- Auth Form -->
+                <form id="auth-form" class="auth-form" autocomplete="off" novalidate>
+                    <!-- Full Name Field (visible on Sign Up) -->
+                    <div id="group-name" class="form-group field-hidden">
+                        <label for="input-name" class="form-label">Full Name</label>
+                        <div class="input-wrapper">
+                            <span class="input-icon">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="12" cy="7" r="4"/>
+                                </svg>
+                            </span>
+                            <input type="text" id="input-name" class="form-input" placeholder="Alex Morgan">
+                        </div>
+                    </div>
+
+                    <!-- Email Field -->
+                    <div class="form-group">
+                        <label for="input-email" class="form-label">Email Address</label>
+                        <div class="input-wrapper">
+                            <span class="input-icon">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                    <polyline points="22,6 12,13 2,6"/>
+                                </svg>
+                            </span>
+                            <input type="email" id="input-email" class="form-input" placeholder="name@example.com" required>
+                        </div>
+                    </div>
+
+                    <!-- Password Field -->
+                    <div class="form-group">
+                        <div class="label-row">
+                            <label for="input-password" class="form-label">Password</label>
+                            <a href="#" id="forgot-link" class="forgot-link" tabindex="-1">Forgot?</a>
+                        </div>
+                        <div class="input-wrapper">
+                            <span class="input-icon">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                </svg>
+                            </span>
+                            <input type="password" id="input-password" class="form-input" placeholder="••••••••" required>
+                            
+                            <!-- Interactive Password Show/Hide Toggle -->
+                            <button type="button" id="password-toggle" class="password-toggle-btn" aria-label="Toggle password visibility">
+                                <!-- Eye Open Icon -->
+                                <svg class="eye-icon eye-open" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                    <circle cx="12" cy="12" r="3"/>
+                                </svg>
+                                <!-- Eye Closed/Slashed Icon -->
+                                <svg class="eye-icon eye-closed" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                                    <line x1="1" y1="1" x2="23" y2="23"/>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <!-- Real-time Password Strength Meter (On Signup) -->
+                        <div id="password-strength" class="strength-meter-wrapper field-hidden">
+                            <div class="strength-track">
+                                <div id="strength-bar" class="strength-fill"></div>
+                            </div>
+                            <span id="strength-text" class="strength-label">Enter password</span>
+                        </div>
+                    </div>
+
+                    <!-- Remember Me Option -->
+                    <div class="form-options">
+                        <label class="custom-checkbox-container">
+                            <input type="checkbox" id="remember-me" checked>
+                            <span class="checkbox-checkmark">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                    <polyline points="20 6 9 17 4 12"/>
+                                </svg>
+                            </span>
+                            <span class="checkbox-label">Keep me illuminated</span>
+                        </label>
+                    </div>
+
+                    <!-- Submit Button with Dynamic States -->
+                    <button type="submit" id="auth-submit-btn" class="submit-btn">
+                        <span id="submit-spinner" class="btn-spinner"></span>
+                        <span id="submit-check" class="btn-check-icon">✓</span>
+                        <span id="submit-btn-text">Sign In</span>
+                    </button>
+                </form>
+
+                <!-- Social Sign In Demo Dividers -->
+                <div class="social-divider">
+                    <span>or continue with</span>
+                </div>
+
+                <div class="social-grid">
+                    <button type="button" class="social-btn" title="Continue with Google">
+                        <svg width="18" height="18" viewBox="0 0 24 24">
+                            <path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.6l3.1-3.1C17.3 1.7 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.4 9 5 12 5z"/>
+                            <path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.7-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.8z"/>
+                            <path fill="#FBBC05" d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.3s.2-1.6.4-2.3L1.9 7.3C.7 9.7 0 12 0 14.5s.7 4.8 1.9 7.2l3.7-2.9z"/>
+                            <path fill="#34A853" d="M12 23.5c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2.4-6.4-5.2L1.9 16.5C3.7 20.2 7.5 23.5 12 23.5z"/>
+                        </svg>
+                        <span>Google</span>
+                    </button>
+
+                    <button type="button" class="social-btn" title="Continue with GitHub">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+                        </svg>
+                        <span>GitHub</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom Interactive Hints & Keyboard Shortcuts Bar -->
+    <footer class="app-footer">
+        <div class="footer-tips">
+            <span class="tip-badge">Controls</span>
+            <span class="tip-item"><kbd>Pull Cord</kbd> or <kbd>Space</kbd> / <kbd>L</kbd> : Toggle Lamp</span>
+            <span class="tip-divider">•</span>
+            <span class="tip-item"><kbd>1</kbd> - <kbd>5</kbd> : Switch Light Color</span>
+            <span class="tip-divider">•</span>
+            <span class="tip-item"><kbd>M</kbd> : Sound Mute</span>
+            <span class="tip-divider">•</span>
+            <span class="tip-item">Move cursor for 3D tilt</span>
+        </div>
+    </footer>
+
+    <!-- Interactive Welcome Toast Banner -->
+    <div id="welcome-toast" class="welcome-toast"></div>
+
+    <!-- Scripts -->
+    <script src="js/audio.js"></script>
+    <script src="js/particles.js"></script>
+    <script src="js/lamp.js"></script>
+    <script src="js/form.js"></script>
+    <script src="js/app.js"></script>
+</body>
 </html>
