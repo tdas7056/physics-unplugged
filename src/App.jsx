@@ -22,16 +22,6 @@ import { supabase, isSupabaseConfigured } from "./supabase";
    SITE WATERMARK
 ───────────────────────────────────────────── */
 
-function SiteWatermark() {
-  return (
-    <div className="site-watermark">
-      <img src={logo} alt="" />
-      <span>Physics Unplugged by Tanmay</span>
-    </div>
-  );
-}
-
-
 /* ─────────────────────────────────────────────
    GLOBAL SIGN OUT BUTTON
 ───────────────────────────────────────────── */
@@ -747,7 +737,6 @@ async function openAttemptReview(attemptId) {
 
         <GlobalSignOut onClick={handleLogout} />
 
-        <SiteWatermark />
       </>
     );
   }
@@ -777,7 +766,6 @@ async function openAttemptReview(attemptId) {
 
         <GlobalSignOut onClick={handleLogout} />
 
-        <SiteWatermark />
 
         {showExamSignOutModal && (
           <ExamSignOutModal
@@ -856,7 +844,6 @@ async function openAttemptReview(attemptId) {
 
       <GlobalSignOut onClick={handleLogout} />
 
-      <SiteWatermark />
     </>
   );
 }
