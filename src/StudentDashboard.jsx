@@ -19,6 +19,7 @@ import {
   Clock3,
   Menu,
   X,
+  AlertTriangle,
 } from "lucide-react";
 
 export default function StudentDashboard({
@@ -92,6 +93,45 @@ export default function StudentDashboard({
   };
 
   const recentAttempts = [...attemptHistory].slice(0, 5);
+
+const reviewData = useMemo(() => {
+  if (!selectedReview) return null;
+
+  let data = selectedReview;
+
+  // Handle JSON returned as a string
+  if (typeof data === "string") {
+    try {
+      data = JSON.parse(data);
+    } catch {
+      return null;
+    }
+  }
+
+  // Handle possible nested response structures
+  if (data?.data) {
+    data = data.data;
+  }
+
+  if (typeof data === "string") {
+    try {
+      data = JSON.parse(data);
+    } catch {
+      return null;
+    }
+  }
+
+  // The expected response is an object containing questions
+  if (Array.isArray(data)) {
+    return { questions: data };
+  }
+
+  if (data && typeof data === "object") {
+    return data;
+  }
+
+  return null;
+}, [selectedReview]);
 
   return (
     <div className="cosmic-dashboard">
@@ -406,41 +446,186 @@ export default function StudentDashboard({
               </div>
             )}
 
-            {selectedReview && (
-              <div className="cosmic-review-panel">
-                <div className="cosmic-review-heading">
-                  <div>
-                    <span className="cosmic-eyebrow">ANSWER REVIEW</span>
-                    <h3>Examination Solutions</h3>
-                  </div>
-                  <button
-                    className="cosmic-close-review"
-                    onClick={() => setSelectedReview(null)}
+
+
+{selectedReview && (
+  <div className="cosmic-review-panel">
+    <div className="cosmic-review-heading">
+      <div>
+        <span className="cosmic-eyebrow">ANSWER REVIEW</span>
+        <h3>Examination Solutions</h3>
+        <p>Check your answers and learn from every question.</p>
+      </div>
+
+      <button
+        className="cosmic-close-review"
+        onClick={() => setSelectedReview(null)}
+        aria-label="Close review"
+      >
+        <X size={19} />
+      </button>
+    </div>
+
+    {!reviewData ? (
+      <div className="cosmic-empty-state">
+        <AlertTriangle size={28} />
+        <p>Unable to read the examination review data.</p>
+      </div>
+    ) : (
+      <>
+        <div className="cosmic-review-score">
+          <div>
+            <span>Your Score</span>
+            <strong>
+              {reviewData.score ?? 0}/{reviewData.max_marks ?? 0}
+            </strong>
+          </div>
+
+          <div>
+            <span>Total Questions</span>
+            <strong>
+              {reviewData.questions?.length ?? 0}
+            </strong>
+          </div>
+        </div>
+
+        {Array.isArray(reviewData.questions) &&
+          reviewData.questions.map((question, index) => {
+            const correctIndex = Number(question.correct_option);
+
+            const selectedIndex =
+              question.selected_option === null ||
+              question.selected_option === undefined
+                ? null
+                : Number(question.selected_option);
+
+            const isUnanswered = selectedIndex === null;
+            const isCorrect =
+              !isUnanswered && selectedIndex === correctIndex;
+
+            return (
+              <article
+                className="cosmic-answer-item"
+                key={question.question_id || index}
+              >
+                <div className="cosmic-question-top">
+                  <span className="cosmic-question-number">
+                    QUESTION {index + 1}
+                  </span>
+
+                  <span
+                    className={`cosmic-answer-status ${
+                      isUnanswered
+                        ? "unanswered"
+                        : isCorrect
+                        ? "correct"
+                        : "incorrect"
+                    }`}
                   >
-                    <X size={19} />
-                  </button>
+                    {isUnanswered
+                      ? "Unanswered"
+                      : isCorrect
+                      ? "Correct"
+                      : "Incorrect"}
+                  </span>
                 </div>
 
-                {Array.isArray(selectedReview) &&
-                  selectedReview.map((answer, index) => (
-                    <div className="cosmic-answer-item" key={index}>
-                      <strong>
-                        Question {index + 1}:{" "}
-                        {answer.question_text || answer.question || ""}
-                      </strong>
-                      {answer.explanation && (
-                        <p>{answer.explanation}</p>
-                      )}
-                    </div>
-                  ))}
+                <h4>{question.question_text}</h4>
 
-                {!Array.isArray(selectedReview) && (
-                  <pre className="cosmic-review-data">
-                    {JSON.stringify(selectedReview, null, 2)}
-                  </pre>
+                {question.image_url && (
+                  <img
+                    src={question.image_url}
+                    alt={`Question ${index + 1}`}
+                    className="cosmic-question-image"
+                  />
                 )}
-              </div>
-            )}
+
+                <div className="cosmic-review-options">
+                  {Array.isArray(question.options) &&
+                    question.options.map((option, optionIndex) => {
+                      const optionText =
+                        typeof option === "string"
+                          ? option
+                          : option?.text || "";
+
+                      const isRight = optionIndex === correctIndex;
+                      const isSelected = optionIndex === selectedIndex;
+
+                      return (
+                        <div
+                          key={optionIndex}
+                          className={`cosmic-review-option ${
+                            isRight
+                              ? "correct-option"
+                              : isSelected
+                              ? "wrong-option"
+                              : ""
+                          }`}
+                        >
+                          <span className="cosmic-option-letter">
+                            {String.fromCharCode(65 + optionIndex)}
+                          </span>
+
+                          <span className="cosmic-option-text">
+                            {optionText}
+                          </span>
+
+                          <span className="cosmic-option-label">
+                            {isRight
+                              ? "Correct Answer"
+                              : isSelected
+                              ? "Your Answer"
+                              : ""}
+                          </span>
+                        </div>
+                      );
+                    })}
+                </div>
+
+                <div className="cosmic-question-result">
+                  <span>
+                    Marks obtained:{" "}
+                    <strong>{question.marks ?? 0}</strong>
+                  </span>
+
+                  <span>
+                    Correct option:{" "}
+                    <strong>
+                      {Number.isInteger(correctIndex) &&
+                      correctIndex >= 0 &&
+                      correctIndex <= 3
+                        ? String.fromCharCode(65 + correctIndex)
+                        : "N/A"}
+                    </strong>
+                  </span>
+                </div>
+
+                {question.explanation && (
+                  <div className="cosmic-explanation">
+                    <strong>
+                      <BookOpen size={16} />
+                      Explanation
+                    </strong>
+                    <p>{question.explanation}</p>
+                  </div>
+                )}
+              </article>
+            );
+          })}
+
+        {(!Array.isArray(reviewData.questions) ||
+          reviewData.questions.length === 0) && (
+          <div className="cosmic-empty-state">
+            <BookOpen size={30} />
+            <p>No question details are available.</p>
+          </div>
+        )}
+      </>
+    )}
+  </div>
+)}
+
+
           </section>
 
           <section id="section-performance" className="cosmic-section">
