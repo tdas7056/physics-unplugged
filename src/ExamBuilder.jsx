@@ -9,6 +9,7 @@ export default function ExamBuilder() {
   const [selectedExam, setSelectedExam] = useState("");
   const [selectedQuestions, setSelectedQuestions] = useState([]);
   const [search, setSearch] = useState("");
+  const [selectedClass, setSelectedClass] = useState("All");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 const [missingKeys, setMissingKeys] = useState(0);
@@ -300,7 +301,7 @@ async function updateReattemptSetting(checked) {
     const exam = exams.find(item => item.id === selectedExam);
 
     return questions.filter(question => {
-const matchesExamClass = true;
+      const matchesSelectedClass = selectedClass === "All" || question.class_name === selectedClass;
 
       const text = [
         question.question_text,
@@ -310,10 +311,17 @@ const matchesExamClass = true;
 
       return (
         !assignedIds.has(question.id) &&
+        matchesSelectedClass &&
         text.includes(search.toLowerCase())
       );
     });
-  }, [questions, assigned, exams, selectedExam, search]);
+  }, [questions, assigned, exams, selectedExam, search, selectedClass]);
+
+  const questionClasses = useMemo(() => {
+    return [...new Set(questions.map(q => (q.class_name || "Uncategorised").trim()))]
+      .filter(Boolean)
+      .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+  }, [questions]);
 
   return (
     <div className="exam-builder">
@@ -444,10 +452,29 @@ const matchesExamClass = true;
 
           <section className="builder-section">
             <h3>Add Questions from Question Bank</h3>
+            <p className="class-filter-help">Choose a class to browse its questions. Your selected questions remain selected when you switch classes.</p>
+
+            <div className="builder-class-tabs" role="tablist" aria-label="Filter questions by class">
+              {["All", ...questionClasses].map(className => (
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={selectedClass === className}
+                  className={selectedClass === className ? "active" : ""}
+                  key={className}
+                  onClick={() => setSelectedClass(className)}
+                >
+                  {className}
+                  <span>{className === "All"
+                    ? questions.length
+                    : questions.filter(q => (q.class_name || "Uncategorised").trim() === className).length}</span>
+                </button>
+              ))}
+            </div>
 
             <input
               type="text"
-              placeholder="Search by question, topic or class..."
+              placeholder={`Search within ${selectedClass === "All" ? "all classes" : selectedClass}...`}
               value={search}
               onChange={e => setSearch(e.target.value)}
             />
