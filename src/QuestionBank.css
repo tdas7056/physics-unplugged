@@ -384,3 +384,13 @@
 .question-bank button{transition:transform .18s ease,filter .18s ease}
 .question-bank button:not(:disabled):hover{transform:translateY(-1px);filter:brightness(1.08)}
 @media(max-width:700px){.question-bank{padding:8px 0 20px}}
+
+
+/* Class-wise Question Bank tabs */
+.question-bank .qb-class-tabs{display:flex;flex-wrap:wrap;gap:9px;margin:15px 0 18px}
+.question-bank .qb-class-tabs button{display:inline-flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 14px;border:1px solid rgba(148,163,184,.2);border-radius:11px;background:#0f192b;color:#cbd5e1;font-size:13px;font-weight:650;cursor:pointer;transition:all .18s ease}
+.question-bank .qb-class-tabs button span{display:inline-grid;place-items:center;min-width:23px;height:23px;padding:0 5px;border-radius:20px;background:rgba(148,163,184,.13);color:#cbd5e1;font-size:11px}
+.question-bank .qb-class-tabs button.active{background:linear-gradient(135deg,#fcd34d,#f59e0b);border-color:#fbbf24;color:#171717;box-shadow:0 5px 15px rgba(245,158,11,.15)}
+.question-bank .qb-class-tabs button.active span{background:rgba(23,23,23,.13);color:#171717}
+.question-bank .qb-list-heading p{margin:6px 0 0;color:#9aa9bd;font-size:12px}
+@media(max-width:600px){.question-bank .qb-class-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.question-bank .qb-class-tabs button{width:100%;box-sizing:border-box}}
