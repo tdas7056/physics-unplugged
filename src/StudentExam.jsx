@@ -351,13 +351,13 @@ async function clearResponse() {
           <small>Online Examination</small>
         </div>
 
-        <div className={`cbt-timer${secondsLeft <= 60 && secondsLeft > 0 ? " warning" : ""}`}>
-          <Clock size={19} />
-          <div>
-            <small>TIME LEFT</small>
-            <strong>{formattedTime}</strong>
-          </div>
-        </div>
+<div className={`cbt-timer${secondsLeft <= 300 && secondsLeft > 0 ? " warning" : ""}`}>
+  <Clock size={22} />
+  <div>
+    <small>TIME REMAINING</small>
+    <strong>{formattedTime}</strong>
+  </div>
+</div>
       </header>
 
       <div className="cbt-body">
