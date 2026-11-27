@@ -27,6 +27,7 @@ export default function StudentExam({ exam, onExit, onRegisterAutoSubmit, onUnre
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const [attemptNumber, setAttemptNumber] = useState(null);
 
   useEffect(() => {
     if (!started || result) return;
@@ -81,8 +82,9 @@ async function startExam() {
     return;
   }
 
-  // Restore the existing attempt ID.
+  // Store the attempt details returned by the database.
   setAttemptId(data.attempt_id);
+  setAttemptNumber(data.attempt_number ?? 1);
 
   // Restore exam questions.
   setQuestions(data.questions || []);
@@ -106,7 +108,9 @@ async function startExam() {
   setStarted(true);
 
   if (data.resumed) {
-    setMessage("Your previous examination has been restored.");
+    setMessage(`Your previous attempt (${data.attempt_number ?? 1}) has been restored.`);
+  } else {
+    setMessage(`Attempt ${data.attempt_number ?? 1} of ${data.max_attempts ?? exam.max_attempts ?? 1} started.`);
   }
 
   setLoading(false);
@@ -258,7 +262,8 @@ async function clearResponse() {
             <li>Select one answer for each question.</li>
             <li>Use the question palette to navigate.</li>
             <li>You can mark questions for review.</li>
-            <li>You can attempt this examination only once.</li>
+            <li>You may attempt this examination up to {exam.max_attempts ?? 1} time(s).</li>
+            <li>If you leave before submitting, your unfinished attempt can be resumed with its saved answers and remaining time.</li>
           </ul>
 
           {message && <p className="message">{message}</p>}
@@ -268,7 +273,7 @@ async function clearResponse() {
             onClick={startExam}
             disabled={loading}
           >
-            {loading ? "Starting..." : "Start Examination"}
+            {loading ? "Starting..." : "Start / Resume Examination"}
           </button>
         </section>
       </main>
