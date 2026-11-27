@@ -31,6 +31,7 @@ export default function QuestionBank() {
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState("");
   const [search, setSearch] = useState("");
+  const [selectedClass, setSelectedClass] = useState("All");
   const [importing, setImporting] = useState(false);
 
   useEffect(() => {
@@ -381,7 +382,14 @@ export default function QuestionBank() {
     }
   }
 
+  const questionClasses = [...new Set(
+    questions.map((question) => (question.class_name || "Uncategorised").trim())
+  )].filter(Boolean).sort((a, b) =>
+    a.localeCompare(b, undefined, { numeric: true })
+  );
+
   const filteredQuestions = questions.filter((question) => {
+    const questionClass = (question.class_name || "Uncategorised").trim();
     const text = [
       question.question_text,
       question.class_name,
@@ -390,7 +398,10 @@ export default function QuestionBank() {
       .join(" ")
       .toLowerCase();
 
-    return text.includes(search.toLowerCase());
+    return (
+      (selectedClass === "All" || questionClass === selectedClass) &&
+      text.includes(search.toLowerCase())
+    );
   });
 
   return (
@@ -617,7 +628,10 @@ export default function QuestionBank() {
 
       <section className="qb-list-section">
         <div className="qb-list-heading">
-          <h2>All questions</h2>
+          <div>
+            <h2>{selectedClass === "All" ? "All questions" : selectedClass + " questions"}</h2>
+            <p>Browse and manage questions class by class.</p>
+          </div>
 
           <button
             className="refresh-button"
@@ -627,11 +641,31 @@ export default function QuestionBank() {
           </button>
         </div>
 
+        <div className="qb-class-tabs" role="tablist" aria-label="Filter question bank by class">
+          {["All", ...questionClasses].map((className) => (
+            <button
+              type="button"
+              role="tab"
+              aria-selected={selectedClass === className}
+              className={selectedClass === className ? "active" : ""}
+              key={className}
+              onClick={() => setSelectedClass(className)}
+            >
+              {className}
+              <span>{className === "All"
+                ? questions.length
+                : questions.filter((question) =>
+                    (question.class_name || "Uncategorised").trim() === className
+                  ).length}</span>
+            </button>
+          ))}
+        </div>
+
         <input
           className="qb-search"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search by question, class or topic..."
+          placeholder={`Search within ${selectedClass === "All" ? "all classes" : selectedClass} by question or topic...`}
         />
 
         {loading ? (
