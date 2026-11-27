@@ -19,10 +19,6 @@ import { supabase, isSupabaseConfigured } from "./supabase";
 
 
 /* ─────────────────────────────────────────────
-   SITE WATERMARK
-───────────────────────────────────────────── */
-
-/* ─────────────────────────────────────────────
    GLOBAL SIGN OUT BUTTON
 ───────────────────────────────────────────── */
 
@@ -427,28 +423,28 @@ export default function App() {
      OPEN ANSWER REVIEW
   ───────────────────────────────────────── */
 
-async function openAttemptReview(attemptId) {
-  setReviewLoading(true);
-  setSelectedReview(null);
+  async function openAttemptReview(attemptId) {
+    setReviewLoading(true);
+    setSelectedReview(null);
 
-  const { data, error } = await supabase.rpc("get_attempt_review", {
-    p_attempt_id: attemptId,
-  });
+    const { data, error } = await supabase.rpc("get_attempt_review", {
+      p_attempt_id: attemptId,
+    });
 
-  console.log("EXAM REVIEW DATA:", data);
-  console.log("EXAM REVIEW TYPE:", typeof data);
-  console.log("IS ARRAY:", Array.isArray(data));
+    console.log("EXAM REVIEW DATA:", data);
+    console.log("EXAM REVIEW TYPE:", typeof data);
+    console.log("IS ARRAY:", Array.isArray(data));
 
-  if (error) {
-    console.error("Review error:", error);
-    setMessage("Could not load answer review: " + error.message);
-  } else {
-    setSelectedReview(data);
-    setMessage("");
+    if (error) {
+      console.error("Review error:", error);
+      setMessage("Could not load answer review: " + error.message);
+    } else {
+      setSelectedReview(data);
+      setMessage("");
+    }
+
+    setReviewLoading(false);
   }
-
-  setReviewLoading(false);
-}
 
 
   /* ─────────────────────────────────────────
@@ -720,7 +716,6 @@ async function openAttemptReview(attemptId) {
         captchaToken={captchaToken}
         setMessage={setMessage}
         logo={logo}
-        SiteWatermark={SiteWatermark}
       />
     );
   }
@@ -734,9 +729,7 @@ async function openAttemptReview(attemptId) {
     return (
       <>
         <TeacherDashboard />
-
         <GlobalSignOut onClick={handleLogout} />
-
       </>
     );
   }
@@ -765,7 +758,6 @@ async function openAttemptReview(attemptId) {
         />
 
         <GlobalSignOut onClick={handleLogout} />
-
 
         {showExamSignOutModal && (
           <ExamSignOutModal
@@ -810,7 +802,6 @@ async function openAttemptReview(attemptId) {
         captchaToken={captchaToken}
         setMessage={setMessage}
         logo={logo}
-        SiteWatermark={SiteWatermark}
       />
     );
   }
@@ -843,7 +834,6 @@ async function openAttemptReview(attemptId) {
       />
 
       <GlobalSignOut onClick={handleLogout} />
-
     </>
   );
 }
