@@ -66,27 +66,52 @@ export default function StudentExam({ exam, onExit, onRegisterAutoSubmit, onUnre
     return () => { onUnregisterAutoSubmit?.(); };
   }, [started, result, attemptId]);
 
-  async function startExam() {
-    setLoading(true);
-    setMessage("");
 
-    const { data, error } = await supabase.rpc("start_exam", {
-      p_exam_id: exam.id
-    });
+async function startExam() {
+  setLoading(true);
+  setMessage("");
 
-    if (error) {
-      setMessage(error.message);
-    } else {
-      setAttemptId(data.attempt_id);
-      setQuestions(data.questions || []);
-      setSecondsLeft(
-        Number(data.duration_minutes || exam.duration_minutes) * 60
-      );
-      setStarted(true);
-    }
+  const { data, error } = await supabase.rpc("start_exam", {
+    p_exam_id: exam.id
+  });
 
+  if (error) {
+    setMessage(error.message);
     setLoading(false);
+    return;
   }
+
+  // Restore the existing attempt ID.
+  setAttemptId(data.attempt_id);
+
+  // Restore exam questions.
+  setQuestions(data.questions || []);
+
+  // Restore previously saved answers.
+  setAnswers(data.answers || {});
+
+  // Restore the original remaining time.
+  // Fall back to full duration for compatibility.
+  const remainingTime = data.remaining_seconds !== undefined
+    ? Number(data.remaining_seconds)
+    : Number(data.duration_minutes || exam.duration_minutes) * 60;
+
+  setSecondsLeft(Math.max(0, remainingTime));
+
+  // Reset temporary navigation state.
+  setCurrent(0);
+  setVisited({});
+  setMarked({});
+
+  setStarted(true);
+
+  if (data.resumed) {
+    setMessage("Your previous examination has been restored.");
+  }
+
+  setLoading(false);
+}
+
 
   async function selectAnswer(questionId, optionIndex) {
     setAnswers(previous => ({
