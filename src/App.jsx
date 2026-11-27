@@ -437,23 +437,28 @@ export default function App() {
      OPEN ANSWER REVIEW
   ───────────────────────────────────────── */
 
-  async function openAttemptReview(attemptId) {
-    setReviewLoading(true);
-    setSelectedReview(null);
+async function openAttemptReview(attemptId) {
+  setReviewLoading(true);
+  setSelectedReview(null);
 
-    const { data, error } = await supabase.rpc("get_attempt_review", {
-      p_attempt_id: attemptId,
-    });
+  const { data, error } = await supabase.rpc("get_attempt_review", {
+    p_attempt_id: attemptId,
+  });
 
-    if (error) {
-      setMessage("Could not load answer review: " + error.message);
-    } else {
-      setSelectedReview(data);
-      setMessage("");
-    }
+  console.log("EXAM REVIEW DATA:", data);
+  console.log("EXAM REVIEW TYPE:", typeof data);
+  console.log("IS ARRAY:", Array.isArray(data));
 
-    setReviewLoading(false);
+  if (error) {
+    console.error("Review error:", error);
+    setMessage("Could not load answer review: " + error.message);
+  } else {
+    setSelectedReview(data);
+    setMessage("");
   }
+
+  setReviewLoading(false);
+}
 
 
   /* ─────────────────────────────────────────
