@@ -469,3 +469,13 @@
 .exam-builder .preview-explanation strong{color:#fcd34d}
 .exam-builder .exam-preview-close,.exam-builder .exam-preview-bottom-close{background:#fbbf24;color:#171717;border:0;border-radius:9px;font-weight:750}
 @media(max-width:700px){.exam-builder{padding:8px 0 20px}.exam-builder .builder-section{padding:17px}}
+
+
+/* Class-wise question bank selector */
+.exam-builder .class-filter-help{margin:4px 0 12px;color:#9aa9bd;font-size:13px}
+.exam-builder .builder-class-tabs{display:flex;flex-wrap:wrap;gap:9px;margin:14px 0 18px}
+.exam-builder .builder-class-tabs button{display:inline-flex;align-items:center;gap:10px;padding:10px 14px;border:1px solid rgba(148,163,184,.2);border-radius:11px;background:#0f192b;color:#cbd5e1;font-size:13px;font-weight:650}
+.exam-builder .builder-class-tabs button span{display:inline-grid;place-items:center;min-width:23px;height:23px;padding:0 5px;border-radius:20px;background:rgba(148,163,184,.13);color:#cbd5e1;font-size:11px}
+.exam-builder .builder-class-tabs button.active{background:linear-gradient(135deg,#fcd34d,#f59e0b);border-color:#fbbf24;color:#171717;box-shadow:0 5px 15px rgba(245,158,11,.15)}
+.exam-builder .builder-class-tabs button.active span{background:rgba(23,23,23,.13);color:#171717}
+@media(max-width:600px){.exam-builder .builder-class-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.exam-builder .builder-class-tabs button{justify-content:space-between}}
