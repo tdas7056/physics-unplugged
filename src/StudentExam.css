@@ -1141,3 +1141,612 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* =========================================================
+   PHYSICS UNPLUGGED - COLOURFUL RESPONSIVE EXAM REDESIGN
+   Append this section at the bottom of StudentExam.css
+========================================================= */
+
+.cbt-exam {
+  --ex-accent: #6366f1;
+  --ex-accent-rgb: 99, 102, 241;
+  --ex-green: #10b981;
+  --ex-red: #ef4444;
+  --ex-amber: #f59e0b;
+  background: #eef2ff;
+  color: #1e293b;
+  background-image:
+    radial-gradient(circle at 10% 0%, #dbeafe 0, transparent 35%),
+    radial-gradient(circle at 90% 100%, #ede9fe 0, transparent 35%);
+}
+
+/* HEADER */
+.cbt-header {
+  min-height: 76px;
+  height: auto;
+  padding: 12px 24px;
+  background: #ffffff;
+  border-bottom: 1px solid #dbe3f0;
+  box-shadow: 0 3px 15px rgba(30, 41, 59, 0.06);
+  gap: 16px;
+}
+
+.cbt-logo {
+  width: 42px;
+  height: 42px;
+  border-radius: 13px;
+  background: linear-gradient(135deg, #2563eb, #6366f1);
+  border: none;
+  color: white;
+  box-shadow: 0 5px 14px rgba(79, 70, 229, 0.25);
+}
+
+.cbt-brand strong {
+  color: #172554;
+  font-size: 0.95rem;
+}
+
+.cbt-brand small,
+.cbt-exam-title small {
+  color: #64748b;
+}
+
+.cbt-exam-title strong {
+  color: #334155;
+}
+
+/* HIGH VISIBILITY TIMER */
+.cbt-timer {
+  min-width: 164px;
+  justify-content: center;
+  padding: 10px 16px;
+  border-radius: 14px;
+  background: #172554 !important;
+  border: 2px solid #fbbf24 !important;
+  color: #fbbf24 !important;
+  box-shadow: 0 5px 15px rgba(23, 37, 84, 0.18);
+}
+
+.cbt-timer small {
+  color: #cbd5e1 !important;
+  font-size: 0.65rem;
+}
+
+.cbt-timer strong {
+  color: #ffffff !important;
+  font-size: 1.35rem;
+  letter-spacing: 0.07em;
+}
+
+.cbt-timer svg {
+  color: #fbbf24;
+  flex-shrink: 0;
+}
+
+.cbt-timer.warning {
+  background: #991b1b !important;
+  border-color: #ef4444 !important;
+}
+
+.cbt-timer.warning strong,
+.cbt-timer.warning small,
+.cbt-timer.warning svg {
+  color: #ffffff !important;
+}
+
+/* MAIN BACKGROUND */
+.cbt-body {
+  max-width: 1700px;
+  width: 100%;
+  margin: 0 auto;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  background: transparent;
+}
+
+.cbt-main {
+  padding: 30px;
+  gap: 20px;
+}
+
+/* QUESTION TOOLBAR */
+.cbt-question-toolbar {
+  background: #ffffff;
+  border: 1px solid #dbe3f0;
+  border-radius: 14px;
+  padding: 15px 20px;
+  color: #334155;
+  box-shadow: 0 3px 12px rgba(30, 41, 59, 0.04);
+}
+
+.cbt-question-toolbar span:first-child {
+  color: #1d4ed8;
+  font-weight: 700;
+}
+
+.cbt-marks {
+  color: #7c3aed;
+  font-weight: 700;
+}
+
+/* QUESTION CARD */
+.cbt-question-card {
+  background: #ffffff;
+  border: 1px solid #dbe3f0;
+  border-radius: 18px;
+  padding: 32px;
+  box-shadow: 0 8px 30px rgba(30, 41, 59, 0.07);
+}
+
+.cbt-question-card::before {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    #6366f1,
+    #06b6d4,
+    transparent
+  );
+  height: 3px;
+  opacity: 1;
+}
+
+.cbt-question-heading h3 {
+  color: #4f46e5;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.cbt-question-text {
+  color: #1e293b;
+  font-size: 1.12rem;
+  font-weight: 600;
+  line-height: 1.8;
+}
+
+/* MARKED LABEL */
+.cbt-mark-label {
+  background: #f3e8ff;
+  border: 1px solid #d8b4fe;
+  color: #7e22ce;
+}
+
+/* ANSWER OPTIONS */
+.cbt-options {
+  gap: 12px;
+}
+
+.cbt-option {
+  background: #f8fafc;
+  border: 1.5px solid #dbe3f0;
+  border-radius: 13px;
+  padding: 15px 18px;
+  min-height: 64px;
+  transition: all 0.2s ease;
+}
+
+.cbt-option:hover {
+  background: #eff6ff;
+  border-color: #60a5fa;
+  transform: translateY(-1px);
+}
+
+.cbt-option-letter {
+  background: #e0e7ff;
+  border: none;
+  color: #3730a3;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  font-weight: 700;
+}
+
+.cbt-option-text {
+  color: #334155;
+  font-size: 0.98rem;
+  font-weight: 500;
+}
+
+.cbt-option.selected {
+  background: #eef2ff;
+  border: 2px solid #4f46e5;
+  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.12);
+}
+
+.cbt-option.selected .cbt-option-letter {
+  background: #4f46e5;
+  color: #ffffff;
+}
+
+.cbt-option.selected .cbt-option-text {
+  color: #1e1b4b;
+  font-weight: 600;
+}
+
+/* SIDEBAR */
+.cbt-sidebar {
+  background: #172554;
+  border-left: none;
+  padding: 22px;
+  gap: 18px;
+}
+
+.cbt-profile {
+  background: #ffffff;
+  border: none;
+  border-radius: 14px;
+  padding: 16px;
+}
+
+.cbt-profile-avatar {
+  background: #dbeafe;
+  color: #1d4ed8;
+  border: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+}
+
+.cbt-profile strong {
+  color: #172554;
+}
+
+.cbt-profile small {
+  color: #64748b;
+}
+
+/* QUESTION PALETTE */
+.cbt-palette-card {
+  background: #ffffff;
+  border: none;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+}
+
+.cbt-palette-card h3 {
+  color: #334155;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.cbt-legend span {
+  color: #475569;
+  font-size: 0.72rem;
+}
+
+.legend-answered {
+  background: #10b981;
+}
+
+.legend-not-answered {
+  background: #ef4444;
+}
+
+.legend-not-visited {
+  background: #cbd5e1;
+  border: none;
+}
+
+.legend-marked {
+  background: #9333ea;
+}
+
+/* PALETTE BUTTONS */
+.cbt-palette {
+  gap: 8px;
+}
+
+.cbt-palette-button {
+  background: #e2e8f0;
+  border: 1px solid #cbd5e1;
+  color: #334155;
+  border-radius: 9px;
+  font-weight: 700;
+  min-height: 42px;
+  aspect-ratio: auto;
+}
+
+.cbt-palette-button.answered {
+  background: #059669;
+  color: #ffffff;
+  border-color: #059669;
+}
+
+.cbt-palette-button.not-answered {
+  background: #ef4444;
+  color: #ffffff;
+  border-color: #ef4444;
+}
+
+.cbt-palette-button.marked {
+  background: #9333ea;
+  color: #ffffff;
+  border-color: #9333ea;
+}
+
+.cbt-palette-button.active {
+  outline: 3px solid #2563eb;
+  outline-offset: 2px;
+  color: #ffffff;
+}
+
+/* SUMMARY */
+.cbt-summary > div {
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+}
+
+.cbt-summary span {
+  color: #64748b;
+}
+
+.cbt-summary strong {
+  color: #172554;
+}
+
+/* ACTION BUTTONS */
+.cbt-review-button {
+  background: #f3e8ff;
+  border: 1px solid #d8b4fe;
+  color: #7e22ce;
+}
+
+.cbt-clear-button {
+  background: #fff1f2;
+  border: 1px solid #fecdd3;
+  color: #be123c;
+}
+
+.cbt-previous-button {
+  background: #e0e7ff;
+  border: 1px solid #c7d2fe;
+  color: #3730a3;
+}
+
+.cbt-next-button,
+.cbt-submit-button {
+  background: linear-gradient(135deg, #2563eb, #6366f1);
+  color: #ffffff;
+  box-shadow: 0 5px 15px rgba(79, 70, 229, 0.22);
+}
+
+.cbt-next-button:hover:not(:disabled),
+.cbt-submit-button:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+
+/* FOOTER */
+.cbt-footer {
+  background: #ffffff;
+  border-top: 1px solid #dbe3f0;
+  color: #64748b;
+}
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+  .cbt-body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .cbt-main {
+    padding: 22px;
+  }
+
+  .cbt-sidebar {
+    border-top: 3px solid #6366f1;
+    max-height: none;
+  }
+
+  .cbt-palette {
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+  }
+
+  .cbt-exam-title {
+    display: none;
+  }
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 640px) {
+  .cbt-header {
+    min-height: 66px;
+    padding: 9px 12px;
+    gap: 8px;
+    justify-content: space-between;
+  }
+
+  .cbt-logo {
+    width: 36px;
+    height: 36px;
+  }
+
+  .cbt-brand {
+    gap: 7px;
+    min-width: 0;
+  }
+
+  .cbt-brand strong {
+    font-size: 0.72rem;
+    white-space: nowrap;
+  }
+
+  .cbt-brand small {
+    display: block;
+    font-size: 0.48rem;
+  }
+
+  .cbt-timer {
+    min-width: 116px;
+    padding: 7px 9px;
+    gap: 7px;
+    border-radius: 11px;
+  }
+
+  .cbt-timer svg {
+    width: 18px;
+  }
+
+  .cbt-timer small {
+    font-size: 0.52rem;
+  }
+
+  .cbt-timer strong {
+    font-size: 1.12rem;
+  }
+
+  .cbt-main {
+    padding: 13px;
+    gap: 13px;
+  }
+
+  .cbt-question-toolbar {
+    padding: 12px;
+    font-size: 0.67rem;
+  }
+
+  .cbt-question-card {
+    padding: 19px 15px;
+    border-radius: 14px;
+  }
+
+  .cbt-question-heading {
+    flex-wrap: wrap;
+  }
+
+  .cbt-question-text {
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+
+  .cbt-option {
+    padding: 13px;
+    min-height: 58px;
+    gap: 10px;
+  }
+
+  .cbt-option-text {
+    font-size: 0.9rem;
+    overflow-wrap: anywhere;
+  }
+
+  .cbt-action-bar {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 9px;
+  }
+
+  .cbt-review-button,
+  .cbt-clear-button,
+  .cbt-previous-button,
+  .cbt-next-button {
+    width: 100%;
+    justify-content: center;
+    margin: 0;
+    padding: 12px 7px;
+    font-size: 0.76rem;
+    white-space: normal;
+    min-height: 46px;
+  }
+
+  .cbt-sidebar {
+    padding: 14px;
+    gap: 13px;
+  }
+
+  .cbt-palette-card {
+    padding: 15px;
+  }
+
+  .cbt-palette {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .cbt-palette-button {
+    min-height: 42px;
+    font-size: 0.8rem;
+  }
+
+  .cbt-summary {
+    gap: 7px;
+  }
+
+  .cbt-submit-button {
+    min-height: 49px;
+  }
+
+  .cbt-question-image-container {
+    height: 190px;
+  }
+
+  .cbt-footer {
+    padding: 12px;
+    justify-content: center;
+    text-align: center;
+    font-size: 0.58rem;
+  }
+
+  .exam-instructions {
+    padding: 25px 17px;
+  }
+}
+
+/* SMALL MOBILE */
+@media (max-width: 380px) {
+  .cbt-brand strong {
+    font-size: 0.65rem;
+  }
+
+  .cbt-timer {
+    min-width: 108px;
+    padding: 6px 7px;
+  }
+
+  .cbt-timer strong {
+    font-size: 1rem;
+  }
+
+  .cbt-action-bar {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .cbt-review-button,
+  .cbt-clear-button,
+  .cbt-previous-button,
+  .cbt-next-button {
+    font-size: 0.69rem;
+  }
+}
+
+/* ACCESSIBILITY AND TOUCH */
+.cbt-exam button {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.cbt-exam button:focus-visible,
+.cbt-option:focus-within {
+  outline: 3px solid #60a5fa;
+  outline-offset: 3px;
+}
+
+.cbt-option,
+.cbt-palette-button,
+.cbt-action-bar button {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cbt-exam *,
+  .cbt-exam *::before,
+  .cbt-exam *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
