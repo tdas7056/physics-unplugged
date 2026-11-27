@@ -539,3 +539,46 @@
   }
 }
 
+
+
+
+/* ===== PHYSICS UNPLUGGED MIDNIGHT THEME ===== */
+.teacher-results{--tr-border:rgba(148,163,184,.17);width:100%;max-width:1300px;margin:0 auto;padding:12px 0 28px;min-height:100vh;background:transparent;color:#e2e8f0;border-radius:0}
+.teacher-results h1,.teacher-results h2,.teacher-results h3{color:#f8fafc}
+.teacher-results .results-heading p{color:#9aa9bd}
+.teacher-results .results-heading button,.teacher-results .results-toolbar button{background:linear-gradient(135deg,#fcd34d,#f59e0b);color:#171717;border:0;border-radius:10px;font-weight:750}
+.teacher-results .results-summary>div:not(.analytics-summary),.teacher-results .analytics-card{background:linear-gradient(145deg,rgba(23,34,56,.96),rgba(17,26,44,.96));border:1px solid var(--tr-border);border-radius:15px;box-shadow:0 10px 25px rgba(0,0,0,.14)}
+.teacher-results .results-summary svg{background:rgba(251,191,36,.12);color:#fcd34d}
+.teacher-results .results-summary span,.teacher-results .analytics-card span{color:#9aa9bd}
+.teacher-results .results-summary strong,.teacher-results .analytics-card strong{color:#fcd34d}
+.teacher-results .analytics-card small{color:#9aa9bd}
+.teacher-results .results-toolbar{background:rgba(18,26,46,.92);border:1px solid var(--tr-border);border-radius:13px}
+.teacher-results .results-toolbar input,.teacher-results .results-toolbar select{box-sizing:border-box;background:#0c1425;color:#f1f5f9;border:1px solid var(--tr-border);border-radius:9px;outline:none}
+.teacher-results .results-toolbar input::placeholder{color:#64748b}
+.teacher-results .results-toolbar input:focus,.teacher-results .results-toolbar select:focus{border-color:#fbbf24;box-shadow:0 0 0 3px rgba(251,191,36,.1)}
+.teacher-results .results-toolbar select option{background:#121a2e;color:#f1f5f9}
+.teacher-results .results-table-wrap{background:#121a2e;border:1px solid var(--tr-border);border-radius:14px;box-shadow:0 12px 30px rgba(0,0,0,.14)}
+.teacher-results .results-table th{background:#1b2941;color:#fcd34d;border-bottom:1px solid var(--tr-border)}
+.teacher-results .results-table td{color:#cbd5e1;border-bottom:1px solid rgba(148,163,184,.11)}
+.teacher-results .results-table tbody tr:hover{background:rgba(148,163,184,.07)}
+.teacher-results .results-table td:first-child{color:#fcd34d}
+.teacher-results .results-table td:nth-child(2){color:#f8fafc}
+.teacher-results .view-details-button{background:rgba(251,191,36,.12);border:1px solid rgba(251,191,36,.25);color:#fcd34d;border-radius:8px}
+.teacher-results .view-details-button:hover{background:rgba(251,191,36,.2)}
+.teacher-results .message{background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.2);color:#fecaca}
+.teacher-results .result-detail-panel{background:#121a2e;border:1px solid var(--tr-border);border-radius:16px;box-shadow:0 12px 30px rgba(0,0,0,.16)}
+.teacher-results .result-detail-heading p{color:#9aa9bd}
+.teacher-results .close-details-button{background:rgba(148,163,184,.09);border:1px solid var(--tr-border);color:#e2e8f0;border-radius:9px}
+.teacher-results .result-detail-summary>div,.teacher-results .result-detail-question{background:#0f192b;border:1px solid var(--tr-border);border-radius:12px}
+.teacher-results .result-detail-summary span{color:#9aa9bd}
+.teacher-results .result-detail-summary strong{color:#fcd34d}
+.teacher-results .result-detail-question h3{color:#fcd34d}
+.teacher-results .detail-question-text{color:#f1f5f9}
+.teacher-results .detail-option{background:#172238;border:1px solid var(--tr-border);color:#cbd5e1}
+.teacher-results .detail-option.correct-option{background:rgba(52,211,153,.12);border-color:rgba(52,211,153,.28);color:#a7f3d0}
+.teacher-results .detail-option.wrong-option{background:rgba(248,113,113,.1);border-color:rgba(248,113,113,.25);color:#fecaca}
+.teacher-results .unanswered-label{color:#fcd34d}
+.teacher-results .detail-explanation{background:rgba(251,191,36,.08);border-left-color:#fbbf24}
+.teacher-results .detail-explanation strong{color:#fcd34d}
+.teacher-results .detail-explanation p{color:#cbd5e1}
+@media(max-width:700px){.teacher-results{padding:8px 0 20px}}
