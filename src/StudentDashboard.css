@@ -542,7 +542,8 @@
 
 .global-signout {
   position: fixed;
-  top: 14px;
+  top: auto;
+  bottom: 18px;
   right: 18px;
   z-index: 99999;
   display: flex;
