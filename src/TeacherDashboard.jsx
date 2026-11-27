@@ -32,6 +32,7 @@ const emptyExam = {
   duration_minutes: 30,
   positive_marks: 1,
   negative_marks: 0,
+  max_attempts: 1,
   is_published: false,
 };
 
@@ -83,6 +84,7 @@ export default function TeacherDashboard() {
       duration_minutes: exam.duration_minutes || 30,
       positive_marks: exam.positive_marks ?? 1,
       negative_marks: exam.negative_marks ?? 0,
+      max_attempts: exam.max_attempts ?? 1,
       is_published: exam.is_published || false,
     });
     setEditingId(exam.id);
@@ -116,6 +118,7 @@ export default function TeacherDashboard() {
       duration_minutes: Number(form.duration_minutes),
       positive_marks: Number(form.positive_marks),
       negative_marks: Number(form.negative_marks),
+      max_attempts: Number(form.max_attempts),
       is_published: form.is_published,
     };
 
@@ -358,6 +361,19 @@ return (
               </label>
             </div>
 
+              <label>
+                Maximum attempts per student
+                <select
+                  name="max_attempts"
+                  value={form.max_attempts}
+                  onChange={changeField}
+                >
+                  <option value={1}>1 attempt</option>
+                  <option value={2}>2 attempts</option>
+                </select>
+                <small>Students can resume an unfinished attempt. A new attempt becomes available after submission.</small>
+              </label>
+
             <label className="publish-checkbox">
               <input
                 type="checkbox"
@@ -418,7 +434,7 @@ return (
                   <h3>{exam.title}</h3>
                   <p>{exam.class_name}</p>
                   <div className="teacher-exam-meta">
-                    {exam.duration_minutes} minutes · +{exam.positive_marks} marks · -{exam.negative_marks} marks
+                    {exam.duration_minutes} minutes · +{exam.positive_marks} marks · -{exam.negative_marks} marks · {exam.max_attempts ?? 1} attempt(s)
                   </div>
                 </div>
 
