@@ -376,7 +376,7 @@ export default function App() {
 
     const { data, error } = await supabase
       .from("exams")
-      .select("id, title, description, duration_minutes")
+      .select("id, title, description, duration_minutes, max_attempts")
       .eq("is_published", true)
       .order("created_at", { ascending: false });
 
