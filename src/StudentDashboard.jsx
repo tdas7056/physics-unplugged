@@ -361,6 +361,10 @@ const reviewData = useMemo(() => {
                         <Clock3 size={15} />
                         {exam.duration_minutes} minutes
                       </span>
+                      <span>
+                        <ClipboardList size={15} />
+                        {exam.max_attempts ?? 1} attempt(s) allowed
+                      </span>
                     </div>
 
                     <button
