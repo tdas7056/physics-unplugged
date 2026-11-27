@@ -2399,3 +2399,228 @@
   }
 }
 
+
+/* EXAM ANSWER REVIEW */
+
+.cosmic-review-score {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin: 22px 0;
+}
+
+.cosmic-review-score > div {
+  padding: 18px;
+  border: 1px solid rgba(34, 211, 238, 0.2);
+  border-radius: 14px;
+  background: rgba(15, 23, 42, 0.65);
+}
+
+.cosmic-review-score span {
+  display: block;
+  color: #94a3b8;
+  font-size: 13px;
+  margin-bottom: 7px;
+}
+
+.cosmic-review-score strong {
+  color: #fbbf24;
+  font-size: 25px;
+}
+
+.cosmic-question-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.cosmic-question-number {
+  color: #22d3ee;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+}
+
+.cosmic-answer-status {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.cosmic-answer-status.correct {
+  color: #86efac;
+  background: rgba(34, 197, 94, 0.13);
+}
+
+.cosmic-answer-status.incorrect {
+  color: #fca5a5;
+  background: rgba(239, 68, 68, 0.13);
+}
+
+.cosmic-answer-status.unanswered {
+  color: #fcd34d;
+  background: rgba(245, 158, 11, 0.13);
+}
+
+.cosmic-answer-item {
+  margin-top: 20px;
+  padding: 22px;
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  border-radius: 16px;
+  background: rgba(10, 15, 30, 0.75);
+}
+
+.cosmic-answer-item h4 {
+  color: #f1f5f9;
+  font-size: 16px;
+  line-height: 1.7;
+  margin: 0 0 20px;
+}
+
+.cosmic-question-image {
+  display: block;
+  max-width: 100%;
+  max-height: 280px;
+  object-fit: contain;
+  margin: 15px 0;
+  border-radius: 10px;
+}
+
+.cosmic-review-options {
+  display: grid;
+  gap: 10px;
+}
+
+.cosmic-review-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px;
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  border-radius: 11px;
+  background: rgba(30, 41, 59, 0.35);
+}
+
+.cosmic-option-letter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 29px;
+  height: 29px;
+  border-radius: 8px;
+  background: rgba(148, 163, 184, 0.12);
+  color: #cbd5e1;
+  font-weight: 700;
+}
+
+.cosmic-option-text {
+  flex: 1;
+  color: #cbd5e1;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.cosmic-option-label {
+  color: #94a3b8;
+  font-size: 11px;
+  font-weight: 700;
+  text-align: right;
+}
+
+.cosmic-review-option.correct-option {
+  border-color: rgba(34, 197, 94, 0.55);
+  background: rgba(34, 197, 94, 0.09);
+}
+
+.cosmic-review-option.correct-option .cosmic-option-letter {
+  color: #86efac;
+  background: rgba(34, 197, 94, 0.2);
+}
+
+.cosmic-review-option.correct-option .cosmic-option-text {
+  color: #bbf7d0;
+}
+
+.cosmic-review-option.correct-option .cosmic-option-label {
+  color: #86efac;
+}
+
+.cosmic-review-option.wrong-option {
+  border-color: rgba(239, 68, 68, 0.55);
+  background: rgba(239, 68, 68, 0.08);
+}
+
+.cosmic-review-option.wrong-option .cosmic-option-letter {
+  color: #fca5a5;
+  background: rgba(239, 68, 68, 0.2);
+}
+
+.cosmic-review-option.wrong-option .cosmic-option-text {
+  color: #fecaca;
+}
+
+.cosmic-review-option.wrong-option .cosmic-option-label {
+  color: #fca5a5;
+}
+
+.cosmic-question-result {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin-top: 18px;
+  padding-top: 15px;
+  border-top: 1px solid rgba(148, 163, 184, 0.15);
+  color: #94a3b8;
+  font-size: 13px;
+}
+
+.cosmic-question-result strong {
+  color: #fbbf24;
+}
+
+.cosmic-explanation {
+  margin-top: 16px;
+  padding: 16px;
+  border-left: 3px solid #22d3ee;
+  border-radius: 8px;
+  background: rgba(34, 211, 238, 0.06);
+}
+
+.cosmic-explanation strong {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #67e8f9;
+  font-size: 14px;
+}
+
+.cosmic-explanation p {
+  margin: 10px 0 0;
+  color: #cbd5e1;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+@media (max-width: 600px) {
+  .cosmic-review-score {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .cosmic-answer-item {
+    padding: 15px;
+  }
+
+  .cosmic-review-option {
+    flex-wrap: wrap;
+  }
+
+  .cosmic-option-label {
+    width: 100%;
+    padding-left: 41px;
+    text-align: left;
+  }
+}
