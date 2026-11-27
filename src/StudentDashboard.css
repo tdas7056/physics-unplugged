@@ -2625,3 +2625,27 @@
     text-align: left;
   }
 }
+/* Mobile Sign Out Button Fix */
+@media (max-width: 768px) {
+  .global-signout {
+    width: auto !important;
+    min-width: unset !important;
+    height: 34px !important;
+    padding: 5px 10px !important;
+    font-size: 12px !important;
+    gap: 5px !important;
+    border-radius: 8px !important;
+    line-height: 1 !important;
+  }
+
+  .global-signout svg {
+    width: 14px !important;
+    height: 14px !important;
+    flex-shrink: 0;
+  }
+
+  .global-signout span {
+    font-size: 12px !important;
+    white-space: nowrap;
+  }
+}
